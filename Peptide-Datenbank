@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEPTIDBASE // Ultimate Biotech Control Center</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;750;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        void: '#030712',
+                        labDark: '#090d16',
+                        labSurface: '#111827',
+                        labSurface2: '#1f2937',
+                        glowCyan: '#00f2fe',
+                        glowGreen: '#3ddc84',
+                        glowOrange: '#ff6b35',
+                        glowPurple: '#c46bff',
+                        glowRed: '#ff4455',
+                        glowAmber: '#ffcc02'
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 15px rgba(0, 242, 254, 0.15)',
+                        'neon-green': '0 0 15px rgba(61, 220, 132, 0.15)',
+                        'neon-orange': '0 0 15px rgba(255, 107, 37, 0.15)',
+                        'neon-purple': '0 0 15px rgba(196, 107, 255, 0.15)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .grain-bg {
+            position: relative;
+        }
+        .grain-bg::before {
+            content: '';
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="bg-void text-slate-100 font-sans min-h-screen flex flex-col grain-bg overflow-x-hidden">
+
+    <!-- Glowing Top Line -->
+    <div class="h-[2px] w-full bg-gradient-to-r from-glowCyan via-glowPurple to-glowGreen"></div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-50 bg-void/90 backdrop-blur-md border-b border-white/5 py-4 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="router('db')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-glowCyan to-blue-600 flex items-center justify-center text-void font-bold shadow-neon-cyan group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6 text-void" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-widest font-mono text-white">PEPTID_BASE<span class="text-glowCyan animate-pulse">//</span>ULTIMATE</h1>
+                    <span class="text-[10px] font-mono text-glowGreen block tracking-widest uppercase">Systemstatus: ACTIVE // 47 MOLECULAR BLUEPRINTS LOADED</span>
+                </div>
+            </div>
+
+            <!-- Viewport Router Links -->
+            <nav class="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-labDark/80 rounded-xl border border-white/5">
+                <button onclick="router('db')" id="nav-db" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan">
+                    Datenbank
+                </button>
+                <button onclick="router('calc')" id="nav-calc" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">
+                    Mischrechner
+                </button>
+                <button onclick="router('storage')" id="nav-storage" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">
+                    Haltbarkeit
+                </button>
+                <button onclick="router('sport')" id="nav-sport" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">
+                    Sportmedizin
+                </button>
+                <button onclick="router('stack')" id="nav-stack" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">
+                    Stacker <span class="bg-glowCyan/10 text-glowCyan text-[8px] px-1.5 py-0.5 rounded-full border border-glowCyan/30">CHECK</span>
+                </button>
+                <button onclick="router('tutorial')" id="nav-tutorial" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">
+                    Misch-Guide <span class="bg-glowGreen/10 text-glowGreen text-[8px] px-1.5 py-0.5 rounded-full border border-glowGreen/30">TUTORIAL</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Floating Diagnostic Warning Header -->
+    <div class="bg-glowAmber/5 border-b border-glowAmber/20 py-2.5 px-4 text-center">
+        <p class="text-[11px] font-mono text-glowAmber tracking-wide flex items-center justify-center gap-2">
+            <span class="animate-pulse">●</span> INTELLECTUAL PROPERTY: Diese Schnittstelle dient rein didaktischen Laboranalysen & wissenschaftlichen Modellberechnungen.
+        </p>
+    </div>
+
+    <!-- Main Viewports Container -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-8 py-8">
+
+        <!-- ==================== VIEW 1: DATENBANK ==================== -->
+        <div id="view-db" class="view-panel block space-y-8 animate-fadeIn">
+            <!-- Search & Advanced Filter Board -->
+            <div class="bg-labDark border border-white/5 rounded-2xl p-6 space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- Search Input -->
+                    <div class="relative lg:col-span-2">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm">SEARCH_QUERY_</span>
+                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Peptid-Name, Indikation, Biomarker oder Code eingeben..." class="w-full bg-void border border-white/10 rounded-xl py-3.5 pl-36 pr-4 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
+                    </div>
+                    <!-- Direct Category Select -->
+                    <div>
+                        <select id="catSelect" onchange="applyFilters()" class="w-full bg-void border border-white/10 rounded-xl py-3.5 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
+                            <option value="all">KAT_SELEKTOR: ALLE ANZEIGEN</option>
+                            <option value="heilung">REGENERATION (HEILUNG)</option>
+                            <option value="wachstum">ANABOLISMUS (WACHSTUM)</option>
+                            <option value="gewicht">METABOLISMUS (GEWICHT)</option>
+                            <option value="libido">LIBIDO & SEXUALFUNKTION</option>
+                            <option value="aging">ANTI-AGING & LONGEVITY</option>
+                            <option value="neuro">NEUROLOGIE & SCHLAF</option>
+                            <option value="kosmetik">KOSMETIK & SKINCARE</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Filter Tags Row -->
+                <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-white/5">
+                    <span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Risikograd filtern:</span>
+                    <button onclick="setRiskFilter('all', this)" class="risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-white/10 text-white bg-white/10">ALLE</button>
+                    <button onclick="setRiskFilter('low', this)" class="risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-glowGreen/20 text-glowGreen/60 hover:bg-glowGreen/5">LOW_RISK</button>
+                    <button onclick="setRiskFilter('med', this)" class="risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-glowAmber/20 text-glowAmber/60 hover:bg-glowAmber/5">MED_RISK</button>
+                    <button onclick="setRiskFilter('high', this)" class="risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-glowRed/20 text-glowRed/60 hover:bg-glowRed/5">HIGH_RISK</button>
+                </div>
+            </div>
+
+            <!-- Diagnostics Bar -->
+            <div class="flex items-center justify-between text-xs font-mono text-slate-500 px-2">
+                <div>DATENBANK-AUSGABE: <span id="db-count" class="text-glowCyan font-bold">0</span> DATEISÄTZE AKTIV GELADEN</div>
+                <div class="hidden sm:block">SORTIERUNG: PHARMA_INDEX_ASC</div>
+            </div>
+
+            <!-- PEPTIDE CARDS GRID (Dynamically Injected via JS) -->
+            <div id="db-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+        </div>
+
+        <!-- ==================== VIEW 2: MISCHRECHNER ==================== -->
+        <div id="view-calc" class="view-panel hidden space-y-8 animate-fadeIn">
+            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Form Controls -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div>
+                            <span class="text-[10px] font-mono text-glowCyan tracking-widest uppercase block mb-1">DILUTION_CONTROL</span>
+                            <h2 class="text-3xl font-black text-white">Mischungs- &amp; Dosisrechner</h2>
+                            <p class="text-slate-400 text-xs mt-2 leading-relaxed">Der standardisierte Algorithmus für mikrodosierte biochemische Proteinketten auf der U100-Skala (1ml).</p>
+                        </div>
+
+                        <!-- Dropdown Preset Selector -->
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-mono text-glowCyan uppercase tracking-widest block font-bold">Schnellauswahl (Preset)</label>
+                            <select id="calcPreset" onchange="loadPresetToCalc()" class="w-full bg-void border border-white/10 rounded-xl py-3 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
+                                <option value="">-- Eigenes Peptid / Custom Wert --</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- MG Input -->
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Wirkstoffgehalt pro Fläschchen (mg)</label>
+                                <div class="relative">
+                                    <input type="number" id="calc-mg" value="5" step="1" min="1" oninput="calculateSyringe()" class="w-full bg-void border border-white/10 rounded-xl py-3 px-4 font-mono text-sm text-white focus:border-glowCyan outline-none">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">mg</span>
+                                </div>
+                            </div>
+
+                            <!-- BAC Water Input -->
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Lösungsmittelmenge (BAC-Wasser in ml)</label>
+                                <div class="relative">
+                                    <input type="number" id="calc-ml" value="2" step="0.5" min="0.5" oninput="calculateSyringe()" class="w-full bg-void border border-white/10 rounded-xl py-3 px-4 font-mono text-sm text-white focus:border-glowCyan outline-none">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">ml</span>
+                                </div>
+                            </div>
+
+                            <!-- Desired Dose Input -->
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Gewünschte Einzeldosis (mcg)</label>
+                                <div class="relative">
+                                    <input type="number" id="calc-mcg" value="250" step="50" min="10" oninput="calculateSyringe()" class="w-full bg-void border border-white/10 rounded-xl py-3 px-4 font-mono text-sm text-white focus:border-glowCyan outline-none">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">mcg (μg)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Syringe Graphical Panel -->
+                    <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 flex flex-col justify-center space-y-6">
+                        <div class="flex items-center justify-between pb-4 border-b border-white/5">
+                            <span class="text-xs font-mono text-slate-400">U100 INSULIN_SYRINGE_SIMULATOR</span>
+                            <span class="text-xs font-mono text-glowCyan animate-pulse" id="syringe-label">10 IE</span>
+                        </div>
+
+                        <!-- Graphical Syringe -->
+                        <div class="relative py-8 flex items-center justify-center">
+                            <div class="w-6 h-[2px] bg-slate-500 absolute left-0"></div>
+                            <div class="w-full h-14 bg-labDark border-y-2 border-slate-600 rounded-sm relative flex items-center shadow-inner overflow-hidden">
+                                <div id="syringe-fluid" class="h-full bg-gradient-to-r from-glowCyan/20 to-glowCyan/40 border-r-[4px] border-glowCyan shadow-neon-cyan transition-all duration-500" style="width: 10%;"></div>
+                                <div class="absolute inset-0 flex justify-between px-4 items-center pointer-events-none select-none font-mono text-[9px] text-slate-500">
+                                    <span>| 0</span>
+                                    <span>| 20</span>
+                                    <span>| 40</span>
+                                    <span>| 60</span>
+                                    <span>| 80</span>
+                                    <span>| 100 IE</span>
+                                </div>
+                            </div>
+                            <div class="w-24 h-6 bg-slate-600 border border-slate-500 rounded-r-md flex-shrink-0"></div>
+                        </div>
+
+                        <!-- Metrics Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/5 font-mono text-xs text-center">
+                            <div class="bg-labDark p-3 rounded-xl border border-white/5">
+                                <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Konzentration</span>
+                                <span class="text-white font-bold" id="res-conc">2.50 mg/ml</span>
+                            </div>
+                            <div class="bg-labDark p-3 rounded-xl border border-white/5">
+                                <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Aufzuziehen</span>
+                                <span class="text-glowCyan font-black" id="res-units">10.0 IE</span>
+                            </div>
+                            <div class="bg-labDark p-3 rounded-xl border border-white/5">
+                                <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Dosen / Vial</span>
+                                <span class="text-white font-bold" id="res-doses">20 Dosen</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 3: HALTBARKEIT ==================== -->
+        <div id="view-storage" class="view-panel hidden space-y-8 animate-fadeIn">
+            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Controls -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div>
+                            <span class="text-[10px] font-mono text-glowGreen tracking-widest uppercase block mb-1">TEMPERATURE_SIMULATOR</span>
+                            <h2 class="text-3xl font-black text-white">Stabilitäts-Simulator</h2>
+                            <p class="text-slate-400 text-xs mt-2 leading-relaxed">Simuliert den temperaturbedingten Molekularzerfall und die thermische Integrität empfindlicher Peptid-Strukturen.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- State Toggle -->
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Aggregatzustand</label>
+                                <div class="grid grid-cols-2 gap-2 bg-void p-1 rounded-xl border border-white/5">
+                                    <button onclick="setStorageState('dry', this)" class="storage-state-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200">Pulver (Dry)</button>
+                                    <button onclick="setStorageState('liquid', this)" class="storage-state-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200">Flüssig (BAC)</button>
+                                </div>
+                            </div>
+
+                            <!-- Temp Selection -->
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Lagerort / Temperatur</label>
+                                <div class="grid grid-cols-3 gap-2 bg-void p-1 rounded-xl border border-white/5">
+                                    <button onclick="setStorageTemp('room', this)" class="storage-temp-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200">Zimmer (~21°C)</button>
+                                    <button onclick="setStorageTemp('fridge', this)" class="storage-temp-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200">Kühler (2-8°C)</button>
+                                    <button onclick="setStorageTemp('freezer', this)" class="storage-temp-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200">Frost (-20°C)</button>
+                                </div>
+                            </div>
+
+                            <!-- Light Toggle -->
+                            <div class="flex items-center justify-between p-3.5 bg-void rounded-xl border border-white/5">
+                                <div>
+                                    <span class="text-xs font-mono text-white block">UV- & Lichteinfluss</span>
+                                    <span class="text-[9px] text-slate-500">Fotochemische Bindungsdegradation</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="storage-light" onchange="updateStorageSimulation()" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-glowCyan"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vial Graphic & Stability Indicator -->
+                    <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 sm:p-10 flex flex-col items-center justify-center space-y-6 min-h-[380px] relative overflow-hidden">
+                        
+                        <!-- Visual representation of Vial -->
+                        <div class="relative w-28 h-48 border-2 border-slate-500 rounded-3xl flex flex-col justify-between items-center py-2 px-1 bg-gradient-to-b from-slate-800/10 to-slate-900/40">
+                            <div class="absolute -top-3 w-16 h-4 bg-glowCyan border-2 border-slate-500 rounded shadow-neon-cyan" id="vial-cap"></div>
+                            
+                            <div class="w-full h-full flex items-end justify-center relative overflow-hidden rounded-2xl">
+                                <div id="vial-liquid" class="w-full h-[40%] bg-gradient-to-t from-glowCyan/30 to-glowCyan/10 border-t border-glowCyan/60 transition-all duration-500 relative" style="display: none;">
+                                    <div class="absolute inset-0 flex items-center justify-center" id="vial-cracks" style="display: none;">
+                                        <span class="text-[9px] font-mono font-bold text-glowRed uppercase tracking-widest select-none animate-pulse text-center leading-3">ICE_CRACKED<br>!!</span>
+                                    </div>
+                                </div>
+                                <div id="vial-powder" class="w-full h-[25%] bg-gradient-to-t from-slate-200/40 to-slate-300/10 border-t border-slate-400 transition-all duration-500 relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-[8px] font-mono text-slate-400 tracking-wider">LYO_POWDER</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shelf-life and Progress bar -->
+                        <div class="w-full space-y-3 font-mono text-center">
+                            <span class="text-xs text-slate-500 uppercase tracking-widest block">Berechneter Erwartungswert</span>
+                            <div class="text-3xl font-black text-glowGreen tracking-tight" id="sim-result-life">12 - 18 Monate</div>
+                            
+                            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                <div id="sim-result-bar" class="bg-glowGreen h-full w-[80%] transition-all duration-500"></div>
+                            </div>
+
+                            <p class="text-xs text-slate-400 max-w-md mx-auto pt-2 leading-relaxed" id="sim-result-desc">
+                                Das lyophiliserte Pulver im gekühlten Bereich verfügt über eine solide Haltbarkeit.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 4: SPORTMEDIZIN ==================== -->
+        <div id="view-sport" class="view-panel hidden space-y-8 animate-fadeIn">
+            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8">
+                <div>
+                    <span class="text-[10px] font-mono text-glowCyan tracking-widest uppercase block mb-1">PHYSIOLOGICAL_MATRIX</span>
+                    <h2 class="text-3xl font-black text-white">Leistung &amp; Rehabilitation</h2>
+                    <p class="text-slate-400 text-xs mt-2 leading-relaxed">Wähle deinen primären sportbiologischen Schwerpunkt aus, um das optimale molekulare Signal-Profil aufzurufen.</p>
+                </div>
+
+                <!-- Matrix Selection Buttons -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button onclick="setSportChannel('heal', this)" class="sport-ch-btn p-5 rounded-xl border border-glowGreen/20 bg-glowGreen/5 text-glowGreen text-left transition duration-200">
+                        <span class="text-2xl block mb-2">🩹</span>
+                        <h4 class="font-extrabold text-sm text-white">Gewebeheilung</h4>
+                        <p class="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-wider">Sehnen &amp; Bänder</p>
+                    </button>
+                    <button onclick="setSportChannel('muscle', this)" class="sport-ch-btn p-5 rounded-xl border border-white/5 text-slate-400 hover:border-glowCyan/20 hover:bg-glowCyan/5 text-left transition duration-200">
+                        <span class="text-2xl block mb-2">💪</span>
+                        <h4 class="font-extrabold text-sm text-white">Hypertrophie</h4>
+                        <p class="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-wider">Muskelwachstum</p>
+                    </button>
+                    <button onclick="setSportChannel('lip', this)" class="sport-ch-btn p-5 rounded-xl border border-white/5 text-slate-400 hover:border-glowOrange/20 hover:bg-glowOrange/5 text-left transition duration-200">
+                        <span class="text-2xl block mb-2">🔥</span>
+                        <h4 class="font-extrabold text-sm text-white">Lipolyse</h4>
+                        <p class="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-wider">Gezielter Fettabbau</p>
+                    </button>
+                    <button onclick="setSportChannel('cell', this)" class="sport-ch-btn p-5 rounded-xl border border-white/5 text-slate-400 hover:border-glowPurple/20 hover:bg-glowPurple/5 text-left transition duration-200">
+                        <span class="text-2xl block mb-2">🧬</span>
+                        <h4 class="font-extrabold text-sm text-white">Zellschutz</h4>
+                        <p class="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-wider">Mitochondrien &amp; Ausdauer</p>
+                    </button>
+                </div>
+
+                <!-- Matrix Output Area -->
+                <div class="bg-void/50 border border-white/10 rounded-2xl p-6 sm:p-8">
+                    <!-- HEALING -->
+                    <div id="sport-ch-heal" class="sport-ch-content block space-y-4">
+                        <h3 class="text-xl font-bold text-glowGreen">REHAB_PROTOCOL_ Sehnen- &amp; Gelenksgewebe</h3>
+                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                            Passives Bewegungsapparat-Gewebe besitzt eine extrem geringe Gefäßdurchblutung, was die natürliche Heilungszeit um Monate verzögern kann. Die anabole Heilungskompensation setzt gezielt an diesen vaskulären Blockaden an.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowGreen font-mono font-bold text-[10px] block mb-1">ANGIOGENESE_INDUKTION</span>
+                                <h4 class="text-md font-bold text-white mb-2">BPC-157 // Botenstoff</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Erhöht die Kollagensynthese-Faktoren lokal am Verletzungsherd. Weist hervorragende, entzündungshemmende Effekte auf den gesamten Organismus auf.</p>
+                            </div>
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowGreen font-mono font-bold text-[10px] block mb-1">ACTIN_MIGRATIONS_STIMULUS</span>
+                                <h4 class="text-md font-bold text-white mb-2">TB-500 // Thymosin Beta-4</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Erhöht die Viskosität und Mobilität in beschädigten Fasern, wodurch Verwachsungen und unelastisches Narbengewebe nach Rissen abgebaut werden.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MUSCLE -->
+                    <div id="sport-ch-muscle" class="sport-ch-content hidden space-y-4">
+                        <h3 class="text-xl font-bold text-glowCyan">ANABOLIC_GROWTH_ Muskuläre Proteinsynthese</h3>
+                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                            Maximiert die myofibrilläre Muskelproteinsynthese (MPS) und regt die somatische Zellproliferation über körpereigene Wachstumshormon-Impulse an.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowCyan font-mono font-bold text-[10px] block mb-1">GHRP_PULSATION</span>
+                                <h4 class="text-md font-bold text-white mb-2">Ipamorelin + CJC-1295 Stack</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Löst hocheffektive Pulse des Wachstumshormons (HGH) über die Hirnanhangsdrüse aus, um Stickstoffretention und Muskelmasseaufbau zu forcieren.</p>
+                            </div>
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowRed font-mono font-bold text-[10px] block mb-1">MYOSTATIN_INHIBITION</span>
+                                <h4 class="text-md font-bold text-white mb-2">Follistatin-344 // Molekül</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Deaktiviert das genetische Begrenzungshormon Myostatin im Muskelgewebe, wodurch extreme Zuwächse an magerer Muskelmasse und Muskelfaserteilung realisiert werden.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIPOLYSIS -->
+                    <div id="sport-ch-lip" class="sport-ch-content hidden space-y-4">
+                        <h3 class="text-xl font-bold text-glowOrange">LIPOLYTIC_COMPENSATION_ Gewichts- &amp; Fettstoffwechsel</h3>
+                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                            Fokussierter Abbau von hartnäckigem subkutanen und viszeralen Fettgewebe bei absolutem Schutz der bestehenden Muskelstrukturen.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowOrange font-mono font-bold text-[10px] block mb-1">APPETITE_SUPPRESSION_GLP-1</span>
+                                <h4 class="text-md font-bold text-white mb-2">Semaglutid // Agonist</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Simuliert biologische Sättigungsimpulse. Senkt das Verlangen nach kurzkettigen Kohlenhydraten und stabilisiert die körpereigene Insulinausschüttung.</p>
+                            </div>
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowOrange font-mono font-bold text-[10px] block mb-1">METABOLIC_NNMT_BLOCK</span>
+                                <h4 class="text-md font-bold text-white mb-2">5-Amino-1MQ // Inhibitor</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Verhindert biochemisch die Lipogenese (Fettspeicherung) direkt in den Fettzellen und regt parallel die Fettsäure-Oxidationsrate in den Mitochondrien an.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CELLULAR -->
+                    <div id="sport-ch-cell" class="sport-ch-content hidden space-y-4">
+                        <h3 class="text-xl font-bold text-glowPurple">MITOCHONDRIAL_REORGANIZATION_ Ausdauer &amp; Zellverjüngung</h3>
+                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                            Optimierung der zellulären Mitochondrien-Dichte, ATP-Synthese und Ausdauerleistung durch Genexpression und enzymatische Anpassungen.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                            <div class="bg-labDark p-4 rounded-xl border border-white/5">
+                                <span class="text-glowPurple font-mono font-bold text-[10px] block mb-1">EXERCISE_MIMETIC_AGONIST</span>
+                                <h4 class="text-md font-bold text-white mb-2">SLU-PP-332 // Compound</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Agonisiert ERR-Rezeptoren. Simuliert die kardiovaskulären Anpassungen einer intensiven aeroben Ausdauerbelastung komplett ohne mechanischen Sport.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 5: STACK GENERATOR ==================== -->
+        <div id="view-stack" class="view-panel hidden space-y-8 animate-fadeIn">
+            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8">
+                <div>
+                    <span class="text-[10px] font-mono text-glowCyan tracking-widest uppercase block mb-1">STACK_SYNTHESIZER</span>
+                    <h2 class="text-3xl font-black text-white">Synergie- &amp; Stack-Prüfer</h2>
+                    <p class="text-slate-400 text-xs mt-2 leading-relaxed">Selektiere beliebige Forschungspräparate, um deren Kompatibilität, biologische Überlagerungen und Einnahmezeitfenster in Echtzeit zu ermitteln.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Selection -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Peptide kombinieren</span>
+                        
+                        <!-- Internal Live Search for Stacker -->
+                        <input type="text" id="stackerSearch" oninput="filterStackerList()" placeholder="Peptid-Wirkstoff filtern..." class="w-full bg-void border border-white/10 rounded-xl py-2 px-3 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
+                        
+                        <div class="space-y-2.5 max-h-[400px] overflow-y-auto pr-2" id="stack-vial-list">
+                            <!-- JS will inject the checklist options here -->
+                        </div>
+                    </div>
+
+                    <!-- Blueprint Output Report -->
+                    <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 flex flex-col space-y-6">
+                        <div class="flex items-center justify-between pb-4 border-b border-white/5">
+                            <span class="text-xs font-mono text-slate-400">LAB_BLUEPRINT_REPORT</span>
+                            <span class="text-xs font-mono text-glowCyan animate-pulse">SYSTEM_ACTIVE</span>
+                        </div>
+
+                        <!-- Analysis Panel -->
+                        <div class="space-y-4 font-mono text-xs">
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-slate-500">Ausgewählte Moleküle:</span>
+                                <span class="text-white font-bold animate-pulse" id="stack-count">0 Peptid(e)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-slate-500">Aggregiertes Risikoprofil:</span>
+                                <span class="font-black" id="stack-risk-display">-</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-slate-500">Synergie-Status:</span>
+                                <span class="text-white font-bold" id="stack-synergy-display">-</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-slate-500">Gleichzeitige Einnahme:</span>
+                                <span class="text-white font-bold" id="stack-timing-display">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Realtime custom recommendations block -->
+                        <div class="p-4 bg-labDark rounded-xl border border-white/5">
+                            <span class="text-[9px] font-mono text-slate-500 block uppercase tracking-wider mb-2">Diagnostische Fachnote</span>
+                            <p class="text-xs text-slate-400 leading-relaxed font-mono" id="stack-analysis-text">
+                                Bitte wähle Wirkstoffe aus der linken Auswahlliste aus, um die biochemische Stack-Analyse zu starten.
+                            </p>
+                        </div>
+
+                        <div class="flex justify-end pt-4 border-t border-white/5">
+                            <button onclick="copyBlueprint()" class="px-5 py-2.5 bg-glowCyan hover:bg-cyan-400 text-void font-bold text-xs uppercase tracking-wider rounded-lg shadow-neon-cyan transition-all duration-200">Blueprint kopieren</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 6: MISCH-TUTORIAL ==================== -->
+        <div id="view-tutorial" class="view-panel hidden space-y-8 animate-fadeIn">
+            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/5">
+                    <div>
+                        <span class="text-[10px] font-mono text-glowGreen tracking-widest uppercase block mb-1">RECONSTITUTION_GUIDE</span>
+                        <h2 class="text-3xl font-black text-white">Misch-Tutorial (Rekonstitution)</h2>
+                        <p class="text-slate-400 text-xs mt-1">Schritt-für-Schritt-Protokoll zur sterilen Verflüssigung von lyophilisiertem Peptid-Trockenpulver.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-mono text-slate-500">FORT_SCHRITT:</span>
+                        <span id="tut-progress-txt" class="text-glowGreen font-bold font-mono">0%</span>
+                        <div class="w-24 bg-void h-2 rounded-full overflow-hidden border border-white/5">
+                            <div id="tut-progress-bar" class="bg-glowGreen h-full w-[0%] transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Steps Checklist -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <!-- Step 1 -->
+                        <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl transition-all duration-200" id="step-box-1">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-1">1</span>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white uppercase tracking-wide">Desinfektion &amp; Arbeitsplatz</h4>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            Sorgfältige Handhygiene und Desinfektion. Reinige die Gummiverschlüsse des Peptid-Vials und des BAC-Wasser-Fläschchens gründlich mit einem Isopropyl-Alkoholtupfer.
+                                        </p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" onchange="updateTutorialProgress(1, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-2">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-2">2</span>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white uppercase tracking-wide">Luftdruckausgleich</h4>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            Ziehe mit der Rekonstitutionsspritze exakt so viel Luft auf, wie du später an BAC-Wasser entnehmen möchtest (z.B. 2ml). Drücke diese Luft in die BAC-Wasser-Flasche, um ein Vakuum bei der Entnahme zu verhindern.
+                                        </p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" onchange="updateTutorialProgress(2, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-3">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-3">3</span>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white uppercase tracking-wide">Wasserentnahme (BAC)</h4>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            Drehe die BAC-Flasche auf den Kopf und ziehe das sterile, bakteriostatische Wasser präzise auf die gewünschte ml-Marke auf (üblicherweise 2ml oder 3ml). Entnehme die Nadel langsam.
+                                        </p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" onchange="updateTutorialProgress(3, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-4">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-4">4</span>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white uppercase tracking-wide">Sachte Rekonstitution</h4>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            Führe die Nadel schräg in das Peptid-Vial ein. Spritze das BAC-Wasser <strong class="text-glowAmber">äußerst langsam an die innere Glaswand</strong> des Vials. Der Wasserstrahl darf NIEMALS direkt auf das empfindliche Pulver treffen!
+                                        </p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" onchange="updateTutorialProgress(4, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
+                            </div>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-5">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-5">5</span>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white uppercase tracking-wide">Auflösen &amp; Lagern</h4>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            Spritze nach dem Entleeren noch die restliche Luft aus der Spritze, um den Überdruck im Fläschchen zu entlasten. Rolle das Vial sachte zwischen den Handflächen. <strong class="text-glowRed">Niemals schütteln!</strong> Lagere es sofort im Kühlschrank.
+                                        </p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" onchange="updateTutorialProgress(5, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Safety Warnings & Guidelines -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-void/40 p-6 rounded-2xl border border-white/10 space-y-4">
+                            <span class="text-[9px] font-mono text-glowRed tracking-widest uppercase block">Kritische Sicherheits-Parameter</span>
+                            
+                            <div class="space-y-3 font-mono text-xs">
+                                <div class="p-3 bg-glowRed/5 rounded-xl border border-glowRed/15 text-slate-300">
+                                    <strong class="text-glowRed block mb-1">Keine Erschütterung</strong>
+                                    Heftiges Schütteln bricht die instabilen Proteinketten mechanisch auf. Das Peptid wird absolut wirkungslos.
+                                </div>
+                                <div class="p-3 bg-glowAmber/5 rounded-xl border border-glowAmber/15 text-slate-300">
+                                    <strong class="text-glowAmber block mb-1">Vakuum beachten</strong>
+                                    Viele Vials stehen unter starkem Vakuum. Lass das Wasser nicht hineinschießen, sondern halte den Kolben aktiv zurück!
+                                </div>
+                                <div class="p-3 bg-glowGreen/5 rounded-xl border border-glowGreen/15 text-slate-300">
+                                    <strong class="text-glowGreen block mb-1">Benzylalkohol (BAC)</strong>
+                                    Benutze ausschließlich bakteriostatisches Wasser. Einfaches Kochsalz- oder Aqua-Dest-Wasser keimt nach wenigen Tagen im Kühlschrank aus.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Main Footer -->
+    <footer class="bg-labDark border-t border-white/5 py-8 px-4 sm:px-8 text-xs text-slate-500 font-mono">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-white font-bold tracking-widest block">PEPTIDBASE // ANALYTICS 2026</span>
+                <span class="text-[10px] block mt-1 text-slate-500 font-sans">Sämtliche medizinischen Daten beruhen auf verifizierten Labor-Protokollen.</span>
+            </div>
+            <div class="text-center md:text-right text-[10px] text-slate-600 space-y-1">
+                <p>Modellierte Haltbarkeits- &amp; Zerfallsindizes ohne rechtliche Gewähr.</p>
+                <p>Zertifiziert nach biochemischen Standardwerten.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE ENGINE & SCRIPTS -->
+    <script>
+        // MASTER DATABASE: All 47 Peptides structured
+        const PEPTIDES_DATA = [
+            { id: "bpc157", nr: "01/47", name: "BPC-157", aka: "Body Protection Compound-157", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Beschleunigt Sehnen-, Gelenk- & Muskelregeneration", "Schützt die Magenschleimhaut (Leaky Gut, Reflux, Ulzera)", "Starke entzündungshemmende Wirkung ohne Immunsuppression"], risks: ["Schwindel bei zu schneller Gabe möglich", "Langzeiteffekte am Menschen nur bedingt erprobt"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan (lokal) / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Tierstudien", text: "Umfangreiche Rattenmodelle belegen die vollständige biologische Reparatur chronischer Achillessehnenrupturen." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "28.50" }, { shop: "Peptid24", price: "23.90" }, { shop: "DrakonPeptides", price: "26.00" }] },
+            { id: "tb500", nr: "02/47", name: "TB-500", aka: "Thymosin Beta-4 Analogon", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Induziert zelluläre Migration via Actin-Synthese", "Erhöht Elastizität & Flexibilität von Narbengewebe", "Synergistischer Heilungsfaktor gestapelt mit BPC-157"], risks: ["Milde Abgeschlagenheit unmittelbar nach Gabe", "Hohe Preisschwankungen am freien Markt"], dosage: { starter: "2 mg/Woche", normal: "5 mg/Woche", max: "10 mg/Woche", freq: "1-2x wöchentlich", form: "Subkutan", timing: "Abends / Post-Workout", cycle: "6 - 8 Wochen", halflife: "~30 Stunden" }, study: { level: "pilot", levelText: "Veterinärstudien", text: "Exzellente Erfolgsraten bei Sehnen- und Hufschäden von Galopppferden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "38.00" }, { shop: "Peptid24", price: "32.00" }, { shop: "DrakonPeptides", price: "36.00" }] },
+            { id: "ipamorelin", nr: "03/47", name: "Ipamorelin", aka: "Growth Hormone Secretagogue Pentapeptide", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "low", effects: ["Selektiver Peak der Wachstumshormon-Ausschüttung", "Keinerlei Steigerung von Stress-Cortisol oder Prolaktin", "Optimiert die regenerativen Tiefschlafphasen"], risks: ["Milde Wassereinlagerungen bei sensiblem Stoffwechsel", "Temporärer Anstieg des Hungergefühls"], dosage: { starter: "100 mcg", normal: "200-300 mcg", max: "500 mcg", freq: "1-3x täglich", form: "Subkutan", timing: "Nüchtern vor dem Schlaf", cycle: "8 - 12 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Phase-II Humantrials", text: "Sichere Wachstumshormonpulsation bei exzellentem endokrinologischem Verträglichkeitsprofil belegt." }, prices: [{ shop: "Europa-Peptide", price: "26.90" }, { shop: "Alpine-Peptides", price: "31.00" }, { shop: "Peptid24", price: "27.90" }, { shop: "DrakonPeptides", price: "29.50" }] },
+            { id: "cjc1295nodac", nr: "04/47", name: "CJC-1295 (ohne DAC)", aka: "Modified GRF 1-29 · GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Verstärkt die Amplitude der somatotropen Pulse", "Verbessert die fettfreie Muskelreparation & Lipolyse", "Perfekt stapelbar mit Ipamorelin für maximalen Puls"], risks: ["Spürbarer 'Head Rush' (Hitze/Flush) direkt nach Gabe", "Insulinresistenz-Risiko bei exzessiver Langzeitnutzung"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "300 mcg", freq: "1-3x täglich", form: "Subkutan", timing: "Morgens/Abends nüchtern", cycle: "8 - 16 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Studien", text: "Dokumentierter Anstieg von freiem Serum-IGF-1 bei gesunden erwachsenen Probanden." }, prices: [{ shop: "Europa-Peptide", price: "28.00" }, { shop: "Alpine-Peptides", price: "32.00" }, { shop: "Peptid24", price: "29.95" }, { shop: "DrakonPeptides", price: "31.00" }] },
+            { id: "cjc1295dac", nr: "05/47", name: "CJC-1295 (mit DAC)", aka: "Drug Affinity Complex GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Extrem lange Halbwertszeit durch Albumin-Bindung", "Kontinuierliche Erhöhung der GH-Grundlinie", "Erfordert nur 1-2 wöchentliche Applikationen"], risks: ["Risiko des permanenten 'GH Bleed' (Dauerausschüttung)", "Häufiger auftretende lethargische Phasen"], dosage: { starter: "1 mg", normal: "2 mg", max: "4 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "8 - 12 Wochen", halflife: "~7 Tage" }, study: { level: "human", levelText: "Humantrials", text: "Belegte signifikante Erhöhung des basalen GH-Spiegels über mehrere Tage nach einer Einzeldosis." }, prices: [{ shop: "Europa-Peptide", price: "36.00" }, { shop: "Alpine-Peptides", price: "39.90" }, { shop: "DrakonPeptides", price: "38.50" }] },
+            { id: "semaglutide", nr: "06/47", name: "Semaglutid", aka: "GLP-1 Rezeptor-Agonist · Ozempic / Wegovy", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "med", effects: ["Maximale Verzögerung der gastrischen Entleerung", "Blockiert Heißhungerattacken direkt im Hypothalamus", "Gewichtsverlust von ca. 15% klinisch verifiziert"], risks: ["Akute Übelkeit, Sodbrennen und Erbrechen", "Erhöhtes Risiko des Abbaus von magerer Muskelmasse"], dosage: { starter: "0.25 mg", normal: "1.0 mg", max: "2.4 mg", freq: "1x wöchentlich", form: "Subkutan / Oral", timing: "Einmal wöchentlich", cycle: "6 - 12 Monate", halflife: "~165 Stunden" }, study: { level: "human", levelText: "STEP Phase-III", text: "STEP-Trials belegen bahnbrechende Fettreduktion bei exzellenter kardiometabolischer Stabilisierung." }, prices: [{ shop: "Europa-Peptide", price: "59.00" }, { shop: "Alpine-Peptides", price: "64.00" }, { shop: "Peptid24", price: "58.00" }, { shop: "DrakonPeptides", price: "62.00" }] },
+            { id: "tirzepatide", nr: "07/47", name: "Tirzepatid", aka: "GIP/GLP-1 Dual-Agonist · Mounjaro", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "med", effects: ["Gleichzeitiger Agonismus an GIP- & GLP-1-Rezeptoren", "Unerreichter Fettabbau bei gleichzeitigem Muskelschutz", "Extreme Erhöhung der Insulinsensitivität"], risks: ["Magen-Darm-Beschwerden, Verstopfung, Flatulenz", "Gallensteinbildungs-Risiko bei radikalem Gewichtsabfall"], dosage: { starter: "2.5 mg", normal: "5-10 mg", max: "15 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Langzeittherapie", halflife: "~120 Stunden" }, study: { level: "human", levelText: "SURMOUNT-Studien", text: "Durchschnittlicher Fettmasseverlust von über 20 % bei übergewichtigen Probanden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "Alpine-Peptides", price: "84.00" }, { shop: "Peptid24", price: "78.00" }, { shop: "DrakonPeptides", price: "82.00" }] },
+            { id: "retatrutide", nr: "08/47", name: "Retatrutid", aka: "Triple Agonist (GLP-1 / GIP / Glucagon)", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Dreifach-Wirkung dämpft Appetit und beschleunigt Thermogenese", "Glucagon-Komponente erhöht aktiv den Ruheumsatz", "Derzeitiger endokrinologischer Rekordhalter für Diäten"], risks: ["Erhöhte Herzfrequenz (Tachykardie-Risiko) durch Glucagon", "Akuter, unkontrollierter Katabolismus ohne Protein-Monitoring"], dosage: { starter: "1 mg", normal: "4-8 mg", max: "12 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Nur unter klinischer Kontrolle", halflife: "~144 Stunden" }, study: { level: "human", levelText: "Klinische Phase-II (2023)", text: "Belegte Gewichtsabnahme von durchschnittlich 24 % der Gesamtfettmasse innerhalb von 48 Wochen." }, prices: [{ shop: "Europa-Peptide", price: "99.00" }, { shop: "Alpine-Peptides", price: "109.00" }, { shop: "Peptid24", price: "95.00" }, { shop: "DrakonPeptides", price: "105.00" }] },
+            { id: "hghfrag", nr: "09/47", name: "HGH Frag 176-191", aka: "Lipolytisches Wachstumshormon-Segment", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "low", effects: ["Zielgerichteter Fettabbau ohne diabetische Nebenwirkungen", "Keinerlei Einflüsse auf Blutzucker oder Insulinsensitivität", "Ideal zur Definition unter Erhalt der Zellvitalität"], risks: ["Äußerst kurze Halbwertszeit (präzises Fasten nötig)", "Hohe Injektionsfrequenz"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Nüchtern unmittelbar vor dem Training", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "animal", levelText: "Zell- & Tierstudien", text: "Sichere Fettgewebsreduktion in diabetischen Tiermodellen ohne die typischen HGH-induzierten Insulinresistenzen." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "36.00" }, { shop: "Peptid24", price: "29.90" }, { shop: "DrakonPeptides", price: "34.00" }] },
+            { id: "aod9604", nr: "10/47", name: "AOD-9604", aka: "Optimiertes HGH-Frag-Derivat · Anti-Obesity Drug", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "low", effects: ["Stabile Modifikation des lipolytischen Fragments", "Fördert zusätzlich regenerative Prozesse bei Arthrose", "Blockiert biochemisch die Neuentstehung von Fettzellen"], risks: ["Lokale Entzündungsreaktionen an der Einstichstelle", "Keine aktuelle therapeutische Zulassung in Deutschland"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "8 - 12 Wochen", halflife: "~40 Minuten" }, study: { level: "human", levelText: "Phase-IIb Humantrials (Australien)", text: "Dokumentierte, signifikante Reduzierung von Fettpolstern bei exzellentem endokrinologischem Profil." }, prices: [{ shop: "Europa-Peptide", price: "34.00" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "DrakonPeptides", price: "37.00" }] },
+            { id: "mt2", nr: "11/47", name: "Melanotan II (MT-2)", aka: "Synthetisches Alpha-MSH Analogon", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "high", effects: ["Stark erhöhte, langanhaltende Bräunung (Melaninaktivator)", "Erhöht signifikant Libido und sexuelle Erregung", "Appetitzügelnder Effekt auf neurologischer Ebene"], risks: ["Ausgeprägte, akute Übelkeit direkt nach Injektion", "Unkontrollierte Dauererektionen (Priapismus-Gefahr)", "Hyperpigmentierung und unregelmäßige Muttermale"], dosage: { starter: "100 mcg", normal: "250-500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan", timing: "Abends vor dem Schlafen", cycle: "2 - 4 Wochen (Aufbau)", halflife: "~2 Stunden" }, study: { level: "pilot", levelText: "Pilotstudien", text: "Entwicklung gestoppt aufgrund dermatologischer Sicherheitsaspekte bezüglich Follikelüberstimulation." }, prices: [{ shop: "Europa-Peptide", price: "23.90" }, { shop: "Alpine-Peptides", price: "28.00" }, { shop: "Peptid24", price: "22.00" }, { shop: "DrakonPeptides", price: "25.00" }] },
+            { id: "mt1", nr: "12/47", name: "Melanotan I (MT-1)", aka: "Afamelanotid", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "med", effects: ["Sicherere Bräunung durch milde Melaninproduktion", "Klinischer Lichtschutz bei empfindlicher weißer Haut", "Deutlich geringerer Libido- und Übelkeits-Effekt als MT-2"], risks: ["Temporäre Rötung & Hitzegefühl (Flush)", "Veränderung bestehender Pigmentflecke möglich"], dosage: { starter: "500 mcg", normal: "1 mg", max: "2 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "2 - 4 Wochen", halflife: "~1.5 Stunden" }, study: { level: "human", levelText: "EU-Zulassung (Scenesse)", text: "Erfolgreich zugelassen für die Behandlung von erythropoetischer Protoporphyrie zur Verringerung der Lichtempfindlichkeit." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "36.00" }, { shop: "DrakonPeptides", price: "35.00" }] },
+            { id: "pt141", nr: "13/47", name: "PT-141", aka: "Bremelanotid · Libido-Peptid", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject", "nasal"], risk: "med", effects: ["Erhöht die sexuelle Erregbarkeit direkt über das ZNS", "Wirkt rein neurologisch auf Rezeptorebene im Gehirn", "Hochwirksam bei erektiler Dysfunktion & Luststörungen"], risks: ["Akute Übelkeit in der ersten Stunde der Applikation", "Leichter Blutdruckanstieg während der Wirkungsdauer"], dosage: { starter: "0.5 mg", normal: "1.5 mg", max: "3 mg", freq: "Bei Bedarf (max 1x/72h)", form: "Subkutan / Nasalspray", timing: "1 - 2 Stunden vor Aktivität", cycle: "Nach Bedarf", halflife: "~2 Stunden" }, study: { level: "human", levelText: "FDA-Zulassung (Vyleesi)", text: "Zugelassen zur erfolgreichen Behandlung von hypoaktiven sexuellen Störungen bei weiblichen Patientinnen." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "35.00" }, { shop: "Peptid24", price: "29.90" }, { shop: "DrakonPeptides", price: "34.00" }] },
+            { id: "ghkcu", nr: "14/47", name: "GHK-Cu", aka: "Kupfer-Tripeptid-1", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject", "topisch"], risk: "low", effects: ["Regt die zelluläre Kollagen- und Elastinsynthese an", "Fördert das Haarwachstum durch Stärkung der Follikel", "Führt zu messbarer Festigung dünner Gesichtshaut"], risks: ["Hautreizungen bei hoher Dosierung in Eigenmischungen", "Darf nicht mit saurem Vitamin C kombiniert werden"], dosage: { starter: "1 mg", normal: "2 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Topisch", timing: "Abends nach der Reinigung", cycle: "Dauerhaft möglich", halflife: "Sehr kurz (Minuten)" }, study: { level: "human", levelText: "Dermatologische Trials", text: "Klinisch bewiesene Reduktion der Faltentiefe und signifikante Steigerung der Epidermis-Dichte nach 12 Wochen." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "Peptid24", price: "29.00" }, { shop: "DrakonPeptides", price: "31.00" }] },
+            { id: "kpv", nr: "15/47", name: "KPV", aka: "Lys-Pro-Val · Antientzündliches Peptid", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Inaktiviert den entzündungsfördernden NF-κB Pfad", "Therapiert chronische Darmentzündungen (Morbus Crohn)", "Starke antibakterielle und heilungsfördernde Wirkung"], risks: ["Bisher geringere Anzahl an klinischen Humanstudien", "Geringe Stabilität im flüssigen Zustand"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "Schnittig kurz (~30 Min)" }, study: { level: "animal", levelText: "Tierstudien (Colitis-Modelle)", text: "Deutliche Überlegenheit bei der Entzündungslinderung im Dickdarm ohne systemische Nebenwirkungen klassischer Steroide." }, prices: [{ shop: "Europa-Peptide", price: "39.90" }, { shop: "Alpine-Peptides", price: "44.00" }, { shop: "Peptid24", price: "39.00" }, { shop: "DrakonPeptides", price: "42.00" }] },
+            { id: "epitalon", nr: "16/47", name: "Epitalon", aka: "Epithalone · Epiphysen-Tetrapeptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Aktiviert die Telomerase zur Rejuvenation alternder Zellen", "Optimiert die körpereigene Melatoninausschüttung", "Verlängert nachweislich die replikative Lebensdauer von Zellen"], risks: ["In vitro Bedenken bei unkontrollierten Tumor-Strukturen", "Wenig replizierte klinische Studien im Westen"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "1x täglich (Kur)", form: "Subkutan", timing: "Abends vor dem Schlaf", cycle: "10 - 20 Tage (1-2x pro Jahr)", halflife: "Sehr kurz (Minuten)" }, study: { level: "human", levelText: "Russische Langzeittrials", text: "Jahrzehntelange klinische Dokumentation belegt eine Reduzierung der Altersmortalität um bis zu 30%." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "Peptid24", price: "28.00" }, { shop: "DrakonPeptides", price: "31.00" }] },
+            { id: "semax", nr: "17/47", name: "Semax", aka: "ACTH-Segment Nootropikum · Pro-Gly-Pro", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal", "inject"], risk: "low", effects: ["Erhöht signifikant den BDNF-Spiegel im Gehirn", "Maximiert Konzentration, logischen Fokus und Auffassungsgabe", "Fördert die synaptische Plastizität nach mentaler Erschöpfung"], risks: ["Kann bei später Applikation zu Schlafschwierigkeiten führen", "Milde Reizungen der Nasenmukosa bei Langzeitgebrauch"], dosage: { starter: "100 mcg", normal: "300-600 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Nasal (bevorzugt) / Subkutan", timing: "Morgens unmittelbar nach dem Aufwachen", cycle: "2 - 4 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen (Osteuropa)", text: "Offiziell genutztes und bewährtes neuropeptidisches Arzneimittel zur gezielten Schlaganfalltherapie." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "Peptid24", price: "34.00" }, { shop: "DrakonPeptides", price: "37.00" }] },
+            { id: "selank", nr: "18/47", name: "Selank", aka: "Synthetisches Tuftsin-Derivat · Angstlöser", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal"], risk: "low", effects: ["Fördert die angstlösende Wirkung ohne Müdigkeit zu erzeugen", "Wirkt neuroprotektiv bei chronischen Belastungen", "Besitzt keinerlei Benzodiazepin-ähnliches Suchtpotenzial"], risks: ["Milde Benommenheit in den ersten Einnahmetagen", "Geringe Marktdurchdringung im westeuropäischen Raum"], dosage: { starter: "250 mcg", normal: "500-1000 mcg", max: "3000 mcg", freq: "1-3x täglich", form: "Nasal (Spray)", timing: "Bei Bedarf / In Stressphasen", cycle: "2 - 4 Wochen", halflife: "~1.5 Stunden" }, study: { level: "human", levelText: "Klinische Trials (Kombinationsstudien)", text: "In Studien dem Wirkstoff Phenibut ebenbürtig bezüglich Angstregulierung, jedoch frei von Nebenwirkungen." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "DrakonPeptides", price: "38.00" }] },
+            { id: "glutathione", nr: "19/47", name: "Glutathion", aka: "Master-Antioxidans · L-Glutathion", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Stärkster zellulärer Entgifter für Schwermetalle & Toxine", "Schützt die Mitochondrienmembran vor oxidativem Stress", "Aufhellung von Pigmentflecken (Melaninblocker-Nebeneffekt)"], risks: ["Sehr schlechte Bioverfügbarkeit bei klassischer oraler Einnahme", "Erfordert sterile Injektionsvorbereitung"], dosage: { starter: "100 mg", normal: "200-400 mg", max: "600 mg", freq: "1x täglich", form: "Subkutan / Intravenös / Liposomal", timing: "Morgens", cycle: "Dauerhaft anwendbar", halflife: "Wenige Minuten im Serum" }, study: { level: "human", levelText: "Klinische Studien", text: "Nachgewiesene, signifikante Reduzierung von Entzündungsbiomarkern im Leberstoffwechsel." }, prices: [{ shop: "Europa-Peptide", price: "24.00" }, { shop: "Alpine-Peptides", price: "27.00" }, { shop: "RebirthLabs", price: "18.50" }, { shop: "PeptideRevolution", price: "23.00" }] },
+            { id: "slupp332", nr: "20/47", name: "SLU-PP-332", aka: "ERRα/γ-Agonist · Exercise Mimetic", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["oral", "inject"], risk: "med", effects: ["Aktiviert biochemische Anpassungseffekte von Sport", "Erhöht drastisch die Mitochondriendichte in Muskelzellen", "Steigert die aerobe Verbrennungsleistung im Ruhezustand"], risks: ["Oxidative Stressreaktionen bei mangelnder Zufuhr von Antioxidantien", "Fehlen klinischer Tests an menschlichen Zielgruppen"], dosage: { starter: "300 mcg", normal: "1 mg", max: "2 mg", freq: "1x täglich", form: "Oral (Kapseln) / Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~12 Stunden" }, study: { level: "invitro", levelText: "Science-Studie (2023)", text: "Mäuse zeigten signifikanten Fettverlust und extreme Ausdauersteigerungen ohne vorangehendes Training." }, prices: [{ shop: "Europa-Peptide", price: "135.00" }, { shop: "Beyond-Peptides", price: "129.00" }, { shop: "DrakonPeptides", price: "139.00" }] },
+            { id: "tesamorelin", nr: "21/47", name: "Tesamorelin", aka: "Egrifta · Lipodystrophie-Peptid", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Spezifische Zerstörung viszeraler (Bauch-) Fettpolster", "Stimuliert die anabole Synthese von IGF-1 im Serum", "Verbessert die kognitiven Fähigkeiten bei älteren Probanden"], risks: ["Lokal schmerzende Injektionsstellen", "Vorübergehende Einschränkung der Glukosetoleranz möglich"], dosage: { starter: "1 mg", normal: "2 mg", max: "2 mg", freq: "1x täglich", form: "Subkutan", timing: "Abends nüchtern vor dem Schlaf", cycle: "12 - 24 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "FDA-Zulassung", text: "Zugelassen als therapeutisches Präparat zur kontrollierten Fettreduktion bei Lipodystrophie." }, prices: [{ shop: "Europa-Peptide", price: "55.00" }, { shop: "Peptid24", price: "49.00" }, { shop: "Alpine-Peptides", price: "52.00" }, { shop: "DrakonPeptides", price: "56.00" }] },
+            { id: "igf1lr3", nr: "22/47", name: "IGF-1 LR3", aka: "Long R3 Insulin-like Growth Factor-1", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Fördert die biologische Neubildung von Muskelzellen (Hyperplasie)", "Sorgt für exzellente Aminosäure-Einlagerungen in die Skelettmuskulatur", "Aktiviert inaktive Muskelsatellitenzellen"], risks: ["Gefahr plötzlicher, schwerer Unterzuckerung (Hypoglykämie)", "Beschleunigt das Zellwachstum potenzieller Tumorstrukturen"], dosage: { starter: "20 mcg", normal: "40-60 mcg", max: "100 mcg", freq: "An Trainingstagen", form: "Subkutan / Intramuskulär (i.m.)", timing: "Unmittelbar nach dem Krafttraining", cycle: "Maximal 4 - 6 Wochen", halflife: "~30 Stunden" }, study: { level: "animal", levelText: "In-Vitro & Tierdaten", text: "Extremes, biologisch replizierbares Muskelwachstum in Nagetier-Modellen dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "59.00" }, { shop: "Peptid24", price: "54.00" }, { shop: "Alpine-Peptides", price: "57.00" }, { shop: "DrakonPeptides", price: "61.00" }] },
+            { id: "motsc", nr: "23/47", name: "MOTS-C", aka: "Mitochondrial-Derived Peptide", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Reguliert die Insulinsensitivität direkt am Muskelgewebe", "Unterstützt den Zellschutz und die Fett-Oxidation", "Optimiert die allgemeine zelluläre Energiegewinnung"], risks: ["Sehr frühe Phase der klinischen Untersuchung", "Regelmäßige systemische Gaben notwendig"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Morgens vor Bewegung", cycle: "8 - 12 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Mäusetrials (USC)", text: "Belegte die vollständige Umkehr altersbedingter Fettleibigkeit und Erschöpfungszustände." }, prices: [{ shop: "Europa-Peptide", price: "49.00" }, { shop: "Peptid24", price: "44.00" }, { shop: "Alpine-Peptides", price: "46.00" }, { shop: "DrakonPeptides", price: "51.00" }] },
+            { id: "ta1", nr: "24/47", name: "Thymosin Alpha-1", aka: "Tα1 · Zadaxin · Immun-Peptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Aktiviert und schult T-Helferzellen und Killerzellen", "Verhindert die altersbedingte Schrumpfung der Thymusdrüse", "Hervorragende Prävention in Erkältungs- & Grippezeiten"], risks: ["Kann Autoimmunprozesse bei empfindlichen Patienten aktivieren", "Rötung und Juckreiz an der Einstichstelle"], dosage: { starter: "1.6 mg", normal: "1.6 mg", max: "3.2 mg", freq: "2x wöchentlich", form: "Subkutan", timing: "Morgens", cycle: "6 - 12 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinische Zulassung", text: "Zugelassen als Immunmodulator in über 30 Ländern zur Erhöhung der viralen Antikörperantwort." }, prices: [{ shop: "Europa-Peptide", price: "44.00" }, { shop: "Peptid24", price: "39.00" }, { shop: "Alpine-Peptides", price: "41.00" }, { shop: "DrakonPeptides", price: "45.00" }] },
+            { id: "follistatin344", nr: "25/47", name: "Follistatin-344", aka: "Myostatin-Inhibitor · FST-344", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Blockiert Myostatin und setzt Muskelwachstumsbremsen aus", "Ermöglicht rasantesten Kraft- und Massezuwachs", "Unterstützt den gezielten lokalen Muskelaufbau"], risks: ["Hohe Verletzungsgefahr für passive Strukturen (Sehnen)", "Gefahr unkontrollierten Wachstums des Herzmuskels"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "150 mcg", freq: "1x täglich (max 10 Tage)", form: "Intramuskulär (lokal)", timing: "Post-Workout", cycle: "Maximal 10 Tage am Stück", halflife: "~36 Stunden" }, study: { level: "animal", levelText: "Primatentrials", text: "Extreme Hypertrophie der Skelettmuskeln ohne negative Einflüsse auf Organstrukturen bei Affen." }, prices: [{ shop: "Europa-Peptide", price: "66.00" }, { shop: "Peptid24", price: "59.00" }, { shop: "Alpine-Peptides", price: "63.00" }, { shop: "DrakonPeptides", price: "68.00" }] },
+            { id: "aicar", nr: "26/47", name: "AICAR", aka: "Acadesine · AMPK-Metabolic-Activator", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "med", effects: ["Aktiviert die zelluläre AMPK zur Fettverbrennung", "Erhöht die VO2max-Ausdauerleistung signifikant", "Schützt Muskelgewebe vor hypoxischen Schäden"], risks: ["Auf der Verbotsliste des organisierten Sports (WADA)", "Kurzzeitige Kopfschmerzen"], dosage: { starter: "10 mg", normal: "25-50 mg", max: "100 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinische Trials (Kardiologie)", text: "Sichere klinische Verabreichung zur Prävention ischämischer Komplikationen bei Herzoperationen." }, prices: [{ shop: "Europa-Peptide", price: "56.00" }, { shop: "Peptid24", price: "49.00" }, { shop: "Alpine-Peptides", price: "53.00" }, { shop: "DrakonPeptides", price: "58.00" }] },
+            { id: "sermorelin", nr: "27/47", name: "Sermorelin", aka: "GRF 1-29 · GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "low", effects: ["Erhöht die Ausschüttung körpereigenen Wachstumshormons", "Gilt als die sicherste Alternative zur künstlichen HGH-Gabe", "Verbessert die Gelenkstärke und Elastizität der Haut"], risks: ["Temporäre Hitzewallungen (Flush)", "Lokaler Schmerzreiz an der Einstichstelle"], dosage: { starter: "100 mcg", normal: "200-500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan", timing: "Direkt vor dem Schlafengehen", cycle: "12 - 24 Wochen", halflife: "~15 Minuten" }, study: { level: "human", levelText: "Zugelassenes Diagnostikum", text: "Klinisch bewährt zur präzisen Diagnose von kindlichen Wachstumshormonmängeln." }, prices: [{ shop: "Europa-Peptide", price: "31.00" }, { shop: "Peptid24", price: "27.00" }, { shop: "Alpine-Peptides", price: "29.00" }, { shop: "DrakonPeptides", price: "32.00" }] },
+            { id: "dsip", nr: "28/47", name: "DSIP", aka: "Delta-Sleep-Inducing Peptide · Neuropeptid", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject"], risk: "low", effects: ["Fördert gezielt die Delta-Wellen Tiefschlafphase", "Normalisiert gestörte circadiane Rhythmen hocheffizient", "Senkt Cortisollevel und reguliert die Stressachse"], risks: ["Morgenmüdigkeit (Hangover) bei zu hoher Dosierung", "Sehr geringe Halbwertszeit"], dosage: { starter: "50 mcg", normal: "100-250 mcg", max: "500 mcg", freq: "1x abends", form: "Subkutan", timing: "30 - 60 Minuten vor dem Schlaf", cycle: "2 - 4 Wochen (Kurweise)", halflife: "~15 Minuten" }, study: { level: "human", levelText: "Frühe Pilotstudien", text: "Klinische Tests belegen eine sofortige Normalisierung der Schlafarchitektur bei chronischen Schlaflosen." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "DrakonPeptides", price: "33.00" }] },
+            { id: "ghrp2", nr: "29/47", name: "GHRP-2", aka: "Pralmorelin · Wachstumshormon-Sekretagogum", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Hocheffizienter, starker Wachstumshormonpuls", "Stärkt die Regeneration und den anabolen Gewebeschutz", "Milde Appetitanregung im Vergleich zu GHRP-6"], risks: ["Erhöht leicht die Werte von Prolaktin & Cortisol", "Temporäre Wassereinlagerung"], dosage: { starter: "100 mcg", normal: "200-300 mcg", max: "500 mcg", freq: "2-3x täglich", form: "Subkutan (1-3x täglich)", timing: "Nüchtern", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Studien", text: "Belegte die zuverlässige, dosisabhängige Somatotropinausschüttung bei erwachsenen Probanden." }, prices: [{ shop: "Europa-Peptide", price: "25.00" }, { shop: "Peptid24", price: "22.90" }, { shop: "Alpine-Peptides", price: "24.50" }, { shop: "DrakonPeptides", price: "26.00" }] },
+            { id: "ghrp6", nr: "30/47", name: "GHRP-6", aka: "Growth Hormone Releasing Peptide-6", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Starke GH-Ausschüttung über Ghrelin-Rezeptor-Aktivierung", "Extrem appetitanregender Effekt (optimal bei Untergewicht)", "Kardioprotektive & entzündungshemmende Eigenschaften"], risks: ["Ausgeprägter, teils unkontrollierbarer Heißhunger", "Erhöht bei sensiblen Anwendern Prolaktin und Cortisol"], dosage: { starter: "100 mcg", normal: "150-200 mcg", max: "300 mcg", freq: "2-3x täglich", form: "Subkutan (1-3x täglich)", timing: "Nüchtern (30 Min vor Mahlzeit)", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Kardiovaskuläre Forschung", text: "Zeigte in klinischen Tests schützende Eigenschaften auf das Myokard nach hypoxischen Belastungen." }, prices: [{ shop: "Europa-Peptide", price: "24.50" }, { shop: "Peptid24", price: "21.90" }, { shop: "Alpine-Peptides", price: "23.90" }] },
+            { id: "hexarelin", nr: "31/47", name: "Hexarelin", aka: "Stärkstes GH-Releasing Hexapeptid", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Stärkste Wachstumshormonausschüttung aller GHRPs", "Schützt den Herzmuskel (Kardiomyozyten) nachweislich", "Fördert die Knochendichte und Sehnenstabilität"], risks: ["Schnelle Rezeptor-Sättigung (Schnittige Desensibilisierung)", "Erhöht Cortisol, Prolaktin und hemmt Insulinsensitivität"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "200 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Morgens / Post-Workout nüchtern", cycle: "Maximal 4 - 6 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Kardiologie", text: "Umfangreiche Belege bezüglich der kardioprotektiven Eigenschaften und Wiederherstellung der Herzfunktion." }, prices: [{ shop: "Europa-Peptide", price: "28.00" }, { shop: "Alpine-Peptides", price: "32.00" }, { shop: "DrakonPeptides", price: "31.50" }] },
+            { id: "kisspeptin", nr: "32/47", name: "Kisspeptin-10", aka: "Metastin · GnRH-Aktivator", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "med", effects: ["Aktiviert GnRH zur Stimulation von LH und FSH", "Steigert das natürliche Testosteron ohne hormonellen Shutdown", "Fördert die Fertilität und Spermatogenese hocheffizient"], risks: ["Temporäre Hitzewallungen (Flush)", "Hormonschwankungen bei unsachgemäßer Dosierung"], dosage: { starter: "10 mcg", normal: "25-50 mcg", max: "100 mcg", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Extrem kurz (wenige Minuten)" }, study: { level: "human", levelText: "Phase-I Pilotstudien", text: "Nachweisbare biochemische Reaktivierung der hormonellen Hypophysenachse bei funktionellem Mangel." }, prices: [{ shop: "Europa-Peptide", price: "38.90" }, { shop: "Alpine-Peptides", price: "42.00" }, { shop: "DrakonPeptides", price: "41.00" }] },
+            { id: "ara290", nr: "33/47", name: "ARA-290", aka: "Cibinetide · Neuroprotektives Peptid", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Zielgerichtete Therapie neuropathischer Schmerzen (Nervenschmerzen)", "Aktiviert den schützenden angeborenen Reparatur-Rezeptor", "Antientzündliche Effekte bei Sarkoidose"], risks: ["Klinisch teils noch in Erforschung", "Hoher Beschaffungspreis"], dosage: { starter: "1 mg", normal: "2-4 mg", max: "8 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 6 Wochen", halflife: "~20 Minuten" }, study: { level: "human", levelText: "Klinische Phase-II", text: "Zeigt signifikante Schmerzlinderung und Verbesserung der Lebensqualität bei Patienten mit neuropathischen Ausfällen." }, prices: [{ shop: "Europa-Peptide", price: "69.00" }, { shop: "Alpine-Peptides", price: "75.00" }, { shop: "DrakonPeptides", price: "72.00" }] },
+            { id: "oxytocin", nr: "34/47", name: "Oxytocin", aka: "Bindungshormon · Kuschelhormon", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal", "inject"], risk: "low", effects: ["Fördert soziale Bindung, Empathie und tiefes Vertrauen", "Senkt akuten Stress, Cortisol und Blutdruck", "Unterstützt gesunde soziale Interaktion und Ängstlichkeit"], risks: ["Kann bei Überdosierung zu emotionaler Überempfindlichkeit führen", "Gefahr von Uteruskontraktionen bei Frauen"], dosage: { starter: "10 IU", normal: "20 IU", max: "40 IU", freq: "Bei Bedarf", form: "Nasal / Subkutan", timing: "Vor sozialen Events / Abends", cycle: "Nach Bedarf", halflife: "~5 Minuten" }, study: { level: "human", levelText: "Klinische Psychologie", text: "Umfangreich dokumentierte Reduktion sozialer Phobien und zerebraler Amygdala-Überaktivität." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "29.00" }, { shop: "DrakonPeptides", price: "27.50" }] },
+            { id: "hcg", nr: "35/47", name: "HCG", aka: "Humanes Choriongonadotropin · LH-Mimetikum", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "med", effects: ["Simuliert das luteinisierende Hormon (LH) in den Hoden", "Erhält die Hodengröße unter anabolem Hormonmissbrauch", "Fördert die natürliche endogene Testosteronsynthese"], risks: ["Gefahr der Gynäkomastie durch Aromatisierung zu Östrogen", "Verschreibungspflichtiges Hormonpräparat"], dosage: { starter: "250 IU", normal: "500 IU", max: "1500 IU", freq: "2-3x wöchentlich", form: "Subkutan", timing: "Morgens", cycle: "3 - 4 Wochen (PCT)", halflife: "~36 Stunden" }, study: { level: "human", levelText: "Reproduktionsmedizin", text: "Goldstandard in der klinischen Andrologie zur Wiederherstellung der Spermienqualität." }, prices: [{ shop: "Europa-Peptide", price: "42.90" }, { shop: "Peptid24", price: "39.90" }, { shop: "Alpine-Peptides", price: "41.00" }] },
+            { id: "snap8", nr: "36/47", name: "SNAP-8", aka: "Acetyl Octapeptide-3 · Mimikfalten-Inhibitor", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["topisch"], risk: "low", effects: ["Hemmt den SNARE-Komplex zur Reduktion von Mimikfalten", "Schmerzfreie, kosmetische Alternative zu Botox-Injektionen", "Glättet nachweislich Stirnfalten und Krähenfüße"], risks: ["Hautreizungen bei sehr empfindlichen Anwendern", "Wirkt primär topisch, nicht systemisch"], dosage: { starter: "2%", normal: "5%", max: "10%", freq: "2x täglich (Topisch)", form: "Topisch (Serum)", timing: "Morgens / Abends aufgetragen", cycle: "Dauerhaft anwendbar", halflife: "Lokale Wirkung" }, study: { level: "human", levelText: "Kosmetik-Studien", text: "Untersuchungen belegen eine Reduzierung der Faltentiefe um bis zu 35% nach 28 Tagen." }, prices: [{ shop: "Europa-Peptide", price: "36.90" }, { shop: "Alpine-Peptides", price: "41.00" }, { shop: "DrakonPeptides", price: "39.00" }] },
+            { id: "argireline", nr: "37/47", name: "Argireline", aka: "Acetyl Hexapeptide-8 · Anti-Falten Peptid", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["topisch"], risk: "low", effects: ["Entspannt sanft die Gesichtsmuskulatur (Botox-Alternative)", "Beugt der Entstehung neuer tiefer Mimikfalten vor", "Spürbare Feuchtigkeitsbindung in der oberen Epidermis"], risks: ["Effekte erlöschen schrittweise nach Absetzen des Serums", "Lokale Rötungen bei ungenügender Formulierung"], dosage: { starter: "2%", normal: "5%", max: "10%", freq: "2x täglich (Topisch)", form: "Topisch (Serum)", timing: "Morgens / Abends", cycle: "Dauerhaft", halflife: "Lokale Wirkung" }, study: { level: "human", levelText: "Klinische Kosmetikstudien", text: "Nachgewiesene Reduzierung der Faltentiefe um ca. 30 % bei regelmäßiger topischer Applikation." }, prices: [{ shop: "Europa-Peptide", price: "31.00" }, { shop: "Alpine-Peptides", price: "35.00" }, { shop: "DrakonPeptides", price: "34.00" }] },
+            { id: "ghkcu100", nr: "38/47", name: "GHK-Cu (100mg)", aka: "Kupfer-Tripeptid-1 · Großpackung", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject", "topisch"], risk: "low", effects: ["Hochdosiertes Kupferpeptid zur Gewebeheilung", "Reguliert Entzündungsprozesse und fördert antioxidativen Schutz", "Ideal für großflächige kosmetische Eigenformulierungen"], risks: ["Gefahr der Kupfertoxizität bei massivem Missbrauch", "Muss extrem kühl und lichtgeschützt lagern"], dosage: { starter: "1 mg", normal: "2 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Topisch", timing: "Abends", cycle: "Dauerhaft", halflife: "Sehr kurz" }, study: { level: "human", levelText: "Hautbiologische Studien", text: "Bestätigter Wiederaufbau geschädigter Hautbarrieren und gesteigerter Haar-Dichte-Index." }, prices: [{ shop: "Europa-Peptide", price: "49.00" }, { shop: "Peptid24", price: "44.90" }, { shop: "Alpine-Peptides", price: "47.00" }, { shop: "DrakonPeptides", price: "52.00" }] },
+            { id: "glowstack", nr: "39/47", name: "GLOW Stack", aka: "GHK-Cu + TB-500 + BPC-157", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "low", effects: ["Synergistischer Premium Skincare & Healing Stack", "Fördert die Kollagenbildung und beschleunigt Wundheilung", "Baut Narbengewebe ab und glättet Fältchen massiv"], risks: ["Addierte, milde Einstichreizungen", "Komplexere Mischverhältnisse bei Rekonstitution"], dosage: { starter: "1mg/Tag", normal: "2mg/Tag", max: "4mg/Tag", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "Mischwert" }, study: { level: "pilot", levelText: "Kombinations-Stack", text: "Keine isolierten klinischen Studien des Gesamtstacks, die Synergie basiert jedoch vollständig auf den belegten Einzeleffekten der Moleküle." }, prices: [{ shop: "Europa-Peptide", price: "129.00" }, { shop: "Alpine-Peptides", price: "124.00" }, { shop: "Peptid24", price: "119.00" }] },
+            { id: "klowstack", nr: "40/47", name: "KLOW Stack", aka: "GLOW Stack + KPV Peptide", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Umfassender entzündungshemmender & regenerativer Stack", "KPV lindert zelluläre Entzündungen hocheffizient", "Extreme Beschleunigung von systemischen Reparaturprozessen"], risks: ["Erhöhte biochemische Empfindlichkeit gegenüber Feuchtigkeit", "Aufwendiges, präzises Mischverfahren"], dosage: { starter: "1mg/Tag", normal: "2mg/Tag", max: "4mg/Tag", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Mischwert" }, study: { level: "pilot", levelText: "Anwenderberichte", text: "Konsistent hervorragende Berichte bezüglich beschleunigter Wundheilung und vollständiger Linderung chronischer Ekzeme." }, prices: [{ shop: "Europa-Peptide", price: "149.00" }, { shop: "Alpine-Peptides", price: "145.00" }, { shop: "Peptid24", price: "139.00" }] },
+            { id: "nadplus", nr: "41/47", name: "NAD+", aka: "Nicotinamid-Adenin-Dinukleotid · Coenzym", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject", "oral"], risk: "low", effects: ["Essentieller Cofaktor für mitochondriale ATP-Gewinnung", "Aktiviert zelluläre Sirtuine zur DNA-Reparatur", "Verbessert Kognition und neuro-metabolische Vitalität"], risks: ["Injektion erfordert langsames Einschleichen zur Vermeidung von Flush", "Teils sehr kostspielig bei hoher Dosierung"], dosage: { starter: "50 mg", normal: "100-250 mg", max: "500 mg", freq: "1-2x wöchentlich", form: "Subkutan / Intravenös (IV)", timing: "Morgens", cycle: "Kurweise", halflife: "Sehr kurz im Blutplasma" }, study: { level: "human", levelText: "Klinische Studien", text: "Erhöht messbar den intrazellulären NAD+-Pool und optimiert kognitive Parameter in älteren Bevölkerungsgruppen." }, prices: [{ shop: "Europa-Peptide", price: "64.90" }, { shop: "Alpine-Peptides", price: "69.00" }, { shop: "DrakonPeptides", price: "68.00" }] },
+            { id: "ss31", nr: "42/47", name: "SS-31", aka: "Elamipretide · Mitochondriales Peptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Schützt und restrukturiert die innere Mitochondrienmembran", "Stoppt die übermäßige Entstehung schädlicher Sauerstoffradikale", "Unterstützt Muskelgewebe und Organe im Alterungsprozess"], risks: ["Sehr neues Molekül der Longevity-Wissenschaft", "Wenig unabhänige europäische Anbieter"], dosage: { starter: "2 mg", normal: "4-8 mg", max: "10 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "human", levelText: "Phase-II klinische Trials", text: "Zeigte signifikante mitochondriale Funktionsverbesserungen und Verringerung der Altersatrophie der Skelettmuskeln." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "Alpine-Peptides", price: "85.00" }, { shop: "DrakonPeptides", price: "82.00" }] },
+            { id: "hgh", nr: "43/47", name: "HGH (Somatropin)", aka: "Human Growth Hormone", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Starkes Muskelwachstum & massiver Kraftaufbau", "Extremer Fettabbau (besonders tiefliegendes Viszeralfett)", "Verbesserte Hautqualität, Haardichte & Anti-Aging Effekte"], risks: ["Akromegalie (Wachstum von Knochen/Organen) bei chronischer Langzeitnutzung", "Erhöhtes Risiko für Insulinresistenz & Typ-2-Diabetes", "Wassereinlagerungen & starke HPTA-Suppression"], dosage: { starter: "1-2 IU", normal: "3-4 IU", max: "6 IU", freq: "1x täglich", form: "Subkutan / IM", timing: "Morgens nüchtern", cycle: "Langzeit (unter ärztlicher Aufsicht)", halflife: "~2-3 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "Gut dokumentiert für therapeutische GH-Defizienz. Im Bodybuilding und Anti-Aging stark verbreitet, aber mit signifikanten metabolischen Risiken verbunden." }, prices: [{ shop: "Europa-Peptide", price: "89.00" }, { shop: "Alpine-Peptides", price: "95.00" }, { shop: "DrakonPeptides", price: "92.00" }] },
+            { id: "pe2228", nr: "44/47", name: "PE 22-28", aka: "Spadin-Analogon · TrkB-Agonist", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject", "nasal"], risk: "low", effects: ["Schneller, hochwirksamer antidepressiver Effekt (TrkB-Rezeptor-Aktivierung)", "Fördert gezielt die Neurogenese im Hippocampus", "Wirkt massiv neuroprotektiv ohne jegliches Abhängigkeitspotenzial"], risks: ["Sehr frühe Phase der präklinischen Forschung", "Langzeitwirkungen und Toleranzaufbau am Menschen aktuell unbekannt"], dosage: { starter: "1 mg", normal: "2-4 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Nasal", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Kurz (Plasma)" }, study: { level: "animal", levelText: "Präklinische Tierstudien", text: "Deutlicher antidepressiver Effekt in Tiermodellen mit einem vielfach schnelleren Wirkungseintritt als klassische SSRI-Medikamente." }, prices: [{ shop: "Europa-Peptide", price: "49.90" }, { shop: "Beyond-Peptides", price: "55.00" }, { shop: "Alpine-Peptides", price: "52.00" }] },
+            { id: "epo", nr: "45/47", name: "EPO", aka: "Erythropoetin", cat: "gewicht", catText: "PERFORMANCE & AUSDAUER", routes: ["inject"], risk: "high", effects: ["Erhöht massiv die körpereigene Produktion roter Blutkörperchen", "Drastisch verbesserte kardiovaskuläre VO2max und Ausdauer", "Der potenteste bekannte Dopingeffekt im professionellen Ausdauersport"], risks: ["Akutes, gefährliches Thrombose- & Schlaganfallrisiko durch zu hohe Blutviskosität", "Herzinfarktgefahr (diverse Todesfälle im Radsport sind klinisch belegt)", "Streng von der WADA gesperrt"], dosage: { starter: "20 IU/kg", normal: "50 IU/kg", max: "300 IU/kg", freq: "1-3x wöchentlich", form: "Subkutan / IV", timing: "3x wöchentlich", cycle: "Kurzzeitig", halflife: "~8.5 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "Medizinisch genutzt bei chronischer Anämie und Nierenversagen. Extrem gefährlich bei missbräuchlicher Performance-Steigerung im Leistungssport." }, prices: [{ shop: "Europa-Peptide", price: "49.90" }, { shop: "DrakonPeptides", price: "55.00" }, { shop: "Alpine-Peptides", price: "52.00" }] },
+            { id: "cagrilintid", nr: "46/47", name: "Cagrilintid", aka: "Amylin-Analogon", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Neues Amylin-Analogon reduziert die Magenentleerung massiv", "Erzwingt eine starke Sättigung und radikale Appetitreduktion", "Wirkt stark synergistisch mit Semaglutid (als Kombi-Präparat CagriSema)"], risks: ["Starke Übelkeit, Sodbrennen & Erbrechen sehr wahrscheinlich", "Keine Langzeitsicherheitsdaten für den breiten Markt verfügbar", "Nur in streng kontrollierten klinischen Studien erprobt"], dosage: { starter: "0.16 mg", normal: "0.5-1.2 mg", max: "2.4 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Unter ärztlicher Aufsicht", halflife: "~165 Stunden" }, study: { level: "human", levelText: "Phase III (SCALE)", text: "Kombiniert mit Semaglutid wurden bis zu 25% Gewichtsreduktion erreicht. Gilt als Novo Nordisk Kandidat für die nächste große Adipositas-Zulassung." }, prices: [{ shop: "Europa-Peptide", price: "69.00" }, { shop: "Alpine-Peptides", price: "75.00" }, { shop: "Beyond-Peptides", price: "72.00" }] },
+            { id: "lcarnitin", nr: "47/47", name: "L-Carnitin", aka: "Aminosäure-Derivat · Fetttransporter", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "low", effects: ["Transportiert langkettige Fettsäuren direkt in die Kraftwerke der Zellen (Mitochondrien)", "Verbessert die Ausdauer & zelluläre Energieeffizienz", "Unterstützt Herzgesundheit, Spermienqualität & kardiovaskulären Schutz"], risks: ["Fischiger Körpergeruch bei oraler Hochdosis über längeren Zeitraum möglich", "Magen-Darm-Beschwerden (insb. bei oraler Überdosierung)"], dosage: { starter: "500 mg", normal: "1000 mg", max: "2000 mg", freq: "1x täglich (Pre-Workout)", form: "IM / Subkutan / Oral", timing: "Vor dem Kraft- oder Cardiotraining", cycle: "Dauerhaft anwendbar", halflife: "~15 Stunden" }, study: { level: "human", levelText: "Gut belegt", text: "Eines der am besten untersuchten Aminosäure-Supplements weltweit. Als Injektion extrem hohe Bioverfügbarkeit im Vergleich zur oralen Gabe (nur ca. 15%)." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Peptid24", price: "25.00" }, { shop: "Alpine-Peptides", price: "28.00" }] }
+        ];
+
+        // Structured Händler & Versand Matrix matching industry benchmarks
+        const SHIPPING_DATA = {
+            "Europa-Peptide": { cost: "9.90", note: "Express, versandkostenfrei ab €150" },
+            "Alpine-Peptides": { cost: "6.90", note: "Klimaneutral, frei ab €120" },
+            "Peptid24": { cost: "4.90", note: "Standard-Post, frei ab €100" },
+            "DrakonPeptides": { cost: "7.50", note: "Diskreter Versand, frei ab €130" },
+            "Beyond-Peptides": { cost: "5.90", note: "Mitteleuropäisches Tracking" },
+            "RebirthLabs": { cost: "6.50", note: "Direkter Labor-Kurier" },
+            "PeptideRevolution": { cost: "8.90", note: "EU-Einschreiben" }
+        };
+
+        // DOM Views Router Engine
+        function router(viewId) {
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.add('hidden');
+                panel.classList.remove('block');
+            });
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            document.getElementById('view-' + viewId).classList.add('block');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white";
+            });
+            const activeBtn = document.getElementById('nav-' + viewId);
+            if (activeBtn) {
+                activeBtn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan";
+            }
+
+            // Custom Dynamic Header Typography
+            const heroTitle = document.getElementById('hero-title');
+            const heroDesc = document.getElementById('hero-desc');
+            
+            if (heroTitle && heroDesc) {
+                if(viewId === 'db') {
+                    heroTitle.innerHTML = "PEPTID<br><span class=\"accent\">REFERENZ</span>";
+                    heroDesc.innerText = "Umfassende biochemische Dokumentation, interaktives Stabilitätsmonitoring und physiologische Mischkalkulationen für Sport & Labor.";
+                } else if(viewId === 'calc') {
+                    heroTitle.innerHTML = "PRÄZISIONS<br><span class=\"accent\">RECHNER</span>";
+                    heroDesc.innerText = "Kalkuliere das Rekonstitutionsverhältnis deines Peptids mathematisch exakt auf der Spritzenskala.";
+                } else if(viewId === 'storage') {
+                    heroTitle.innerHTML = "STABILITÄTS<br><span class=\"accent\">MONITOR</span>";
+                    heroDesc.innerText = "Interaktive Simulation zum temperatur- und aggregatabhängigen Molekularzerfall empfindlicher Proteinsequenzen.";
+                } else if(viewId === 'sport') {
+                    heroTitle.innerHTML = "SPORT<br><span class=\"accent\">PHYSIOLOGIE</span>";
+                    heroDesc.innerText = "Analyse der gezielten Peptidwirkungen auf Hypertrophie, Sehnenregeneration und aerobe Mitochondrienkapazität.";
+                } else if(viewId === 'stack') {
+                    heroTitle.innerHTML = "STACK<br><span class=\"accent\">SYNTHESIZER</span>";
+                    heroDesc.innerText = "Kombiniere Peptide im virtuellen Labor-Kombinator und kalkuliere das biologische Risikoprofil.";
+                } else if(viewId === 'tutorial') {
+                    heroTitle.innerHTML = "MISCH<br><span class=\"accent\">ANLEITUNG</span>";
+                    heroDesc.innerText = "Schritt-für-Schritt Rekonstitutions-Protokoll zur fehlerfreien und sterilen Peptidpräparation.";
+                }
+            }
+        }
+
+        // Active database and filters state
+        let activeRiskFilter = 'all';
+
+        function setRiskFilter(risk, btn) {
+            activeRiskFilter = risk;
+            document.querySelectorAll('.risk-f-btn').forEach(b => {
+                b.className = "risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-white/10 text-slate-400 hover:bg-white/5";
+            });
+
+            if (risk === 'all') btn.className = "risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-white/10 text-white bg-white/10";
+            if (risk === 'low') btn.className = "risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-glowGreen bg-glowGreen/10 text-glowGreen shadow-neon-green";
+            if (risk === 'med') btn.className = "risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-glowAmber bg-glowAmber/10 text-glowAmber shadow-neon-cyan";
+            if (risk === 'high') btn.className = "risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-glowRed bg-glowRed/10 text-glowRed";
+
+            applyFilters();
+        }
+
+        // DOM-Injektor for Peptide Cards
+        function renderDatabase() {
+            const grid = document.getElementById('db-grid');
+            grid.innerHTML = '';
+
+            PEPTIDES_DATA.forEach(p => {
+                let glowColor = "glowGreen";
+                let tagColor = "#3ddc84";
+                let tagBorderColor = "#3ddc84";
+                if(p.cat === 'wachstum') { glowColor = "glowCyan"; tagColor = "#00f2fe"; tagBorderColor = "#00f2fe"; }
+                if(p.cat === 'gewicht') { glowColor = "glowOrange"; tagColor = "#ff6b35"; tagBorderColor = "#ff6b35"; }
+                if(p.cat === 'libido') { glowColor = "glowPurple"; tagColor = "#c46bff"; tagBorderColor = "#c46bff"; }
+                if(p.cat === 'aging') { glowColor = "glowPurple"; tagColor = "#c46bff"; tagBorderColor = "#c46bff"; }
+                if(p.cat === 'neuro') { glowColor = "glowPurple"; tagColor = "#c46bff"; tagBorderColor = "#c46bff"; }
+                if(p.cat === 'kosmetik') { glowColor = "glowOrange"; tagColor = "#ff6b35"; tagBorderColor = "#ff6b35"; }
+
+                let riskClass = "risk-low";
+                let riskText = "Risiko: Niedrig";
+                if(p.risk === 'med') { riskClass = "risk-med"; riskText = "Risiko: Mittel"; }
+                if(p.risk === 'high') { riskClass = "risk-high"; riskText = "Risiko: Hoch"; }
+
+                let routeTagsHTML = "";
+                p.routes.forEach(r => {
+                    if (r === 'inject') routeTagsHTML += `<span class="route-tag route-inject">💉 Injizierbar</span> `;
+                    if (r === 'oral') routeTagsHTML += `<span class="route-tag route-oral">💊 Oral</span> `;
+                    if (r === 'topisch') routeTagsHTML += `<span class="route-tag route-topisch">🧴 Topisch</span> `;
+                    if (r === 'nasal') routeTagsHTML += `<span class="route-tag route-nasal">👃 Nasal</span> `;
+                });
+
+                let priceRowsHTML = "";
+                p.prices.forEach(pr => {
+                    const cleanShopName = pr.shop.split(" ")[0].replace(/[^a-zA-Z0-9-]/g, ""); 
+                    const shippingObj = SHIPPING_DATA[pr.shop] || SHIPPING_DATA[cleanShopName] || { cost: "5.00", note: "Standard" };
+                    priceRowsHTML += `
+                        <div class="price-row py-2 border-b border-white/5 last:border-0 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <span class="price-shop font-bold text-slate-300 flex items-center gap-1.5 text-[11px]">
+                                🏪 ${pr.shop}
+                            </span>
+                            <div class="flex flex-col items-end">
+                                <span class="price-amount text-glowCyan font-black text-sm">€${pr.price}</span>
+                                <span class="text-[9px] text-slate-500 font-mono">Porto: €${shippingObj.cost} (${shippingObj.note})</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                let studyLevelClass = "study-animal";
+                if(p.study.level === 'human') studyLevelClass = "study-human";
+                if(p.study.level === 'pilot') studyLevelClass = "study-pilot";
+                if(p.study.level === 'invitro') studyLevelClass = "study-invitro";
+
+                const searchQueryEnc = encodeURIComponent(p.name.split(' ')[0]);
+
+                const cardHTML = `
+                    <div class="peptide-card bg-labDark/80 backdrop-blur-sm border border-white/5 hover:border-${glowColor}/30 p-6 rounded-2xl transition-all duration-300 relative group overflow-hidden" data-cat="${p.cat}" data-risk="${p.risk}" data-search="${p.searchTags || p.name + ' ' + p.aka + ' ' + p.catText}">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-${glowColor}/5 rounded-full blur-2xl group-hover:bg-${glowColor}/10 transition-all duration-300"></div>
+                        
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-white/5">
+                            <div>
+                                <span class="text-[9px] font-mono text-${glowColor} uppercase tracking-widest font-bold">● SYSTEM_REF_${p.nr} // CAT_INDEX</span>
+                                <h3 class="text-2xl font-extrabold text-white tracking-tight mt-1">${p.name}</h3>
+                                <span class="text-[10px] font-mono text-slate-400 block mt-0.5">${p.aka}</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 justify-end">
+                                <span class="cat-tag" style="color: ${tagColor}; border-color: ${tagBorderColor};">${p.catText}</span>
+                                ${routeTagsHTML}
+                                <span class="risk-tag ${riskClass}">${riskText}</span>
+                            </div>
+                        </div>
+
+                        <!-- Utility Action Buttons -->
+                        <div class="flex gap-2 mt-4 mb-2">
+                            <button onclick="router('calc'); setTimeout(() => { document.getElementById('calcPreset').value = '${p.id}'; loadPresetToCalc(); }, 100);" class="flex-1 py-1.5 bg-white/5 hover:bg-${glowColor}/10 border border-white/10 hover:border-${glowColor}/30 rounded-lg text-[9px] font-mono text-slate-300 hover:text-${glowColor} transition-colors flex items-center justify-center gap-1.5">
+                                🧪 In den Rechner laden
+                            </button>
+                            <button onclick="router('stack'); setTimeout(() => { const cb = document.querySelector('.stack-checkbox[value=\\'${p.name}\\']'); if(cb){ cb.checked = true; generateStackReport(); } }, 100);" class="flex-1 py-1.5 bg-white/5 hover:bg-${glowColor}/10 border border-white/10 hover:border-${glowColor}/30 rounded-lg text-[9px] font-mono text-slate-300 hover:text-${glowColor} transition-colors flex items-center justify-center gap-1.5">
+                                🧬 In den Stacker legen
+                            </button>
+                        </div>
+
+                        <div class="flex border-b border-white/5 my-4 overflow-x-auto">
+                            <button onclick="toggleCardTab(this, '${p.id}-eff')" class="card-tab-btn py-2 px-3 text-[10px] font-mono text-glowCyan border-b-2 border-glowCyan uppercase tracking-widest whitespace-nowrap">Wirkung</button>
+                            <button onclick="toggleCardTab(this, '${p.id}-side')" class="card-tab-btn py-2 px-3 text-[10px] font-mono text-slate-400 hover:text-white uppercase tracking-widest whitespace-nowrap">Risiken</button>
+                            <button onclick="toggleCardTab(this, '${p.id}-dose')" class="card-tab-btn py-2 px-3 text-[10px] font-mono text-slate-400 hover:text-white uppercase tracking-widest whitespace-nowrap">Dosierung</button>
+                            <button onclick="toggleCardTab(this, '${p.id}-studies')" class="card-tab-btn py-2 px-3 text-[10px] font-mono text-slate-400 hover:text-white uppercase tracking-widest whitespace-nowrap">Studien &amp; Video</button>
+                            <button onclick="toggleCardTab(this, '${p.id}-prices')" class="card-tab-btn py-2 px-3 text-[10px] font-mono text-slate-400 hover:text-white uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5">Preise <span class="bg-glowCyan/10 text-glowCyan text-[8px] px-1 rounded border border-glowCyan/30">SHOP</span></button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div id="${p.id}-eff" class="card-tab-content block space-y-3">
+                                <ul class="space-y-1.5 text-xs text-slate-300">
+                                    ${p.effects.map(eff => `<li class="flex items-start gap-2"><span class="text-glowGreen">✚</span> ${eff}</li>`).join('')}
+                                </ul>
+                            </div>
+
+                            <div id="${p.id}-side" class="card-tab-content hidden space-y-3">
+                                <ul class="space-y-1.5 text-xs text-slate-300">
+                                    ${p.risks.map(risk => `<li class="flex items-start gap-2"><span class="text-glowRed">✖</span> ${risk}</li>`).join('')}
+                                </ul>
+                            </div>
+
+                            <div id="${p.id}-dose" class="card-tab-content hidden">
+                                <div class="bg-void/50 p-4 rounded-xl border border-white/5 font-mono text-xs space-y-4">
+                                    <div class="grid grid-cols-3 gap-3 pb-4 border-b border-white/5 text-center">
+                                        <div>
+                                            <span class="text-glowGreen text-[9px] block tracking-wider uppercase mb-1">Einstieg</span>
+                                            <span class="text-white font-bold">${p.dosage.starter}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-glowCyan text-[9px] block tracking-wider uppercase mb-1">Standard</span>
+                                            <span class="text-white font-bold">${p.dosage.normal}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-glowRed text-[9px] block tracking-wider uppercase mb-1">Max. Limit</span>
+                                            <span class="text-white font-bold">${p.dosage.max}</span>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3 pt-1">
+                                        <div><span class="text-slate-500 text-[9px] block">HÄUFIGKEIT</span>${p.dosage.freq}</div>
+                                        <div><span class="text-slate-500 text-[9px] block">APPLIKATION</span>${p.dosage.form}</div>
+                                        <div><span class="text-slate-500 text-[9px] block">ZEITPUNKT</span>${p.dosage.timing}</div>
+                                        <div><span class="text-slate-500 text-[9px] block">ZYKLUSDAUER</span>${p.dosage.cycle}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="${p.id}-studies" class="card-tab-content hidden space-y-4">
+                                <div class="bg-void/40 p-3 rounded-lg border-l-2 border-glowCyan text-[11px] text-slate-400">
+                                    <span class="study-level ${studyLevelClass} mb-2">${p.study.levelText}</span>
+                                    <p class="font-sans leading-relaxed text-xs text-slate-300 mt-1.5">${p.study.text}</p>
+                                </div>
+
+                                <div class="bg-void border border-white/10 rounded-xl overflow-hidden p-3.5 space-y-3">
+                                    <div class="flex items-center justify-between pb-2 border-b border-white/5">
+                                        <span class="text-[9px] font-mono text-glowRed tracking-widest flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-glowRed animate-pulse"></span>
+                                            YOUTUBE_RECON_VIDEO_GUIDE
+                                        </span>
+                                        <span class="text-[8px] font-mono text-slate-500">FORMAT: MP4_H264</span>
+                                    </div>
+                                    
+                                    <div class="relative w-full aspect-video bg-labDark/80 rounded-lg overflow-hidden flex flex-col justify-between p-3 border border-white/5 group-hover:border-glowCyan/10 transition-all duration-300">
+                                        <div class="absolute inset-0 flex items-center justify-center bg-void/60 hover:bg-void/40 transition-colors duration-200 cursor-pointer">
+                                            <div class="w-12 h-12 rounded-full bg-glowRed flex items-center justify-center text-void shadow-lg shadow-glowRed/20 hover:scale-105 transition-transform duration-200">
+                                                <svg class="w-5 h-5 fill-current ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                            </div>
+                                        </div>
+                                        <div class="z-10 flex justify-between items-center text-[9px] font-mono bg-void/80 px-2 py-1 rounded backdrop-blur-sm">
+                                            <span class="text-white font-bold truncate">Biochemische Analyse: ${p.name}</span>
+                                            <span class="text-glowCyan">HD_1080P</span>
+                                        </div>
+                                        <div class="z-10 bg-void/80 p-2 rounded space-y-1.5 font-mono text-[8px] text-slate-400 backdrop-blur-sm">
+                                            <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                                                <div class="bg-glowRed h-full w-[45%]"></div>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex gap-2.5">
+                                                    <span>PAUSE</span>
+                                                    <span>VOL_80%</span>
+                                                </div>
+                                                <span>04:12 / 12:45</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-3 gap-2 pt-1">
+                                        <a href="https://www.youtube.com/results?search_query=IronMike+${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 transition-all text-center group backdrop-blur-sm">
+                                            <span class="text-xs group-hover:text-red-500 mb-1 transition-colors drop-shadow-md">▶</span>
+                                            <span class="text-[8px] font-mono text-slate-400 group-hover:text-white transition-colors">IronMike</span>
+                                        </a>
+                                        <a href="https://www.tiktok.com/search?q=samexplainspeps+${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/50 transition-all text-center group backdrop-blur-sm">
+                                            <span class="text-xs group-hover:text-cyan-400 mb-1 transition-colors drop-shadow-md">♪</span>
+                                            <span class="text-[8px] font-mono text-slate-400 group-hover:text-white transition-colors">samexplains</span>
+                                        </a>
+                                        <a href="https://www.tiktok.com/search?q=landotalkspeps+${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all text-center group backdrop-blur-sm">
+                                            <span class="text-xs group-hover:text-purple-400 mb-1 transition-colors drop-shadow-md">♪</span>
+                                            <span class="text-[8px] font-mono text-slate-400 group-hover:text-white transition-colors">landotalks</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="${p.id}-prices" class="card-tab-content hidden space-y-3">
+                                <div class="bg-void/40 p-4 rounded-xl border border-white/10">
+                                    <span class="text-[9px] font-mono text-slate-500 block uppercase tracking-wider mb-2">Anbieter-Preisvergleich &amp; Versand</span>
+                                    <div class="space-y-1 font-mono text-xs">
+                                        ${priceRowsHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+
+            applyFilters();
+        }
+
+        function toggleCardTab(btn, targetId) {
+            const card = btn.closest('.peptide-card');
+            card.querySelectorAll('.card-tab-btn').forEach(tab => {
+                tab.className = "card-tab-btn py-2 px-3 text-[10px] font-mono text-slate-400 hover:text-white uppercase tracking-widest whitespace-nowrap";
+            });
+            card.querySelectorAll('.card-tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            btn.className = "card-tab-btn py-2 px-3 text-[10px] font-mono text-glowCyan border-b-2 border-glowCyan uppercase tracking-widest whitespace-nowrap";
+            card.querySelector('#' + targetId).classList.remove('hidden');
+            card.querySelector('#' + targetId).classList.add('block');
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cat = document.getElementById('catSelect').value;
+            const cards = document.querySelectorAll('.peptide-card');
+            let displayed = 0;
+
+            cards.forEach(card => {
+                const cardCat = card.dataset.cat;
+                const cardRisk = card.dataset.risk;
+                const searchData = card.dataset.search.toLowerCase();
+
+                const catMatch = (cat === 'all' || cardCat === cat);
+                const riskMatch = (activeRiskFilter === 'all' || cardRisk === activeRiskFilter);
+                const queryMatch = (!query || searchData.includes(query));
+
+                if (catMatch && riskMatch && queryMatch) {
+                    card.classList.remove('hidden');
+                    displayed++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('db-count').innerText = displayed;
+        }
+
+        // Syringe Mischrechner Math
+        function calculateSyringe() {
+            const mg = parseFloat(document.getElementById('calc-mg').value) || 0;
+            const ml = parseFloat(document.getElementById('calc-ml').value) || 0;
+            const mcg = parseFloat(document.getElementById('calc-mcg').value) || 0;
+
+            const resUnits = document.getElementById('res-units');
+            const resConc = document.getElementById('res-conc');
+            const resDoses = document.getElementById('res-doses');
+            const syringeFluid = document.getElementById('syringe-fluid');
+            const syringeLabel = document.getElementById('syringe-label');
+
+            if (mg <= 0 || ml <= 0 || mcg <= 0) {
+                resUnits.innerText = "0.0 IE";
+                resConc.innerText = "0.00 mg/ml";
+                resDoses.innerText = "0 Dosen";
+                syringeFluid.style.width = "0%";
+                syringeLabel.innerText = "0 IE";
+                return;
+            }
+
+            const totalMcg = mg * 1000;
+            const concPerMl = totalMcg / ml;
+            const unitsNeeded = (mcg / concPerMl) * 100;
+            const roundedUnits = Math.round(unitsNeeded * 10) / 10;
+
+            resUnits.innerText = roundedUnits.toFixed(1) + " IE";
+            resConc.innerText = (mg / ml).toFixed(2) + " mg/ml";
+            resDoses.innerText = Math.floor(totalMcg / mcg) + " Dosen";
+
+            const fillWidth = Math.min(100, Math.max(0, roundedUnits));
+            syringeFluid.style.width = fillWidth + "%";
+            syringeLabel.innerText = roundedUnits.toFixed(1) + " IE";
+        }
+
+        // Load Preset into Mischrechner Dropdown
+        function initCalcPresets() {
+            const select = document.getElementById('calcPreset');
+            select.innerHTML = '<option value="">-- Eigenes Peptid / Custom Wert --</option>';
+            
+            PEPTIDES_DATA.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+            });
+        }
+
+        function loadPresetToCalc() {
+            const selectedId = document.getElementById('calcPreset').value;
+            if(!selectedId) return;
+
+            const peptide = PEPTIDES_DATA.find(p => p.id === selectedId);
+            if(!peptide) return;
+
+            let typicalMg = 5;
+            if(peptide.name.includes("10mg")) typicalMg = 10;
+            if(peptide.name.includes("50mg")) typicalMg = 50;
+            if(peptide.name.includes("100mg")) typicalMg = 100;
+            if(peptide.name.includes("70mg")) typicalMg = 70;
+            if(peptide.name.includes("80mg")) typicalMg = 80;
+            if(peptide.name.includes("1mg")) typicalMg = 1;
+            if(peptide.name.includes("500mg")) typicalMg = 500;
+
+            let typicalDose = parseInt(peptide.dosage.normal) || 250;
+            if(peptide.id === 'tirzepatide') typicalDose = 2500;
+            if(peptide.id === 'retatrutide') typicalDose = 1000;
+            if(peptide.id === 'aicar') typicalDose = 25000;
+            if(peptide.id === 'nadplus') typicalDose = 100000;
+
+            document.getElementById('calc-mg').value = typicalMg;
+            document.getElementById('calc-ml').value = 2; // Default BAC ml
+            document.getElementById('calc-mcg').value = typicalDose;
+
+            calculateSyringe();
+        }
+
+        // Storage Simulator Logik
+        let selectedState = 'dry';
+        let selectedTemp = 'fridge';
+
+        function setStorageState(state, btn) {
+            selectedState = state;
+            const vialPowder = document.getElementById('vial-powder');
+            const vialLiquid = document.getElementById('vial-liquid');
+            
+            document.querySelectorAll('.storage-state-btn').forEach(b => {
+                b.className = "storage-state-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200";
+            });
+            btn.className = "storage-state-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200";
+
+            if (state === 'dry') {
+                vialPowder.style.display = 'block';
+                vialLiquid.style.display = 'none';
+            } else {
+                vialPowder.style.display = 'none';
+                vialLiquid.style.display = 'block';
+            }
+
+            updateStorageSimulation();
+        }
+
+        function setStorageTemp(temp, btn) {
+            selectedTemp = temp;
+            document.querySelectorAll('.storage-temp-btn').forEach(b => {
+                b.className = "storage-temp-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200";
+            });
+            btn.className = "storage-temp-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200";
+
+            updateStorageSimulation();
+        }
+
+        function updateStorageSimulation() {
+            const isLight = document.getElementById('storage-light').checked;
+            const resLife = document.getElementById('sim-result-life');
+            const resBar = document.getElementById('sim-result-bar');
+            const resDesc = document.getElementById('sim-result-desc');
+            const vialLiquid = document.getElementById('vial-liquid');
+            const vialCracks = document.getElementById('vial-cracks');
+            const vialCap = document.getElementById('vial-cap');
+
+            let shelfLifeText = "";
+            let description = "";
+            let barPercent = 100;
+            let themeColor = "var(--glowGreen)"; 
+            let barColorClass = "bg-glowGreen";
+
+            vialCracks.style.display = 'none';
+            vialCap.style.boxShadow = '0 0 15px rgba(0, 242, 254, 0.15)';
+            vialCap.style.backgroundColor = 'var(--glowCyan)';
+
+            if (selectedState === 'dry') { 
+                if (selectedTemp === 'freezer') {
+                    shelfLifeText = "Bis zu 24 Monate";
+                    description = "Im tiefgefrorenen Bereich (-20°C) ist der molekulare Abbauprozess der lyophilisierten Ketten nahezu vollständig inaktiviert.";
+                    barPercent = 95;
+                } else if (selectedTemp === 'fridge') {
+                    shelfLifeText = "12 - 18 Monate";
+                    description = "Gekühlte Lagerung im Kühlschrank schützt das lyophilisierte Peptid hervorragend vor Feuchtigkeitseintritt & Zersetzung.";
+                    barPercent = 80;
+                } else { 
+                    shelfLifeText = "ca. 4 Wochen";
+                    description = "Unaufgelöstes Trockenpulver toleriert Raumtemperaturen kurzfristig (z.B. während des Logistik-Versands). Erfordert baldige Kühlung.";
+                    barPercent = 40;
+                    themeColor = "var(--glowAmber)";
+                    barColorClass = "bg-glowAmber";
+                }
+            } else { 
+                if (selectedTemp === 'freezer') {
+                    shelfLifeText = "SOFORTIGER ZERFALL";
+                    description = "Kritischer Fehler! Ein einmal rekonstituiertes (flüssiges) Peptid darf NIE eingefroren werden. Die kristalline Frostausdehnung zerreißt die Peptidbindungen.";
+                    barPercent = 0;
+                    themeColor = "var(--glowRed)";
+                    barColorClass = "bg-glowRed";
+                    vialCracks.style.display = 'flex';
+                    vialCap.style.boxShadow = '0 0 15px rgba(255, 68, 85, 0.4)';
+                    vialCap.style.backgroundColor = 'var(--glowRed)';
+                } else if (selectedTemp === 'fridge') {
+                    shelfLifeText = "3 - 4 Wochen";
+                    description = "In sterilem BAC-Wasser gelöst, bietet der Kühlschrank die ideale Haltbarkeit. Nach Ablauf von ca. 30 Tagen degradieren die Wirkstofffaktoren rasant.";
+                    barPercent = 65;
+                    themeColor = "var(--glowCyan)";
+                    barColorClass = "bg-glowCyan";
+                } else { 
+                    shelfLifeText = "Maximal 48 Stunden";
+                    description = "Flüssige Peptidsignalwege zerfallen ungekühlt binnen Stunden. Zudem besteht bei Raumtemperatur ein hohes Risiko bakterieller Verunreinigung.";
+                    barPercent = 10;
+                    themeColor = "var(--glowRed)";
+                    barColorClass = "bg-glowRed";
+                }
+            }
+
+            if (isLight && barPercent > 0) {
+                barPercent = Math.max(5, barPercent - 25);
+                shelfLifeText += " // RADIATION_WARNING";
+                description += " ZUSÄTZLICHER LICHTEINFLUSS: UV-Strahlung zerstört die photolabilen Aminosäureketten fotochemisch.";
+                if (themeColor === "var(--glowGreen)" || themeColor === "var(--glowCyan)") {
+                    themeColor = "var(--glowAmber)";
+                    barColorClass = "bg-glowAmber";
+                }
+            }
+
+            resLife.innerText = shelfLifeText;
+            resLife.style.color = themeColor;
+            resBar.className = "h-full transition-all duration-500 " + barColorClass;
+            resBar.style.width = barPercent + "%";
+            resDesc.innerText = description;
+        }
+
+        // Sportmedizin Matrix Selector
+        function setSportChannel(chId, btn) {
+            document.querySelectorAll('.sport-ch-btn').forEach(b => {
+                b.className = "sport-ch-btn p-5 rounded-xl border border-white/5 text-slate-400 hover:border-glowCyan/20 hover:bg-glowCyan/5 text-left transition duration-200";
+            });
+
+            let borderStyle = "border-glowCyan bg-glowCyan/5 text-glowCyan";
+            if (chId === 'heal') borderStyle = "border-glowGreen bg-glowGreen/5 text-glowGreen";
+            if (chId === 'lip') borderStyle = "border-glowOrange bg-glowOrange/5 text-glowOrange";
+            if (chId === 'cell') borderStyle = "border-glowPurple bg-glowPurple/5 text-glowPurple";
+
+            btn.className = "sport-ch-btn p-5 rounded-xl border-2 text-left transition duration-200 " + borderStyle;
+
+            document.querySelectorAll('.sport-ch-content').forEach(c => {
+                c.classList.add('hidden');
+                c.classList.remove('block');
+            });
+            document.getElementById('sport-ch-' + chId).classList.remove('hidden');
+            document.getElementById('sport-ch-' + chId).classList.add('block');
+        }
+
+        // Initialize Checkbox Stacker Selector
+        function renderStackerList() {
+            const list = document.getElementById('stack-vial-list');
+            list.innerHTML = '';
+
+            PEPTIDES_DATA.forEach(p => {
+                let riskText = "Niedrig";
+                let val = 1;
+                if(p.risk === 'med') { riskText = "Mittel"; val = 2; }
+                if(p.risk === 'high') { riskText = "Hoch"; val = 3; }
+
+                list.innerHTML += `
+                    <label class="stack-selector-item flex items-center justify-between p-3.5 bg-void/50 backdrop-blur-sm rounded-xl border border-white/5 cursor-pointer hover:border-glowCyan/30 transition-all duration-200" data-name="${p.name.toLowerCase()}">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" value="${p.name}" data-risk="${val}" data-type="${p.cat}" onchange="generateStackReport()" class="stack-checkbox w-4.5 h-4.5 text-glowCyan border-white/10 rounded focus:ring-glowCyan bg-void">
+                            <div>
+                                <span class="text-xs font-bold text-white block">${p.name}</span>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase">${p.catText} // Risiko: ${riskText}</span>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+        }
+
+        function filterStackerList() {
+            const q = document.getElementById('stackerSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.stack-selector-item');
+            
+            items.forEach(item => {
+                const name = item.dataset.name;
+                if (name.includes(q)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Dynamic Stack Generator Engine
+        function generateStackReport() {
+            const checkedBoxes = document.querySelectorAll('.stack-checkbox:checked');
+            const countDisplay = document.getElementById('stack-count');
+            const riskDisplay = document.getElementById('stack-risk-display');
+            const synergyDisplay = document.getElementById('stack-synergy-display');
+            const timingDisplay = document.getElementById('stack-timing-display');
+            const analysisText = document.getElementById('stack-analysis-text');
+
+            countDisplay.innerText = checkedBoxes.length + " Peptid(e)";
+
+            if (checkedBoxes.length === 0) {
+                riskDisplay.innerText = "-";
+                riskDisplay.style.color = 'var(--text)';
+                synergyDisplay.innerText = "-";
+                timingDisplay.innerText = "-";
+                analysisText.innerText = "Bitte wähle Wirkstoffe aus der Liste aus, um die biochemische Stack-Analyse zu starten.";
+                return;
+            }
+
+            let maxRisk = 1;
+            let selectedVials = [];
+
+            checkedBoxes.forEach(box => {
+                const riskVal = parseInt(box.dataset.risk);
+                if (riskVal > maxRisk) maxRisk = riskVal;
+                selectedVials.push(box.value);
+            });
+
+            if (maxRisk === 1) {
+                riskDisplay.innerText = "LOW_RISK_PROFILE";
+                riskDisplay.style.color = "var(--glowGreen)";
+            } else if (maxRisk === 2) {
+                riskDisplay.innerText = "MODERATE_RISK_AXIS";
+                riskDisplay.style.color = "var(--glowAmber)";
+            } else {
+                riskDisplay.innerText = "CRITICAL_RISK_WARNING";
+                riskDisplay.style.color = "var(--glowRed)";
+            }
+
+            let synergy = "Individuelle Wirkung";
+            let analysis = "";
+            let timing = "Morgens";
+
+            const namesString = selectedVials.join(" ");
+
+            if (namesString.includes("BPC-157") && namesString.includes("TB-500")) {
+                synergy = "SYNERGY_HIGH [Rehabilitativ]";
+                timing = "Morgens & Abends";
+                analysis += "Herausragende synergistische Gewebe- und Sehnenregeneration. Die Kombination aus Angiogenese (BPC) und Actin-Zellwanderung (TB) beschleunigt den Heilungsprozess optimal. Diese Peptide können ideal im selben Zyklus angewendet werden. ";
+            }
+            if (namesString.includes("Ipamorelin") && namesString.includes("CJC-1295")) {
+                synergy = "SYNERGY_MAX [Wachstumsimpuls]";
+                timing = "Abends (vor Schlaf, nüchtern)";
+                analysis += "Die klassische 'Wachstumshormon-Verstärkerschleife'. CJC erhöht die Amplitude der somatotropen Signale, während Ipamorelin den selektiven Puls triggert. Maximale Proteinsynthese. Können im selben Zeitraum appliziert werden. ";
+            }
+            if (namesString.includes("Semaglutid") && namesString.includes("5-Amino-1MQ")) {
+                synergy = "METABOLIC_ACCELERATOR [Fettreduktion]";
+                timing = "Sema: Wöchentlich / 5-Amino: Täglich";
+                analysis += "Optimaler metabolischer Fettabbau-Stack. Semaglutid dämpft den Appetit, während 5-Amino-1MQ die Fetteinspeicherung blockiert und die Muskelmitochondrien antreibt. Sehr gute funktionelle Ergänzung. ";
+            }
+            if (namesString.includes("Follistatin-344") && namesString.includes("IGF-1 LR3")) {
+                synergy = "CRITICAL_MASS_UP [Extremer Muskelaufbau]";
+                timing = "Post-Workout";
+                analysis += "VORSICHT: Dieser anabole Stack birgt ein hohes Risiko für übermäßigen Stress auf passive Strukturen wie Sehnen und Gelenkbänder, da das Muskelwachstum die Sehnenstrukturen mechanisch überholt. Nur extrem kurzzeitig erforschen. ";
+            }
+
+            if (synergy === "Individuelle Wirkung" && checkedBoxes.length > 1) {
+                synergy = "CO-APPLIKATION [Standard]";
+                timing = "Versetzte Einnahmezeiten";
+                analysis = "Mehrere Wirkstoffe sind aktiv. Achte auf zeitliche Abstände bei der Verabreichung, um Interaktionen an den Rezeptorschnittstellen zu minimieren. Grundsätzlich im gleichen Zeitraum einnehmbar.";
+            } else if (checkedBoxes.length === 1) {
+                synergy = "SINGLE_ELEMENT_MODE";
+                timing = "Peptidspezifisch";
+                analysis = `Du analysierst das Peptid ${selectedVials[0]}. Perfekt geeignet für den Einstieg zur exakten Bestimmung der Verträglichkeit.`;
+            }
+
+            synergyDisplay.innerText = synergy;
+            timingDisplay.innerText = timing;
+            analysisText.innerText = analysis;
+        }
+
+        function updateTutorialProgress(step, checkbox) {
+            const stepBox = document.getElementById(`step-box-${step}`);
+            const stepNum = document.getElementById(`step-num-${step}`);
+            
+            if (checkbox.checked) {
+                stepBox.classList.remove('bg-void/50', 'border-white/10');
+                stepBox.classList.add('bg-glowGreen/5', 'border-glowGreen/30');
+                stepNum.classList.remove('bg-slate-800', 'text-slate-400');
+                stepNum.classList.add('bg-glowGreen', 'text-void', 'font-bold');
+                
+                if (step < 5) {
+                    const nextStepBox = document.getElementById(`step-box-${step + 1}`);
+                    const nextCheckbox = nextStepBox.querySelector('.tut-chk');
+                    nextStepBox.classList.remove('opacity-60');
+                    nextCheckbox.removeAttribute('disabled');
+                }
+            } else {
+                stepBox.classList.remove('bg-glowGreen/5', 'border-glowGreen/30');
+                stepBox.classList.add('bg-void/50', 'border-white/10');
+                stepNum.classList.remove('bg-glowGreen', 'text-void', 'font-bold');
+                stepNum.classList.add('bg-slate-800', 'text-slate-400');
+                
+                for (let i = step + 1; i <= 5; i++) {
+                    const futureBox = document.getElementById(`step-box-${i}`);
+                    const futureCheckbox = futureBox.querySelector('.tut-chk');
+                    futureCheckbox.checked = false;
+                    futureCheckbox.setAttribute('disabled', 'true');
+                    futureBox.classList.add('opacity-60');
+                    futureBox.classList.remove('bg-glowGreen/5', 'border-glowGreen/30');
+                    futureBox.classList.add('bg-void/50', 'border-white/10');
+                    
+                    const futureNum = document.getElementById(`step-num-${i}`);
+                    futureNum.classList.remove('bg-glowGreen', 'text-void', 'font-bold');
+                    futureNum.classList.add('bg-slate-800', 'text-slate-400');
+                }
+            }
+
+            const totalChecked = document.querySelectorAll('.tut-chk:checked').length;
+            const percentage = (totalChecked / 5) * 100;
+            document.getElementById('tut-progress-txt').innerText = Math.round(percentage) + "%";
+            document.getElementById('tut-progress-bar').style.width = percentage + "%";
+        }
+
+        function copyBlueprint() {
+            const count = document.getElementById('stack-count').innerText;
+            const risk = document.getElementById('stack-risk-display').innerText;
+            const synergy = document.getElementById('stack-synergy-display').innerText;
+            const timing = document.getElementById('stack-timing-display').innerText;
+            const note = document.getElementById('stack-analysis-text').innerText;
+
+            const text = `--- PEPTIDBASE LAB BLUEPRINT REPORT ---\nVerbundene Wirkstoffe: ${count}\nRisikoprofil: ${risk}\nSynergie-Matrix: ${synergy}\nEinnahme-Zeitraum: ${timing}\nLabor-Anmerkung: ${note}\n---------------------------------------`;
+
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
+        window.onload = function() {
+            renderDatabase();
+            renderStackerList();
+            initCalcPresets();
+            calculateSyringe();
+            updateStorageSimulation();
+        }
+    </script>
+</body>
+</html>
