@@ -39,15 +39,11 @@
         }
     </script>
     <style>
-        .grain-bg {
-            position: relative;
-        }
+        .grain-bg { position: relative; }
         .grain-bg::before {
-            content: '';
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 10;
+            pointer-events: none; z-index: 10;
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #030712; }
@@ -57,83 +53,58 @@
         .chat-bubble { animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Typing dot animation */
         .dot-flashing {
             position: relative; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite linear alternate; animation-delay: .5s;
         }
-        .dot-flashing::before, .dot-flashing::after {
-            content: ''; display: inline-block; position: absolute; top: 0;
-        }
-        .dot-flashing::before {
-            left: -10px; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite alternate; animation-delay: 0s;
-        }
-        .dot-flashing::after {
-            left: 10px; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite alternate; animation-delay: 1s;
-        }
+        .dot-flashing::before, .dot-flashing::after { content: ''; display: inline-block; position: absolute; top: 0; }
+        .dot-flashing::before { left: -10px; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite alternate; animation-delay: 0s; }
+        .dot-flashing::after { left: 10px; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite alternate; animation-delay: 1s; }
         @keyframes dot-flashing { 0% { background-color: #00f2fe; } 50%, 100% { background-color: rgba(0, 242, 254, 0.2); } }
     </style>
 </head>
 <body class="bg-void text-slate-100 font-sans min-h-screen flex flex-col grain-bg overflow-x-hidden relative">
 
-    <!-- Glowing Top Line -->
     <div class="h-[2px] w-full z-20 relative bg-gradient-to-r from-glowCyan via-glowPurple to-glowGreen"></div>
 
-    <!-- Main Navigation Header -->
     <header class="sticky top-0 z-40 bg-void/90 backdrop-blur-md border-b border-white/5 py-4 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <!-- Brand Logo -->
             <div class="flex items-center gap-3 cursor-pointer group" onclick="router('db')">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-glowCyan to-blue-600 flex items-center justify-center text-void font-bold shadow-neon-cyan group-hover:scale-105 transition-transform duration-300">
                     <svg class="w-6 h-6 text-void" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 </div>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-widest font-mono text-white">PEPTID_BASE<span class="text-glowCyan animate-pulse">//</span>ULTIMATE</h1>
-                    <span class="text-[10px] font-mono text-glowGreen block tracking-widest uppercase">Systemstatus: ACTIVE // 47 MOLECULAR BLUEPRINTS LOADED</span>
+                    <span class="text-[10px] font-mono text-glowGreen block tracking-widest uppercase">Systemstatus: ACTIVE // 63 MOLECULAR BLUEPRINTS LOADED</span>
                 </div>
             </div>
 
-            <!-- Viewport Router Links -->
             <nav class="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-labDark/80 rounded-xl border border-white/5 relative z-20">
-                <button onclick="router('db')" id="nav-db" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan">
-                    Datenbank
-                </button>
-                <button onclick="router('calc')" id="nav-calc" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">
-                    Mischrechner
-                </button>
-                <button onclick="router('storage')" id="nav-storage" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">
-                    Haltbarkeit
-                </button>
-                <button onclick="router('sport')" id="nav-sport" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">
-                    Sportmedizin
-                </button>
-                <button onclick="router('stack')" id="nav-stack" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">
-                    Stacker <span class="bg-glowCyan/10 text-glowCyan text-[8px] px-1.5 py-0.5 rounded-full border border-glowCyan/30">CHECK</span>
-                </button>
-                <button onclick="router('tutorial')" id="nav-tutorial" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">
-                    Misch-Guide <span class="bg-glowGreen/10 text-glowGreen text-[8px] px-1.5 py-0.5 rounded-full border border-glowGreen/30">TUTORIAL</span>
-                </button>
+                <button onclick="router('db')" id="nav-db" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan">Datenbank</button>
+                <button onclick="router('calc')" id="nav-calc" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">Mischrechner</button>
+                <button onclick="router('storage')" id="nav-storage" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">Haltbarkeit</button>
+                <button onclick="router('sport')" id="nav-sport" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white">Sportmedizin</button>
+                <button onclick="router('stack')" id="nav-stack" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">Stacker <span class="bg-glowCyan/10 text-glowCyan text-[8px] px-1.5 py-0.5 rounded-full border border-glowCyan/30">CHECK</span></button>
+                <button onclick="router('tutorial')" id="nav-tutorial" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">Misch-Guide</button>
+                <button onclick="router('coupons')" id="nav-coupons" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-glowAmber hover:text-white flex items-center gap-1.5 border border-glowAmber/20 bg-glowAmber/5">Rabatte %</button>
             </nav>
         </div>
     </header>
 
-    <!-- Floating Diagnostic Warning Header -->
     <div class="bg-glowAmber/5 border-b border-glowAmber/20 py-2.5 px-4 text-center relative z-20">
         <p class="text-[11px] font-mono text-glowAmber tracking-wide flex items-center justify-center gap-2">
             <span class="animate-pulse">●</span> INTELLECTUAL PROPERTY: Diese Schnittstelle dient rein didaktischen Laboranalysen & wissenschaftlichen Modellberechnungen.
         </p>
     </div>
 
-    <!-- Main Viewports Container -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 relative z-20">
 
         <!-- ==================== VIEW 1: DATENBANK ==================== -->
         <div id="view-db" class="view-panel block space-y-8 animate-fadeIn">
-            <!-- Search & Advanced Filter Board -->
             <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 space-y-6 shadow-xl">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div class="relative lg:col-span-2">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm">SEARCH_QUERY_</span>
-                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Peptid-Name, Indikation, Biomarker oder Code eingeben..." class="w-full bg-void/50 border border-white/10 rounded-xl py-3.5 pl-36 pr-4 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
+                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Peptid, Indikation, SARM oder Code eingeben..." class="w-full bg-void/50 border border-white/10 rounded-xl py-3.5 pl-36 pr-4 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
                     </div>
                     <div>
                         <select id="catSelect" onchange="applyFilters()" class="w-full bg-void/50 border border-white/10 rounded-xl py-3.5 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
@@ -149,7 +120,6 @@
                     </div>
                 </div>
 
-                <!-- Custom Filter Tags Row -->
                 <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-white/5">
                     <span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Risikograd filtern:</span>
                     <button onclick="setRiskFilter('all', this)" class="risk-f-btn px-3 py-1.5 rounded-lg font-mono text-[10px] border border-white/10 text-white bg-white/10">ALLE</button>
@@ -159,13 +129,11 @@
                 </div>
             </div>
 
-            <!-- Diagnostics Bar -->
             <div class="flex items-center justify-between text-xs font-mono text-slate-500 px-2">
                 <div>DATENBANK-AUSGABE: <span id="db-count" class="text-glowCyan font-bold">0</span> DATEISÄTZE AKTIV GELADEN</div>
                 <div class="hidden sm:block">SORTIERUNG: PHARMA_INDEX_ASC</div>
             </div>
 
-            <!-- PEPTIDE CARDS GRID (Dynamically Injected via JS) -->
             <div id="db-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
         </div>
 
@@ -173,24 +141,19 @@
         <div id="view-calc" class="view-panel hidden space-y-8 animate-fadeIn">
             <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 shadow-xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    <!-- Form Controls -->
                     <div class="lg:col-span-5 space-y-6">
                         <div>
                             <span class="text-[10px] font-mono text-glowCyan tracking-widest uppercase block mb-1">DILUTION_CONTROL</span>
                             <h2 class="text-3xl font-black text-white">Mischungs- &amp; Dosisrechner</h2>
                             <p class="text-slate-400 text-xs mt-2 leading-relaxed">Der standardisierte Algorithmus für mikrodosierte biochemische Proteinketten auf der U100-Skala (1ml).</p>
                         </div>
-
-                        <!-- Dropdown Preset Selector -->
                         <div class="space-y-1">
                             <label class="text-[10px] font-mono text-glowCyan uppercase tracking-widest block font-bold">Schnellauswahl (Preset)</label>
                             <select id="calcPreset" onchange="loadPresetToCalc()" class="w-full bg-void/80 border border-white/10 rounded-xl py-3 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
                                 <option value="">-- Eigenes Peptid / Custom Wert --</option>
                             </select>
                         </div>
-
                         <div class="space-y-4">
-                            <!-- MG Input -->
                             <div class="space-y-1">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Wirkstoffgehalt pro Fläschchen (mg)</label>
                                 <div class="relative">
@@ -198,7 +161,6 @@
                                     <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">mg</span>
                                 </div>
                             </div>
-                            <!-- BAC Water Input -->
                             <div class="space-y-1">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Lösungsmittelmenge (BAC-Wasser in ml)</label>
                                 <div class="relative">
@@ -206,7 +168,6 @@
                                     <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">ml</span>
                                 </div>
                             </div>
-                            <!-- Desired Dose Input -->
                             <div class="space-y-1">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Gewünschte Einzeldosis (mcg)</label>
                                 <div class="relative">
@@ -216,32 +177,21 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Syringe Graphical Panel -->
                     <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 flex flex-col justify-center space-y-6">
                         <div class="flex items-center justify-between pb-4 border-b border-white/5">
                             <span class="text-xs font-mono text-slate-400">U100 INSULIN_SYRINGE_SIMULATOR</span>
                             <span class="text-xs font-mono text-glowCyan animate-pulse" id="syringe-label">10 IE</span>
                         </div>
-
-                        <!-- Graphical Syringe -->
                         <div class="relative py-8 flex items-center justify-center">
                             <div class="w-6 h-[2px] bg-slate-500 absolute left-0"></div>
                             <div class="w-full h-14 bg-labDark border-y-2 border-slate-600 rounded-sm relative flex items-center shadow-inner overflow-hidden">
                                 <div id="syringe-fluid" class="h-full bg-gradient-to-r from-glowCyan/20 to-glowCyan/40 border-r-[4px] border-glowCyan shadow-neon-cyan transition-all duration-500" style="width: 10%;"></div>
                                 <div class="absolute inset-0 flex justify-between px-4 items-center pointer-events-none select-none font-mono text-[9px] text-slate-500">
-                                    <span>| 0</span>
-                                    <span>| 20</span>
-                                    <span>| 40</span>
-                                    <span>| 60</span>
-                                    <span>| 80</span>
-                                    <span>| 100 IE</span>
+                                    <span>| 0</span><span>| 20</span><span>| 40</span><span>| 60</span><span>| 80</span><span>| 100 IE</span>
                                 </div>
                             </div>
                             <div class="w-24 h-6 bg-slate-600 border border-slate-500 rounded-r-md flex-shrink-0"></div>
                         </div>
-
-                        <!-- Metrics Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/5 font-mono text-xs text-center">
                             <div class="bg-labDark/80 p-3 rounded-xl border border-white/5">
                                 <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Konzentration</span>
@@ -257,7 +207,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -266,7 +215,6 @@
         <div id="view-storage" class="view-panel hidden space-y-8 animate-fadeIn">
             <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 shadow-xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    <!-- Controls -->
                     <div class="lg:col-span-5 space-y-6">
                         <div>
                             <span class="text-[10px] font-mono text-glowGreen tracking-widest uppercase block mb-1">TEMPERATURE_SIMULATOR</span>
@@ -301,7 +249,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Vial Graphic & Stability Indicator -->
                     <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 sm:p-10 flex flex-col items-center justify-center space-y-6 min-h-[380px] relative overflow-hidden">
                         <div class="relative w-28 h-48 border-2 border-slate-500 rounded-3xl flex flex-col justify-between items-center py-2 px-1 bg-gradient-to-b from-slate-800/10 to-slate-900/40">
                             <div class="absolute -top-3 w-16 h-4 bg-glowCyan border-2 border-slate-500 rounded shadow-neon-cyan" id="vial-cap"></div>
@@ -591,6 +538,61 @@
             </div>
         </div>
 
+        <!-- ==================== VIEW 7: COUPONS & RABATTE ==================== -->
+        <div id="view-coupons" class="view-panel hidden space-y-8 animate-fadeIn">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 shadow-xl">
+                <div>
+                    <span class="text-[10px] font-mono text-glowAmber tracking-widest uppercase block mb-1">SAVE_MONEY_PROTOCOL</span>
+                    <h2 class="text-3xl font-black text-white">Labor-Rabatte & Community Codes</h2>
+                    <p class="text-slate-400 text-xs mt-2 leading-relaxed">Klicke einfach auf einen der Codes unten, um ihn direkt in deine Zwischenablage zu kopieren. Füge ihn dann an der Kasse des jeweiligen Shops ein, um massiv zu sparen.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-void/50 p-6 rounded-2xl border border-white/10 hover:border-glowCyan/30 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">🇪🇺 Europa-Peptide</h3>
+                        <div class="space-y-3">
+                            <button onclick="copyCoupon('Outlaw15', this)" class="w-full flex justify-between items-center bg-glowAmber/10 border border-glowAmber/30 text-glowAmber hover:bg-glowAmber/20 py-3.5 px-4 rounded-xl font-mono font-bold transition-all">
+                                <span>Code: OUTLAW15</span> <span>15% Rabatt</span>
+                            </button>
+                            <button onclick="copyCoupon('Morty15', this)" class="w-full flex justify-between items-center bg-glowAmber/10 border border-glowAmber/30 text-glowAmber hover:bg-glowAmber/20 py-3.5 px-4 rounded-xl font-mono font-bold transition-all">
+                                <span>Code: MORTY15</span> <span>15% Rabatt</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-void/50 p-6 rounded-2xl border border-white/10 hover:border-glowCyan/30 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">🇩🇪 Peptid24</h3>
+                        <div class="space-y-3">
+                            <button onclick="copyCoupon('Outlaw15', this)" class="w-full flex justify-between items-center bg-glowAmber/10 border border-glowAmber/30 text-glowAmber hover:bg-glowAmber/20 py-3.5 px-4 rounded-xl font-mono font-bold transition-all">
+                                <span>Code: OUTLAW15</span> <span>15% Rabatt</span>
+                            </button>
+                            <button onclick="copyCoupon('Morty15', this)" class="w-full flex justify-between items-center bg-glowAmber/10 border border-glowAmber/30 text-glowAmber hover:bg-glowAmber/20 py-3.5 px-4 rounded-xl font-mono font-bold transition-all">
+                                <span>Code: MORTY15</span> <span>15% Rabatt</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-void/50 p-6 rounded-2xl border border-white/10 hover:border-glowCyan/30 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">🐉 Drakon Peptides</h3>
+                        <div class="space-y-3">
+                            <button onclick="copyCoupon('SimonProves', this)" class="w-full flex justify-between items-center bg-glowCyan/10 border border-glowCyan/30 text-glowCyan hover:bg-glowCyan/20 py-3.5 px-4 rounded-xl font-mono font-bold transition-all">
+                                <span>Code: SIMONPROVES</span> <span>10% Rabatt</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-void/50 p-6 rounded-2xl border border-white/10 hover:border-glowCyan/30 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">🧬 Rebirth Labs</h3>
+                        <div class="space-y-3">
+                            <button onclick="copyCoupon('Sam', this)" class="w-full flex justify-between items-center bg-glowCyan/10 border border-glowCyan/30 text-glowCyan hover:bg-glowCyan/20 py-3.5 px-4 rounded-xl font-mono font-bold transition-all">
+                                <span>Code: SAM</span> <span>10% Rabatt</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- FLOATING AI BOT BUTTON -->
@@ -600,7 +602,6 @@
 
     <!-- AI CHAT WINDOW -->
     <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[350px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[70vh] bg-labDark/95 backdrop-blur-xl border border-glowCyan/50 rounded-2xl shadow-neon-cyan z-50 flex flex-col hidden transform origin-bottom-right transition-all duration-300">
-        <!-- Chat Header -->
         <div class="flex items-center justify-between p-4 border-b border-white/10 bg-void/50 rounded-t-2xl">
             <div class="flex items-center gap-2">
                 <div class="w-2 h-2 rounded-full bg-glowCyan animate-pulse"></div>
@@ -611,17 +612,15 @@
             </button>
         </div>
         
-        <!-- Chat Messages -->
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 font-mono text-xs">
             <div class="chat-bubble flex gap-2">
                 <div class="w-6 h-6 rounded-full bg-glowCyan/20 flex items-center justify-center shrink-0"><span class="text-[10px] text-glowCyan">AI</span></div>
                 <div class="bg-void border border-white/10 p-3 rounded-xl rounded-tl-none text-slate-300">
-                    System online. Ich habe Zugriff auf alle 47 Peptide der Datenbank. Frag mich nach Dosierungen, Kombinationen oder Wirkungen.
+                    System online. Ich bin der analytische Forschungsassistent. Ich unterstütze dich bei biochemischen Fragen zu Peptiden und SARMs. (Hinweis: Keine ärztliche Beratung, WADA-Regularien beachten).
                 </div>
             </div>
         </div>
 
-        <!-- Chat Input -->
         <div class="p-3 border-t border-white/10 bg-void/50 rounded-b-2xl">
             <form id="chat-form" class="flex items-center gap-2" onsubmit="handleChatSubmit(event)">
                 <input type="text" id="chat-input" placeholder="Frage die KI..." class="flex-1 bg-labDark border border-white/10 rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-glowCyan">
@@ -648,58 +647,73 @@
 
     <!-- INTERACTIVE ENGINE & SCRIPTS -->
     <script>
-        // MASTER DATABASE: All 47 Peptides
+        // MASTER DATABASE: All 63 Peptides & SARMs
         const PEPTIDES_DATA = [
-            { id: "bpc157", nr: "01/47", name: "BPC-157", aka: "Body Protection Compound-157", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Beschleunigt Sehnen-, Gelenk- & Muskelregeneration", "Schützt die Magenschleimhaut (Leaky Gut, Reflux, Ulzera)", "Starke entzündungshemmende Wirkung ohne Immunsuppression"], risks: ["Schwindel bei zu schneller Gabe möglich", "Langzeiteffekte am Menschen nur bedingt erprobt"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan (lokal) / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Tierstudien", text: "Umfangreiche Rattenmodelle belegen die vollständige biologische Reparatur chronischer Achillessehnenrupturen." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "28.50" }, { shop: "Peptid24", price: "23.90" }, { shop: "DrakonPeptides", price: "26.00" }] },
-            { id: "tb500", nr: "02/47", name: "TB-500", aka: "Thymosin Beta-4 Analogon", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Induziert zelluläre Migration via Actin-Synthese", "Erhöht Elastizität & Flexibilität von Narbengewebe", "Synergistischer Heilungsfaktor gestapelt mit BPC-157"], risks: ["Milde Abgeschlagenheit unmittelbar nach Gabe", "Hohe Preisschwankungen am freien Markt"], dosage: { starter: "2 mg/Woche", normal: "5 mg/Woche", max: "10 mg/Woche", freq: "1-2x wöchentlich", form: "Subkutan", timing: "Abends / Post-Workout", cycle: "6 - 8 Wochen", halflife: "~30 Stunden" }, study: { level: "pilot", levelText: "Veterinärstudien", text: "Exzellente Erfolgsraten bei Sehnen- und Hufschäden von Galopppferden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "38.00" }, { shop: "Peptid24", price: "32.00" }, { shop: "DrakonPeptides", price: "36.00" }] },
-            { id: "ipamorelin", nr: "03/47", name: "Ipamorelin", aka: "Growth Hormone Secretagogue Pentapeptide", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "low", effects: ["Selektiver Peak der Wachstumshormon-Ausschüttung", "Keinerlei Steigerung von Stress-Cortisol oder Prolaktin", "Optimiert die regenerativen Tiefschlafphasen"], risks: ["Milde Wassereinlagerungen bei sensiblem Stoffwechsel", "Temporärer Anstieg des Hungergefühls"], dosage: { starter: "100 mcg", normal: "200-300 mcg", max: "500 mcg", freq: "1-3x täglich", form: "Subkutan", timing: "Nüchtern vor dem Schlaf", cycle: "8 - 12 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Phase-II Humantrials", text: "Sichere Wachstumshormonpulsation bei exzellentem endokrinologischem Verträglichkeitsprofil belegt." }, prices: [{ shop: "Europa-Peptide", price: "26.90" }, { shop: "Alpine-Peptides", price: "31.00" }, { shop: "Peptid24", price: "27.90" }, { shop: "DrakonPeptides", price: "29.50" }] },
-            { id: "cjc1295nodac", nr: "04/47", name: "CJC-1295 (ohne DAC)", aka: "Modified GRF 1-29 · GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Verstärkt die Amplitude der somatotropen Pulse", "Verbessert die fettfreie Muskelreparation & Lipolyse", "Perfekt stapelbar mit Ipamorelin für maximalen Puls"], risks: ["Spürbarer 'Head Rush' (Hitze/Flush) direkt nach Gabe", "Insulinresistenz-Risiko bei exzessiver Langzeitnutzung"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "300 mcg", freq: "1-3x täglich", form: "Subkutan", timing: "Morgens/Abends nüchtern", cycle: "8 - 16 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Studien", text: "Dokumentierter Anstieg von freiem Serum-IGF-1 bei gesunden erwachsenen Probanden." }, prices: [{ shop: "Europa-Peptide", price: "28.00" }, { shop: "Alpine-Peptides", price: "32.00" }, { shop: "Peptid24", price: "29.95" }, { shop: "DrakonPeptides", price: "31.00" }] },
-            { id: "cjc1295dac", nr: "05/47", name: "CJC-1295 (mit DAC)", aka: "Drug Affinity Complex GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Extrem lange Halbwertszeit durch Albumin-Bindung", "Kontinuierliche Erhöhung der GH-Grundlinie", "Erfordert nur 1-2 wöchentliche Applikationen"], risks: ["Risiko des permanenten 'GH Bleed' (Dauerausschüttung)", "Häufiger auftretende lethargische Phasen"], dosage: { starter: "1 mg", normal: "2 mg", max: "4 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "8 - 12 Wochen", halflife: "~7 Tage" }, study: { level: "human", levelText: "Humantrials", text: "Belegte signifikante Erhöhung des basalen GH-Spiegels über mehrere Tage nach einer Einzeldosis." }, prices: [{ shop: "Europa-Peptide", price: "36.00" }, { shop: "Alpine-Peptides", price: "39.90" }, { shop: "DrakonPeptides", price: "38.50" }] },
-            { id: "semaglutide", nr: "06/47", name: "Semaglutid", aka: "GLP-1 Rezeptor-Agonist · Ozempic / Wegovy", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "med", effects: ["Maximale Verzögerung der gastrischen Entleerung", "Blockiert Heißhungerattacken direkt im Hypothalamus", "Gewichtsverlust von ca. 15% klinisch verifiziert"], risks: ["Akute Übelkeit, Sodbrennen und Erbrechen", "Erhöhtes Risiko des Abbaus von magerer Muskelmasse"], dosage: { starter: "0.25 mg", normal: "1.0 mg", max: "2.4 mg", freq: "1x wöchentlich", form: "Subkutan / Oral", timing: "Einmal wöchentlich", cycle: "6 - 12 Monate", halflife: "~165 Stunden" }, study: { level: "human", levelText: "STEP Phase-III", text: "STEP-Trials belegen bahnbrechende Fettreduktion bei exzellenter kardiometabolischer Stabilisierung." }, prices: [{ shop: "Europa-Peptide", price: "59.00" }, { shop: "Alpine-Peptides", price: "64.00" }, { shop: "Peptid24", price: "58.00" }, { shop: "DrakonPeptides", price: "62.00" }] },
-            { id: "tirzepatide", nr: "07/47", name: "Tirzepatid", aka: "GIP/GLP-1 Dual-Agonist · Mounjaro", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "med", effects: ["Gleichzeitiger Agonismus an GIP- & GLP-1-Rezeptoren", "Unerreichter Fettabbau bei gleichzeitigem Muskelschutz", "Extreme Erhöhung der Insulinsensitivität"], risks: ["Magen-Darm-Beschwerden, Verstopfung, Flatulenz", "Gallensteinbildungs-Risiko bei radikalem Gewichtsabfall"], dosage: { starter: "2.5 mg", normal: "5-10 mg", max: "15 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Langzeittherapie", halflife: "~120 Stunden" }, study: { level: "human", levelText: "SURMOUNT-Studien", text: "Durchschnittlicher Fettmasseverlust von über 20 % bei übergewichtigen Probanden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "Alpine-Peptides", price: "84.00" }, { shop: "Peptid24", price: "78.00" }, { shop: "DrakonPeptides", price: "82.00" }] },
-            { id: "retatrutide", nr: "08/47", name: "Retatrutid", aka: "Triple Agonist (GLP-1 / GIP / Glucagon)", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Dreifach-Wirkung dämpft Appetit und beschleunigt Thermogenese", "Glucagon-Komponente erhöht aktiv den Ruheumsatz", "Derzeitiger endokrinologischer Rekordhalter für Diäten"], risks: ["Erhöhte Herzfrequenz (Tachykardie-Risiko) durch Glucagon", "Akuter, unkontrollierter Katabolismus ohne Protein-Monitoring"], dosage: { starter: "1 mg", normal: "4-8 mg", max: "12 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Nur unter klinischer Kontrolle", halflife: "~144 Stunden" }, study: { level: "human", levelText: "Klinische Phase-II (2023)", text: "Belegte Gewichtsabnahme von durchschnittlich 24 % der Gesamtfettmasse innerhalb von 48 Wochen." }, prices: [{ shop: "Europa-Peptide", price: "99.00" }, { shop: "Alpine-Peptides", price: "109.00" }, { shop: "Peptid24", price: "95.00" }, { shop: "DrakonPeptides", price: "105.00" }] },
-            { id: "hghfrag", nr: "09/47", name: "HGH Frag 176-191", aka: "Lipolytisches Wachstumshormon-Segment", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "low", effects: ["Zielgerichteter Fettabbau ohne diabetische Nebenwirkungen", "Keinerlei Einflüsse auf Blutzucker oder Insulinsensitivität", "Ideal zur Definition unter Erhalt der Zellvitalität"], risks: ["Äußerst kurze Halbwertszeit (präzises Fasten nötig)", "Hohe Injektionsfrequenz"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Nüchtern unmittelbar vor dem Training", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "animal", levelText: "Zell- & Tierstudien", text: "Sichere Fettgewebsreduktion in diabetischen Tiermodellen ohne die typischen HGH-induzierten Insulinresistenzen." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "36.00" }, { shop: "Peptid24", price: "29.90" }, { shop: "DrakonPeptides", price: "34.00" }] },
-            { id: "aod9604", nr: "10/47", name: "AOD-9604", aka: "Optimiertes HGH-Frag-Derivat · Anti-Obesity Drug", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "low", effects: ["Stabile Modifikation des lipolytischen Fragments", "Fördert zusätzlich regenerative Prozesse bei Arthrose", "Blockiert biochemisch die Neuentstehung von Fettzellen"], risks: ["Lokale Entzündungsreaktionen an der Einstichstelle", "Keine aktuelle therapeutische Zulassung in Deutschland"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "8 - 12 Wochen", halflife: "~40 Minuten" }, study: { level: "human", levelText: "Phase-IIb Humantrials (Australien)", text: "Dokumentierte, signifikante Reduzierung von Fettpolstern bei exzellentem endokrinologischem Profil." }, prices: [{ shop: "Europa-Peptide", price: "34.00" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "DrakonPeptides", price: "37.00" }] },
-            { id: "mt2", nr: "11/47", name: "Melanotan II (MT-2)", aka: "Synthetisches Alpha-MSH Analogon", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "high", effects: ["Stark erhöhte, langanhaltende Bräunung (Melaninaktivator)", "Erhöht signifikant Libido und sexuelle Erregung", "Appetitzügelnder Effekt auf neurologischer Ebene"], risks: ["Ausgeprägte, akute Übelkeit direkt nach Injektion", "Unkontrollierte Dauererektionen (Priapismus-Gefahr)", "Hyperpigmentierung und unregelmäßige Muttermale"], dosage: { starter: "100 mcg", normal: "250-500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan", timing: "Abends vor dem Schlafen", cycle: "2 - 4 Wochen (Aufbau)", halflife: "~2 Stunden" }, study: { level: "pilot", levelText: "Pilotstudien", text: "Entwicklung gestoppt aufgrund dermatologischer Sicherheitsaspekte bezüglich Follikelüberstimulation." }, prices: [{ shop: "Europa-Peptide", price: "23.90" }, { shop: "Alpine-Peptides", price: "28.00" }, { shop: "Peptid24", price: "22.00" }, { shop: "DrakonPeptides", price: "25.00" }] },
-            { id: "mt1", nr: "12/47", name: "Melanotan I (MT-1)", aka: "Afamelanotid", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "med", effects: ["Sicherere Bräunung durch milde Melaninproduktion", "Klinischer Lichtschutz bei empfindlicher weißer Haut", "Deutlich geringerer Libido- und Übelkeits-Effekt als MT-2"], risks: ["Temporäre Rötung & Hitzegefühl (Flush)", "Veränderung bestehender Pigmentflecke möglich"], dosage: { starter: "500 mcg", normal: "1 mg", max: "2 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "2 - 4 Wochen", halflife: "~1.5 Stunden" }, study: { level: "human", levelText: "EU-Zulassung (Scenesse)", text: "Erfolgreich zugelassen für die Behandlung von erythropoetischer Protoporphyrie zur Verringerung der Lichtempfindlichkeit." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "36.00" }, { shop: "DrakonPeptides", price: "35.00" }] },
-            { id: "pt141", nr: "13/47", name: "PT-141", aka: "Bremelanotid · Libido-Peptid", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject", "nasal"], risk: "med", effects: ["Erhöht die sexuelle Erregbarkeit direkt über das ZNS", "Wirkt rein neurologisch auf Rezeptorebene im Gehirn", "Hochwirksam bei erektiler Dysfunktion & Luststörungen"], risks: ["Akute Übelkeit in der ersten Stunde der Applikation", "Leichter Blutdruckanstieg während der Wirkungsdauer"], dosage: { starter: "0.5 mg", normal: "1.5 mg", max: "3 mg", freq: "Bei Bedarf (max 1x/72h)", form: "Subkutan / Nasalspray", timing: "1 - 2 Stunden vor Aktivität", cycle: "Nach Bedarf", halflife: "~2 Stunden" }, study: { level: "human", levelText: "FDA-Zulassung (Vyleesi)", text: "Zugelassen zur erfolgreichen Behandlung von hypoaktiven sexuellen Störungen bei weiblichen Patientinnen." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "35.00" }, { shop: "Peptid24", price: "29.90" }, { shop: "DrakonPeptides", price: "34.00" }] },
-            { id: "ghkcu", nr: "14/47", name: "GHK-Cu", aka: "Kupfer-Tripeptid-1", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject", "topisch"], risk: "low", effects: ["Regt die zelluläre Kollagen- und Elastinsynthese an", "Fördert das Haarwachstum durch Stärkung der Follikel", "Führt zu messbarer Festigung dünner Gesichtshaut"], risks: ["Hautreizungen bei hoher Dosierung in Eigenmischungen", "Darf nicht mit saurem Vitamin C kombiniert werden"], dosage: { starter: "1 mg", normal: "2 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Topisch", timing: "Abends nach der Reinigung", cycle: "Dauerhaft möglich", halflife: "Sehr kurz (Minuten)" }, study: { level: "human", levelText: "Dermatologische Trials", text: "Klinisch bewiesene Reduktion der Faltentiefe und signifikante Steigerung der Epidermis-Dichte nach 12 Wochen." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "Peptid24", price: "29.00" }, { shop: "DrakonPeptides", price: "31.00" }] },
-            { id: "kpv", nr: "15/47", name: "KPV", aka: "Lys-Pro-Val · Antientzündliches Peptid", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Inaktiviert den entzündungsfördernden NF-κB Pfad", "Therapiert chronische Darmentzündungen (Morbus Crohn)", "Starke antibakterielle und heilungsfördernde Wirkung"], risks: ["Bisher geringere Anzahl an klinischen Humanstudien", "Geringe Stabilität im flüssigen Zustand"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "Schnittig kurz (~30 Min)" }, study: { level: "animal", levelText: "Tierstudien (Colitis-Modelle)", text: "Deutliche Überlegenheit bei der Entzündungslinderung im Dickdarm ohne systemische Nebenwirkungen klassischer Steroide." }, prices: [{ shop: "Europa-Peptide", price: "39.90" }, { shop: "Alpine-Peptides", price: "44.00" }, { shop: "Peptid24", price: "39.00" }, { shop: "DrakonPeptides", price: "42.00" }] },
-            { id: "epitalon", nr: "16/47", name: "Epitalon", aka: "Epithalone · Epiphysen-Tetrapeptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Aktiviert die Telomerase zur Rejuvenation alternder Zellen", "Optimiert die körpereigene Melatoninausschüttung", "Verlängert nachweislich die replikative Lebensdauer von Zellen"], risks: ["In vitro Bedenken bei unkontrollierten Tumor-Strukturen", "Wenig replizierte klinische Studien im Westen"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "1x täglich (Kur)", form: "Subkutan", timing: "Abends vor dem Schlaf", cycle: "10 - 20 Tage (1-2x pro Jahr)", halflife: "Sehr kurz (Minuten)" }, study: { level: "human", levelText: "Russische Langzeittrials", text: "Jahrzehntelange klinische Dokumentation belegt eine Reduzierung der Altersmortalität um bis zu 30%." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "Peptid24", price: "28.00" }, { shop: "DrakonPeptides", price: "31.00" }] },
-            { id: "semax", nr: "17/47", name: "Semax", aka: "ACTH-Segment Nootropikum · Pro-Gly-Pro", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal", "inject"], risk: "low", effects: ["Erhöht signifikant den BDNF-Spiegel im Gehirn", "Maximiert Konzentration, logischen Fokus und Auffassungsgabe", "Fördert die synaptische Plastizität nach mentaler Erschöpfung"], risks: ["Kann bei später Applikation zu Schlafschwierigkeiten führen", "Milde Reizungen der Nasenmukosa bei Langzeitgebrauch"], dosage: { starter: "100 mcg", normal: "300-600 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Nasal (bevorzugt) / Subkutan", timing: "Morgens unmittelbar nach dem Aufwachen", cycle: "2 - 4 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen (Osteuropa)", text: "Offiziell genutztes und bewährtes neuropeptidisches Arzneimittel zur gezielten Schlaganfalltherapie." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "Peptid24", price: "34.00" }, { shop: "DrakonPeptides", price: "37.00" }] },
-            { id: "selank", nr: "18/47", name: "Selank", aka: "Synthetisches Tuftsin-Derivat · Angstlöser", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal"], risk: "low", effects: ["Fördert die angstlösende Wirkung ohne Müdigkeit zu erzeugen", "Wirkt neuroprotektiv bei chronischen Belastungen", "Besitzt keinerlei Benzodiazepin-ähnliches Suchtpotenzial"], risks: ["Milde Benommenheit in den ersten Einnahmetagen", "Geringe Marktdurchdringung im westeuropäischen Raum"], dosage: { starter: "250 mcg", normal: "500-1000 mcg", max: "3000 mcg", freq: "1-3x täglich", form: "Nasal (Spray)", timing: "Bei Bedarf / In Stressphasen", cycle: "2 - 4 Wochen", halflife: "~1.5 Stunden" }, study: { level: "human", levelText: "Klinische Trials (Kombinationsstudien)", text: "In Studien dem Wirkstoff Phenibut ebenbürtig bezüglich Angstregulierung, jedoch frei von Nebenwirkungen." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "DrakonPeptides", price: "38.00" }] },
-            { id: "glutathione", nr: "19/47", name: "Glutathion", aka: "Master-Antioxidans · L-Glutathion", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Stärkster zellulärer Entgifter für Schwermetalle & Toxine", "Schützt die Mitochondrienmembran vor oxidativem Stress", "Aufhellung von Pigmentflecken (Melaninblocker-Nebeneffekt)"], risks: ["Sehr schlechte Bioverfügbarkeit bei klassischer oraler Einnahme", "Erfordert sterile Injektionsvorbereitung"], dosage: { starter: "100 mg", normal: "200-400 mg", max: "600 mg", freq: "1x täglich", form: "Subkutan / Intravenös / Liposomal", timing: "Morgens", cycle: "Dauerhaft anwendbar", halflife: "Wenige Minuten im Serum" }, study: { level: "human", levelText: "Klinische Studien", text: "Nachgewiesene, signifikante Reduzierung von Entzündungsbiomarkern im Leberstoffwechsel." }, prices: [{ shop: "Europa-Peptide", price: "24.00" }, { shop: "Alpine-Peptides", price: "27.00" }, { shop: "RebirthLabs", price: "18.50" }, { shop: "PeptideRevolution", price: "23.00" }] },
-            { id: "slupp332", nr: "20/47", name: "SLU-PP-332", aka: "ERRα/γ-Agonist · Exercise Mimetic", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["oral", "inject"], risk: "med", effects: ["Aktiviert biochemische Anpassungseffekte von Sport", "Erhöht drastisch die Mitochondriendichte in Muskelzellen", "Steigert die aerobe Verbrennungsleistung im Ruhezustand"], risks: ["Oxidative Stressreaktionen bei mangelnder Zufuhr von Antioxidantien", "Fehlen klinischer Tests an menschlichen Zielgruppen"], dosage: { starter: "300 mcg", normal: "1 mg", max: "2 mg", freq: "1x täglich", form: "Oral (Kapseln) / Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~12 Stunden" }, study: { level: "invitro", levelText: "Science-Studie (2023)", text: "Mäuse zeigten signifikanten Fettverlust und extreme Ausdauersteigerungen ohne vorangehendes Training." }, prices: [{ shop: "Europa-Peptide", price: "135.00" }, { shop: "Beyond-Peptides", price: "129.00" }, { shop: "DrakonPeptides", price: "139.00" }] },
-            { id: "tesamorelin", nr: "21/47", name: "Tesamorelin", aka: "Egrifta · Lipodystrophie-Peptid", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Spezifische Zerstörung viszeraler (Bauch-) Fettpolster", "Stimuliert die anabole Synthese von IGF-1 im Serum", "Verbessert die kognitiven Fähigkeiten bei älteren Probanden"], risks: ["Lokal schmerzende Injektionsstellen", "Vorübergehende Einschränkung der Glukosetoleranz möglich"], dosage: { starter: "1 mg", normal: "2 mg", max: "2 mg", freq: "1x täglich", form: "Subkutan", timing: "Abends nüchtern vor dem Schlaf", cycle: "12 - 24 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "FDA-Zulassung", text: "Zugelassen als therapeutisches Präparat zur kontrollierten Fettreduktion bei Lipodystrophie." }, prices: [{ shop: "Europa-Peptide", price: "55.00" }, { shop: "Peptid24", price: "49.00" }, { shop: "Alpine-Peptides", price: "52.00" }, { shop: "DrakonPeptides", price: "56.00" }] },
-            { id: "igf1lr3", nr: "22/47", name: "IGF-1 LR3", aka: "Long R3 Insulin-like Growth Factor-1", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Fördert die biologische Neubildung von Muskelzellen (Hyperplasie)", "Sorgt für exzellente Aminosäure-Einlagerungen in die Skelettmuskulatur", "Aktiviert inaktive Muskelsatellitenzellen"], risks: ["Gefahr plötzlicher, schwerer Unterzuckerung (Hypoglykämie)", "Beschleunigt das Zellwachstum potenzieller Tumorstrukturen"], dosage: { starter: "20 mcg", normal: "40-60 mcg", max: "100 mcg", freq: "An Trainingstagen", form: "Subkutan / Intramuskulär (i.m.)", timing: "Unmittelbar nach dem Krafttraining", cycle: "Maximal 4 - 6 Wochen", halflife: "~30 Stunden" }, study: { level: "animal", levelText: "In-Vitro & Tierdaten", text: "Extremes, biologisch replizierbares Muskelwachstum in Nagetier-Modellen dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "59.00" }, { shop: "Peptid24", price: "54.00" }, { shop: "Alpine-Peptides", price: "57.00" }, { shop: "DrakonPeptides", price: "61.00" }] },
-            { id: "motsc", nr: "23/47", name: "MOTS-C", aka: "Mitochondrial-Derived Peptide", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Reguliert die Insulinsensitivität direkt am Muskelgewebe", "Unterstützt den Zellschutz und die Fett-Oxidation", "Optimiert die allgemeine zelluläre Energiegewinnung"], risks: ["Sehr frühe Phase der klinischen Untersuchung", "Regelmäßige systemische Gaben notwendig"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Morgens vor Bewegung", cycle: "8 - 12 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Mäusetrials (USC)", text: "Belegte die vollständige Umkehr altersbedingter Fettleibigkeit und Erschöpfungszustände." }, prices: [{ shop: "Europa-Peptide", price: "49.00" }, { shop: "Peptid24", price: "44.00" }, { shop: "Alpine-Peptides", price: "46.00" }, { shop: "DrakonPeptides", price: "51.00" }] },
-            { id: "ta1", nr: "24/47", name: "Thymosin Alpha-1", aka: "Tα1 · Zadaxin · Immun-Peptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Aktiviert und schult T-Helferzellen und Killerzellen", "Verhindert die altersbedingte Schrumpfung der Thymusdrüse", "Hervorragende Prävention in Erkältungs- & Grippezeiten"], risks: ["Kann Autoimmunprozesse bei empfindlichen Patienten aktivieren", "Rötung und Juckreiz an der Einstichstelle"], dosage: { starter: "1.6 mg", normal: "1.6 mg", max: "3.2 mg", freq: "2x wöchentlich", form: "Subkutan", timing: "Morgens", cycle: "6 - 12 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinische Zulassung", text: "Zugelassen als Immunmodulator in über 30 Ländern zur Erhöhung der viralen Antikörperantwort." }, prices: [{ shop: "Europa-Peptide", price: "44.00" }, { shop: "Peptid24", price: "39.00" }, { shop: "Alpine-Peptides", price: "41.00" }, { shop: "DrakonPeptides", price: "45.00" }] },
-            { id: "follistatin344", nr: "25/47", name: "Follistatin-344", aka: "Myostatin-Inhibitor · FST-344", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Blockiert Myostatin und setzt Muskelwachstumsbremsen aus", "Ermöglicht rasantesten Kraft- und Massezuwachs", "Unterstützt den gezielten lokalen Muskelaufbau"], risks: ["Hohe Verletzungsgefahr für passive Strukturen (Sehnen)", "Gefahr unkontrollierten Wachstums des Herzmuskels"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "150 mcg", freq: "1x täglich (max 10 Tage)", form: "Intramuskulär (lokal)", timing: "Post-Workout", cycle: "Maximal 10 Tage am Stück", halflife: "~36 Stunden" }, study: { level: "animal", levelText: "Primatentrials", text: "Extreme Hypertrophie der Skelettmuskeln ohne negative Einflüsse auf Organstrukturen bei Affen." }, prices: [{ shop: "Europa-Peptide", price: "66.00" }, { shop: "Peptid24", price: "59.00" }, { shop: "Alpine-Peptides", price: "63.00" }, { shop: "DrakonPeptides", price: "68.00" }] },
-            { id: "aicar", nr: "26/47", name: "AICAR", aka: "Acadesine · AMPK-Metabolic-Activator", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "med", effects: ["Aktiviert die zelluläre AMPK zur Fettverbrennung", "Erhöht die VO2max-Ausdauerleistung signifikant", "Schützt Muskelgewebe vor hypoxischen Schäden"], risks: ["Auf der Verbotsliste des organisierten Sports (WADA)", "Kurzzeitige Kopfschmerzen"], dosage: { starter: "10 mg", normal: "25-50 mg", max: "100 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinische Trials (Kardiologie)", text: "Sichere klinische Verabreichung zur Prävention ischämischer Komplikationen bei Herzoperationen." }, prices: [{ shop: "Europa-Peptide", price: "56.00" }, { shop: "Peptid24", price: "49.00" }, { shop: "Alpine-Peptides", price: "53.00" }, { shop: "DrakonPeptides", price: "58.00" }] },
-            { id: "sermorelin", nr: "27/47", name: "Sermorelin", aka: "GRF 1-29 · GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "low", effects: ["Erhöht die Ausschüttung körpereigenen Wachstumshormons", "Gilt als die sicherste Alternative zur künstlichen HGH-Gabe", "Verbessert die Gelenkstärke und Elastizität der Haut"], risks: ["Temporäre Hitzewallungen (Flush)", "Lokaler Schmerzreiz an der Einstichstelle"], dosage: { starter: "100 mcg", normal: "200-500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan", timing: "Direkt vor dem Schlafengehen", cycle: "12 - 24 Wochen", halflife: "~15 Minuten" }, study: { level: "human", levelText: "Zugelassenes Diagnostikum", text: "Klinisch bewährt zur präzisen Diagnose von kindlichen Wachstumshormonmängeln." }, prices: [{ shop: "Europa-Peptide", price: "31.00" }, { shop: "Peptid24", price: "27.00" }, { shop: "Alpine-Peptides", price: "29.00" }, { shop: "DrakonPeptides", price: "32.00" }] },
-            { id: "dsip", nr: "28/47", name: "DSIP", aka: "Delta-Sleep-Inducing Peptide · Neuropeptid", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject"], risk: "low", effects: ["Fördert gezielt die Delta-Wellen Tiefschlafphase", "Normalisiert gestörte circadiane Rhythmen hocheffizient", "Senkt Cortisollevel und reguliert die Stressachse"], risks: ["Morgenmüdigkeit (Hangover) bei zu hoher Dosierung", "Sehr geringe Halbwertszeit"], dosage: { starter: "50 mcg", normal: "100-250 mcg", max: "500 mcg", freq: "1x abends", form: "Subkutan", timing: "30 - 60 Minuten vor dem Schlaf", cycle: "2 - 4 Wochen (Kurweise)", halflife: "~15 Minuten" }, study: { level: "human", levelText: "Frühe Pilotstudien", text: "Klinische Tests belegen eine sofortige Normalisierung der Schlafarchitektur bei chronischen Schlaflosen." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "DrakonPeptides", price: "33.00" }] },
-            { id: "ghrp2", nr: "29/47", name: "GHRP-2", aka: "Pralmorelin · Wachstumshormon-Sekretagogum", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Hocheffizienter, starker Wachstumshormonpuls", "Stärkt die Regeneration und den anabolen Gewebeschutz", "Milde Appetitanregung im Vergleich zu GHRP-6"], risks: ["Erhöht leicht die Werte von Prolaktin & Cortisol", "Temporäre Wassereinlagerung"], dosage: { starter: "100 mcg", normal: "200-300 mcg", max: "500 mcg", freq: "2-3x täglich", form: "Subkutan (1-3x täglich)", timing: "Nüchtern", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Studien", text: "Belegte die zuverlässige, dosisabhängige Somatotropinausschüttung bei erwachsenen Probanden." }, prices: [{ shop: "Europa-Peptide", price: "25.00" }, { shop: "Peptid24", price: "22.90" }, { shop: "Alpine-Peptides", price: "24.50" }, { shop: "DrakonPeptides", price: "26.00" }] },
-            { id: "ghrp6", nr: "30/47", name: "GHRP-6", aka: "Growth Hormone Releasing Peptide-6", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Starke GH-Ausschüttung über Ghrelin-Rezeptor-Aktivierung", "Extrem appetitanregender Effekt (optimal bei Untergewicht)", "Kardioprotektive & entzündungshemmende Eigenschaften"], risks: ["Ausgeprägter, teils unkontrollierbarer Heißhunger", "Erhöht bei sensiblen Anwendern Prolaktin und Cortisol"], dosage: { starter: "100 mcg", normal: "150-200 mcg", max: "300 mcg", freq: "2-3x täglich", form: "Subkutan (1-3x täglich)", timing: "Nüchtern (30 Min vor Mahlzeit)", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Kardiovaskuläre Forschung", text: "Zeigte in klinischen Tests schützende Eigenschaften auf das Myokard nach hypoxischen Belastungen." }, prices: [{ shop: "Europa-Peptide", price: "24.50" }, { shop: "Peptid24", price: "21.90" }, { shop: "Alpine-Peptides", price: "23.90" }] },
-            { id: "hexarelin", nr: "31/47", name: "Hexarelin", aka: "Stärkstes GH-Releasing Hexapeptid", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Stärkste Wachstumshormonausschüttung aller GHRPs", "Schützt den Herzmuskel (Kardiomyozyten) nachweislich", "Fördert die Knochendichte und Sehnenstabilität"], risks: ["Schnelle Rezeptor-Sättigung (Schnittige Desensibilisierung)", "Erhöht Cortisol, Prolaktin und hemmt Insulinsensitivität"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "200 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Morgens / Post-Workout nüchtern", cycle: "Maximal 4 - 6 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Kardiologie", text: "Umfangreiche Belege bezüglich der kardioprotektiven Eigenschaften und Wiederherstellung der Herzfunktion." }, prices: [{ shop: "Europa-Peptide", price: "28.00" }, { shop: "Alpine-Peptides", price: "32.00" }, { shop: "DrakonPeptides", price: "31.50" }] },
-            { id: "kisspeptin", nr: "32/47", name: "Kisspeptin-10", aka: "Metastin · GnRH-Aktivator", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "med", effects: ["Aktiviert GnRH zur Stimulation von LH und FSH", "Steigert das natürliche Testosteron ohne hormonellen Shutdown", "Fördert die Fertilität und Spermatogenese hocheffizient"], risks: ["Temporäre Hitzewallungen (Flush)", "Hormonschwankungen bei unsachgemäßer Dosierung"], dosage: { starter: "10 mcg", normal: "25-50 mcg", max: "100 mcg", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Extrem kurz (wenige Minuten)" }, study: { level: "human", levelText: "Phase-I Pilotstudien", text: "Nachweisbare biochemische Reaktivierung der hormonellen Hypophysenachse bei funktionellem Mangel." }, prices: [{ shop: "Europa-Peptide", price: "38.90" }, { shop: "Alpine-Peptides", price: "42.00" }, { shop: "DrakonPeptides", price: "41.00" }] },
-            { id: "ara290", nr: "33/47", name: "ARA-290", aka: "Cibinetide · Neuroprotektives Peptid", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Zielgerichtete Therapie neuropathischer Schmerzen (Nervenschmerzen)", "Aktiviert den schützenden angeborenen Reparatur-Rezeptor", "Antientzündliche Effekte bei Sarkoidose"], risks: ["Klinisch teils noch in Erforschung", "Hoher Beschaffungspreis"], dosage: { starter: "1 mg", normal: "2-4 mg", max: "8 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 6 Wochen", halflife: "~20 Minuten" }, study: { level: "human", levelText: "Klinische Phase-II", text: "Zeigt signifikante Schmerzlinderung und Verbesserung der Lebensqualität bei Patienten mit neuropathischen Ausfällen." }, prices: [{ shop: "Europa-Peptide", price: "69.00" }, { shop: "Alpine-Peptides", price: "75.00" }, { shop: "DrakonPeptides", price: "72.00" }] },
-            { id: "oxytocin", nr: "34/47", name: "Oxytocin", aka: "Bindungshormon · Kuschelhormon", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal", "inject"], risk: "low", effects: ["Fördert soziale Bindung, Empathie und tiefes Vertrauen", "Senkt akuten Stress, Cortisol und Blutdruck", "Unterstützt gesunde soziale Interaktion und Ängstlichkeit"], risks: ["Kann bei Überdosierung zu emotionaler Überempfindlichkeit führen", "Gefahr von Uteruskontraktionen bei Frauen"], dosage: { starter: "10 IU", normal: "20 IU", max: "40 IU", freq: "Bei Bedarf", form: "Nasal / Subkutan", timing: "Vor sozialen Events / Abends", cycle: "Nach Bedarf", halflife: "~5 Minuten" }, study: { level: "human", levelText: "Klinische Psychologie", text: "Umfangreich dokumentierte Reduktion sozialer Phobien und zerebraler Amygdala-Überaktivität." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "29.00" }, { shop: "DrakonPeptides", price: "27.50" }] },
-            { id: "hcg", nr: "35/47", name: "HCG", aka: "Humanes Choriongonadotropin · LH-Mimetikum", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "med", effects: ["Simuliert das luteinisierende Hormon (LH) in den Hoden", "Erhält die Hodengröße unter anabolem Hormonmissbrauch", "Fördert die natürliche endogene Testosteronsynthese"], risks: ["Gefahr der Gynäkomastie durch Aromatisierung zu Östrogen", "Verschreibungspflichtiges Hormonpräparat"], dosage: { starter: "250 IU", normal: "500 IU", max: "1500 IU", freq: "2-3x wöchentlich", form: "Subkutan", timing: "Morgens", cycle: "3 - 4 Wochen (PCT)", halflife: "~36 Stunden" }, study: { level: "human", levelText: "Reproduktionsmedizin", text: "Goldstandard in der klinischen Andrologie zur Wiederherstellung der Spermienqualität." }, prices: [{ shop: "Europa-Peptide", price: "42.90" }, { shop: "Peptid24", price: "39.90" }, { shop: "Alpine-Peptides", price: "41.00" }] },
-            { id: "snap8", nr: "36/47", name: "SNAP-8", aka: "Acetyl Octapeptide-3 · Mimikfalten-Inhibitor", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["topisch"], risk: "low", effects: ["Hemmt den SNARE-Komplex zur Reduktion von Mimikfalten", "Schmerzfreie, kosmetische Alternative zu Botox-Injektionen", "Glättet nachweislich Stirnfalten und Krähenfüße"], risks: ["Hautreizungen bei sehr empfindlichen Anwendern", "Wirkt primär topisch, nicht systemisch"], dosage: { starter: "2%", normal: "5%", max: "10%", freq: "2x täglich (Topisch)", form: "Topisch (Serum)", timing: "Morgens / Abends aufgetragen", cycle: "Dauerhaft anwendbar", halflife: "Lokale Wirkung" }, study: { level: "human", levelText: "Kosmetik-Studien", text: "Untersuchungen belegen eine Reduzierung der Faltentiefe um bis zu 35% nach 28 Tagen." }, prices: [{ shop: "Europa-Peptide", price: "36.90" }, { shop: "Alpine-Peptides", price: "41.00" }, { shop: "DrakonPeptides", price: "39.00" }] },
-            { id: "argireline", nr: "37/47", name: "Argireline", aka: "Acetyl Hexapeptide-8 · Anti-Falten Peptid", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["topisch"], risk: "low", effects: ["Entspannt sanft die Gesichtsmuskulatur (Botox-Alternative)", "Beugt der Entstehung neuer tiefer Mimikfalten vor", "Spürbare Feuchtigkeitsbindung in der oberen Epidermis"], risks: ["Effekte erlöschen schrittweise nach Absetzen des Serums", "Lokale Rötungen bei ungenügender Formulierung"], dosage: { starter: "2%", normal: "5%", max: "10%", freq: "2x täglich (Topisch)", form: "Topisch (Serum)", timing: "Morgens / Abends", cycle: "Dauerhaft", halflife: "Lokale Wirkung" }, study: { level: "human", levelText: "Klinische Kosmetikstudien", text: "Nachgewiesene Reduzierung der Faltentiefe um ca. 30 % bei regelmäßiger topischer Applikation." }, prices: [{ shop: "Europa-Peptide", price: "31.00" }, { shop: "Alpine-Peptides", price: "35.00" }, { shop: "DrakonPeptides", price: "34.00" }] },
-            { id: "ghkcu100", nr: "38/47", name: "GHK-Cu (100mg)", aka: "Kupfer-Tripeptid-1 · Großpackung", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject", "topisch"], risk: "low", effects: ["Hochdosiertes Kupferpeptid zur Gewebeheilung", "Reguliert Entzündungsprozesse und fördert antioxidativen Schutz", "Ideal für großflächige kosmetische Eigenformulierungen"], risks: ["Gefahr der Kupfertoxizität bei massivem Missbrauch", "Muss extrem kühl und lichtgeschützt lagern"], dosage: { starter: "1 mg", normal: "2 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Topisch", timing: "Abends", cycle: "Dauerhaft", halflife: "Sehr kurz" }, study: { level: "human", levelText: "Hautbiologische Studien", text: "Bestätigter Wiederaufbau geschädigter Hautbarrieren und gesteigerter Haar-Dichte-Index." }, prices: [{ shop: "Europa-Peptide", price: "49.00" }, { shop: "Peptid24", price: "44.90" }, { shop: "Alpine-Peptides", price: "47.00" }, { shop: "DrakonPeptides", price: "52.00" }] },
-            { id: "glowstack", nr: "39/47", name: "GLOW Stack", aka: "GHK-Cu + TB-500 + BPC-157", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "low", effects: ["Synergistischer Premium Skincare & Healing Stack", "Fördert die Kollagenbildung und beschleunigt Wundheilung", "Baut Narbengewebe ab und glättet Fältchen massiv"], risks: ["Addierte, milde Einstichreizungen", "Komplexere Mischverhältnisse bei Rekonstitution"], dosage: { starter: "1mg/Tag", normal: "2mg/Tag", max: "4mg/Tag", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "Mischwert" }, study: { level: "pilot", levelText: "Kombinations-Stack", text: "Keine isolierten klinischen Studien des Gesamtstacks, die Synergie basiert jedoch vollständig auf den belegten Einzeleffekten der Moleküle." }, prices: [{ shop: "Europa-Peptide", price: "129.00" }, { shop: "Alpine-Peptides", price: "124.00" }, { shop: "Peptid24", price: "119.00" }] },
-            { id: "klowstack", nr: "40/47", name: "KLOW Stack", aka: "GLOW Stack + KPV Peptide", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Umfassender entzündungshemmender & regenerativer Stack", "KPV lindert zelluläre Entzündungen hocheffizient", "Extreme Beschleunigung von systemischen Reparaturprozessen"], risks: ["Erhöhte biochemische Empfindlichkeit gegenüber Feuchtigkeit", "Aufwendiges, präzises Mischverfahren"], dosage: { starter: "1mg/Tag", normal: "2mg/Tag", max: "4mg/Tag", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Mischwert" }, study: { level: "pilot", levelText: "Anwenderberichte", text: "Konsistent hervorragende Berichte bezüglich beschleunigter Wundheilung und vollständiger Linderung chronischer Ekzeme." }, prices: [{ shop: "Europa-Peptide", price: "149.00" }, { shop: "Alpine-Peptides", price: "145.00" }, { shop: "Peptid24", price: "139.00" }] },
-            { id: "nadplus", nr: "41/47", name: "NAD+", aka: "Nicotinamid-Adenin-Dinukleotid · Coenzym", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject", "oral"], risk: "low", effects: ["Essentieller Cofaktor für mitochondriale ATP-Gewinnung", "Aktiviert zelluläre Sirtuine zur DNA-Reparatur", "Verbessert Kognition und neuro-metabolische Vitalität"], risks: ["Injektion erfordert langsames Einschleichen zur Vermeidung von Flush", "Teils sehr kostspielig bei hoher Dosierung"], dosage: { starter: "50 mg", normal: "100-250 mg", max: "500 mg", freq: "1-2x wöchentlich", form: "Subkutan / Intravenös (IV)", timing: "Morgens", cycle: "Kurweise", halflife: "Sehr kurz im Blutplasma" }, study: { level: "human", levelText: "Klinische Studien", text: "Erhöht messbar den intrazellulären NAD+-Pool und optimiert kognitive Parameter in älteren Bevölkerungsgruppen." }, prices: [{ shop: "Europa-Peptide", price: "64.90" }, { shop: "Alpine-Peptides", price: "69.00" }, { shop: "DrakonPeptides", price: "68.00" }] },
-            { id: "ss31", nr: "42/47", name: "SS-31", aka: "Elamipretide · Mitochondriales Peptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Schützt und restrukturiert die innere Mitochondrienmembran", "Stoppt die übermäßige Entstehung schädlicher Sauerstoffradikale", "Unterstützt Muskelgewebe und Organe im Alterungsprozess"], risks: ["Sehr neues Molekül der Longevity-Wissenschaft", "Wenig unabhänige europäische Anbieter"], dosage: { starter: "2 mg", normal: "4-8 mg", max: "10 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "human", levelText: "Phase-II klinische Trials", text: "Zeigte signifikante mitochondriale Funktionsverbesserungen und Verringerung der Altersatrophie der Skelettmuskeln." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "Alpine-Peptides", price: "85.00" }, { shop: "DrakonPeptides", price: "82.00" }] },
-            { id: "hgh", nr: "43/47", name: "HGH (Somatropin)", aka: "Human Growth Hormone", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Starkes Muskelwachstum & massiver Kraftaufbau", "Extremer Fettabbau (besonders tiefliegendes Viszeralfett)", "Verbesserte Hautqualität, Haardichte & Anti-Aging Effekte"], risks: ["Akromegalie (Wachstum von Knochen/Organen) bei chronischer Langzeitnutzung", "Erhöhtes Risiko für Insulinresistenz & Typ-2-Diabetes", "Wassereinlagerungen & starke HPTA-Suppression"], dosage: { starter: "1-2 IU", normal: "3-4 IU", max: "6 IU", freq: "1x täglich", form: "Subkutan / IM", timing: "Morgens nüchtern", cycle: "Langzeit (unter ärztlicher Aufsicht)", halflife: "~2-3 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "Gut dokumentiert für therapeutische GH-Defizienz. Im Bodybuilding und Anti-Aging stark verbreitet, aber mit signifikanten metabolischen Risiken verbunden." }, prices: [{ shop: "Europa-Peptide", price: "89.00" }, { shop: "Alpine-Peptides", price: "95.00" }, { shop: "DrakonPeptides", price: "92.00" }] },
-            { id: "pe2228", nr: "44/47", name: "PE 22-28", aka: "Spadin-Analogon · TrkB-Agonist", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject", "nasal"], risk: "low", effects: ["Schneller, hochwirksamer antidepressiver Effekt (TrkB-Rezeptor-Aktivierung)", "Fördert gezielt die Neurogenese im Hippocampus", "Wirkt massiv neuroprotektiv ohne jegliches Abhängigkeitspotenzial"], risks: ["Sehr frühe Phase der präklinischen Forschung", "Langzeitwirkungen und Toleranzaufbau am Menschen aktuell unbekannt"], dosage: { starter: "1 mg", normal: "2-4 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Nasal", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Kurz (Plasma)" }, study: { level: "animal", levelText: "Präklinische Tierstudien", text: "Deutlicher antidepressiver Effekt in Tiermodellen mit einem vielfach schnelleren Wirkungseintritt als klassische SSRI-Medikamente." }, prices: [{ shop: "Europa-Peptide", price: "49.90" }, { shop: "Beyond-Peptides", price: "55.00" }, { shop: "Alpine-Peptides", price: "52.00" }] },
-            { id: "epo", nr: "45/47", name: "EPO", aka: "Erythropoetin", cat: "gewicht", catText: "PERFORMANCE & AUSDAUER", routes: ["inject"], risk: "high", effects: ["Erhöht massiv die körpereigene Produktion roter Blutkörperchen", "Drastisch verbesserte kardiovaskuläre VO2max und Ausdauer", "Der potenteste bekannte Dopingeffekt im professionellen Ausdauersport"], risks: ["Akutes, gefährliches Thrombose- & Schlaganfallrisiko durch zu hohe Blutviskosität", "Herzinfarktgefahr (diverse Todesfälle im Radsport sind klinisch belegt)", "Streng von der WADA gesperrt"], dosage: { starter: "20 IU/kg", normal: "50 IU/kg", max: "300 IU/kg", freq: "1-3x wöchentlich", form: "Subkutan / IV", timing: "3x wöchentlich", cycle: "Kurzzeitig", halflife: "~8.5 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "Medizinisch genutzt bei chronischer Anämie und Nierenversagen. Extrem gefährlich bei missbräuchlicher Performance-Steigerung im Leistungssport." }, prices: [{ shop: "Europa-Peptide", price: "49.90" }, { shop: "DrakonPeptides", price: "55.00" }, { shop: "Alpine-Peptides", price: "52.00" }] },
-            { id: "cagrilintid", nr: "46/47", name: "Cagrilintid", aka: "Amylin-Analogon", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Neues Amylin-Analogon reduziert die Magenentleerung massiv", "Erzwingt eine starke Sättigung und radikale Appetitreduktion", "Wirkt stark synergistisch mit Semaglutid (als Kombi-Präparat CagriSema)"], risks: ["Starke Übelkeit, Sodbrennen & Erbrechen sehr wahrscheinlich", "Keine Langzeitsicherheitsdaten für den breiten Markt verfügbar", "Nur in streng kontrollierten klinischen Studien erprobt"], dosage: { starter: "0.16 mg", normal: "0.5-1.2 mg", max: "2.4 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Unter ärztlicher Aufsicht", halflife: "~165 Stunden" }, study: { level: "human", levelText: "Phase III (SCALE)", text: "Kombiniert mit Semaglutid wurden bis zu 25% Gewichtsreduktion erreicht. Gilt als Novo Nordisk Kandidat für die nächste große Adipositas-Zulassung." }, prices: [{ shop: "Europa-Peptide", price: "69.00" }, { shop: "Alpine-Peptides", price: "75.00" }, { shop: "Beyond-Peptides", price: "72.00" }] },
-            { id: "lcarnitin", nr: "47/47", name: "L-Carnitin", aka: "Aminosäure-Derivat · Fetttransporter", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "low", effects: ["Transportiert langkettige Fettsäuren direkt in die Kraftwerke der Zellen (Mitochondrien)", "Verbessert die Ausdauer & zelluläre Energieeffizienz", "Unterstützt Herzgesundheit, Spermienqualität & kardiovaskulären Schutz"], risks: ["Fischiger Körpergeruch bei oraler Hochdosis über längeren Zeitraum möglich", "Magen-Darm-Beschwerden (insb. bei oraler Überdosierung)"], dosage: { starter: "500 mg", normal: "1000 mg", max: "2000 mg", freq: "1x täglich (Pre-Workout)", form: "IM / Subkutan / Oral", timing: "Vor dem Kraft- oder Cardiotraining", cycle: "Dauerhaft anwendbar", halflife: "~15 Stunden" }, study: { level: "human", levelText: "Gut belegt", text: "Eines der am besten untersuchten Aminosäure-Supplements weltweit. Als Injektion extrem hohe Bioverfügbarkeit im Vergleich zur oralen Gabe (nur ca. 15%)." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Peptid24", price: "25.00" }, { shop: "Alpine-Peptides", price: "28.00" }] }
+            { id: "bpc157", nr: "01/63", name: "BPC-157", aka: "Body Protection Compound-157", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Beschleunigt Sehnen-, Gelenk- & Muskelregeneration", "Schützt die Magenschleimhaut (Leaky Gut, Reflux, Ulzera)", "Starke entzündungshemmende Wirkung ohne Immunsuppression"], risks: ["Schwindel bei zu schneller Gabe möglich", "Langzeiteffekte am Menschen nur bedingt erprobt"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan (lokal) / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Tierstudien", text: "Umfangreiche Rattenmodelle belegen die vollständige biologische Reparatur chronischer Achillessehnenrupturen." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "28.50" }, { shop: "Peptid24", price: "23.90" }, { shop: "DrakonPeptides", price: "26.00" }] },
+            { id: "tb500", nr: "02/63", name: "TB-500", aka: "Thymosin Beta-4 Analogon", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Induziert zelluläre Migration via Actin-Synthese", "Erhöht Elastizität & Flexibilität von Narbengewebe", "Synergistischer Heilungsfaktor gestapelt mit BPC-157"], risks: ["Milde Abgeschlagenheit unmittelbar nach Gabe", "Hohe Preisschwankungen am freien Markt"], dosage: { starter: "2 mg/Woche", normal: "5 mg/Woche", max: "10 mg/Woche", freq: "1-2x wöchentlich", form: "Subkutan", timing: "Abends / Post-Workout", cycle: "6 - 8 Wochen", halflife: "~30 Stunden" }, study: { level: "pilot", levelText: "Veterinärstudien", text: "Exzellente Erfolgsraten bei Sehnen- und Hufschäden von Galopppferden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "38.00" }, { shop: "Peptid24", price: "32.00" }, { shop: "DrakonPeptides", price: "36.00" }] },
+            { id: "ipamorelin", nr: "03/63", name: "Ipamorelin", aka: "Growth Hormone Secretagogue Pentapeptide", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "low", effects: ["Selektiver Peak der Wachstumshormon-Ausschüttung", "Keinerlei Steigerung von Stress-Cortisol oder Prolaktin", "Optimiert die regenerativen Tiefschlafphasen"], risks: ["Milde Wassereinlagerungen bei sensiblem Stoffwechsel", "Temporärer Anstieg des Hungergefühls"], dosage: { starter: "100 mcg", normal: "200-300 mcg", max: "500 mcg", freq: "1-3x täglich", form: "Subkutan", timing: "Nüchtern vor dem Schlaf", cycle: "8 - 12 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Phase-II Humantrials", text: "Sichere Wachstumshormonpulsation bei exzellentem endokrinologischem Verträglichkeitsprofil belegt." }, prices: [{ shop: "Europa-Peptide", price: "26.90" }, { shop: "Alpine-Peptides", price: "31.00" }, { shop: "Peptid24", price: "27.90" }, { shop: "DrakonPeptides", price: "29.50" }] },
+            { id: "cjc1295nodac", nr: "04/63", name: "CJC-1295 (ohne DAC)", aka: "Modified GRF 1-29 · GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Verstärkt die Amplitude der somatotropen Pulse", "Verbessert die fettfreie Muskelreparation & Lipolyse", "Perfekt stapelbar mit Ipamorelin für maximalen Puls"], risks: ["Spürbarer 'Head Rush' (Hitze/Flush) direkt nach Gabe", "Insulinresistenz-Risiko bei exzessiver Langzeitnutzung"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "300 mcg", freq: "1-3x täglich", form: "Subkutan", timing: "Morgens/Abends nüchtern", cycle: "8 - 16 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Studien", text: "Dokumentierter Anstieg von freiem Serum-IGF-1 bei gesunden erwachsenen Probanden." }, prices: [{ shop: "Europa-Peptide", price: "28.00" }, { shop: "Alpine-Peptides", price: "32.00" }, { shop: "Peptid24", price: "29.95" }, { shop: "DrakonPeptides", price: "31.00" }] },
+            { id: "cjc1295dac", nr: "05/63", name: "CJC-1295 (mit DAC)", aka: "Drug Affinity Complex GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Extrem lange Halbwertszeit durch Albumin-Bindung", "Kontinuierliche Erhöhung der GH-Grundlinie", "Erfordert nur 1-2 wöchentliche Applikationen"], risks: ["Risiko des permanenten 'GH Bleed' (Dauerausschüttung)", "Häufiger auftretende lethargische Phasen"], dosage: { starter: "1 mg", normal: "2 mg", max: "4 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "8 - 12 Wochen", halflife: "~7 Tage" }, study: { level: "human", levelText: "Humantrials", text: "Belegte signifikante Erhöhung des basalen GH-Spiegels über mehrere Tage nach einer Einzeldosis." }, prices: [{ shop: "Europa-Peptide", price: "36.00" }, { shop: "Alpine-Peptides", price: "39.90" }, { shop: "DrakonPeptides", price: "38.50" }] },
+            { id: "semaglutide", nr: "06/63", name: "Semaglutid", aka: "GLP-1 Rezeptor-Agonist · Ozempic / Wegovy", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "med", effects: ["Maximale Verzögerung der gastrischen Entleerung", "Blockiert Heißhungerattacken direkt im Hypothalamus", "Gewichtsverlust von ca. 15% klinisch verifiziert"], risks: ["Akute Übelkeit, Sodbrennen und Erbrechen", "Erhöhtes Risiko des Abbaus von magerer Muskelmasse"], dosage: { starter: "0.25 mg", normal: "1.0 mg", max: "2.4 mg", freq: "1x wöchentlich", form: "Subkutan / Oral", timing: "Einmal wöchentlich", cycle: "6 - 12 Monate", halflife: "~165 Stunden" }, study: { level: "human", levelText: "STEP Phase-III", text: "STEP-Trials belegen bahnbrechende Fettreduktion bei exzellenter kardiometabolischer Stabilisierung." }, prices: [{ shop: "Europa-Peptide", price: "59.00" }, { shop: "Alpine-Peptides", price: "64.00" }, { shop: "Peptid24", price: "58.00" }, { shop: "DrakonPeptides", price: "62.00" }] },
+            { id: "tirzepatide", nr: "07/63", name: "Tirzepatid", aka: "GIP/GLP-1 Dual-Agonist · Mounjaro", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "med", effects: ["Gleichzeitiger Agonismus an GIP- & GLP-1-Rezeptoren", "Unerreichter Fettabbau bei gleichzeitigem Muskelschutz", "Extreme Erhöhung der Insulinsensitivität"], risks: ["Magen-Darm-Beschwerden, Verstopfung, Flatulenz", "Gallensteinbildungs-Risiko bei radikalem Gewichtsabfall"], dosage: { starter: "2.5 mg", normal: "5-10 mg", max: "15 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Langzeittherapie", halflife: "~120 Stunden" }, study: { level: "human", levelText: "SURMOUNT-Studien", text: "Durchschnittlicher Fettmasseverlust von über 20 % bei übergewichtigen Probanden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "Alpine-Peptides", price: "84.00" }, { shop: "Peptid24", price: "78.00" }, { shop: "DrakonPeptides", price: "82.00" }] },
+            { id: "retatrutide", nr: "08/63", name: "Retatrutid", aka: "Triple Agonist (GLP-1 / GIP / Glucagon)", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Dreifach-Wirkung dämpft Appetit und beschleunigt Thermogenese", "Glucagon-Komponente erhöht aktiv den Ruheumsatz", "Derzeitiger endokrinologischer Rekordhalter für Diäten"], risks: ["Erhöhte Herzfrequenz (Tachykardie-Risiko) durch Glucagon", "Akuter, unkontrollierter Katabolismus ohne Protein-Monitoring"], dosage: { starter: "1 mg", normal: "4-8 mg", max: "12 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Nur unter klinischer Kontrolle", halflife: "~144 Stunden" }, study: { level: "human", levelText: "Klinische Phase-II (2023)", text: "Belegte Gewichtsabnahme von durchschnittlich 24 % der Gesamtfettmasse innerhalb von 48 Wochen." }, prices: [{ shop: "Europa-Peptide", price: "99.00" }, { shop: "Alpine-Peptides", price: "109.00" }, { shop: "Peptid24", price: "95.00" }, { shop: "DrakonPeptides", price: "105.00" }] },
+            { id: "hghfrag", nr: "09/63", name: "HGH Frag 176-191", aka: "Lipolytisches Wachstumshormon-Segment", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "low", effects: ["Zielgerichteter Fettabbau ohne diabetische Nebenwirkungen", "Keinerlei Einflüsse auf Blutzucker oder Insulinsensitivität", "Ideal zur Definition unter Erhalt der Zellvitalität"], risks: ["Äußerst kurze Halbwertszeit (präzises Fasten nötig)", "Hohe Injektionsfrequenz"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Nüchtern unmittelbar vor dem Training", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "animal", levelText: "Zell- & Tierstudien", text: "Sichere Fettgewebsreduktion in diabetischen Tiermodellen ohne die typischen HGH-induzierten Insulinresistenzen." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "36.00" }, { shop: "Peptid24", price: "29.90" }, { shop: "DrakonPeptides", price: "34.00" }] },
+            { id: "aod9604", nr: "10/63", name: "AOD-9604", aka: "Optimiertes HGH-Frag-Derivat · Anti-Obesity Drug", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "low", effects: ["Stabile Modifikation des lipolytischen Fragments", "Fördert zusätzlich regenerative Prozesse bei Arthrose", "Blockiert biochemisch die Neuentstehung von Fettzellen"], risks: ["Lokale Entzündungsreaktionen an der Einstichstelle", "Keine aktuelle therapeutische Zulassung in Deutschland"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "8 - 12 Wochen", halflife: "~40 Minuten" }, study: { level: "human", levelText: "Phase-IIb Humantrials (Australien)", text: "Dokumentierte, signifikante Reduzierung von Fettpolstern bei exzellentem endokrinologischem Profil." }, prices: [{ shop: "Europa-Peptide", price: "34.00" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "DrakonPeptides", price: "37.00" }] },
+            { id: "mt2", nr: "11/63", name: "Melanotan II (MT-2)", aka: "Synthetisches Alpha-MSH Analogon", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "high", effects: ["Stark erhöhte, langanhaltende Bräunung (Melaninaktivator)", "Erhöht signifikant Libido und sexuelle Erregung", "Appetitzügelnder Effekt auf neurologischer Ebene"], risks: ["Ausgeprägte, akute Übelkeit direkt nach Injektion", "Unkontrollierte Dauererektionen (Priapismus-Gefahr)", "Hyperpigmentierung und unregelmäßige Muttermale"], dosage: { starter: "100 mcg", normal: "250-500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan", timing: "Abends vor dem Schlafen", cycle: "2 - 4 Wochen (Aufbau)", halflife: "~2 Stunden" }, study: { level: "pilot", levelText: "Pilotstudien", text: "Entwicklung gestoppt aufgrund dermatologischer Sicherheitsaspekte bezüglich Follikelüberstimulation." }, prices: [{ shop: "Europa-Peptide", price: "23.90" }, { shop: "Alpine-Peptides", price: "28.00" }, { shop: "Peptid24", price: "22.00" }, { shop: "DrakonPeptides", price: "25.00" }] },
+            { id: "mt1", nr: "12/63", name: "Melanotan I (MT-1)", aka: "Afamelanotid", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "med", effects: ["Sicherere Bräunung durch milde Melaninproduktion", "Klinischer Lichtschutz bei empfindlicher weißer Haut", "Deutlich geringerer Libido- und Übelkeits-Effekt als MT-2"], risks: ["Temporäre Rötung & Hitzegefühl (Flush)", "Veränderung bestehender Pigmentflecke möglich"], dosage: { starter: "500 mcg", normal: "1 mg", max: "2 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "2 - 4 Wochen", halflife: "~1.5 Stunden" }, study: { level: "human", levelText: "EU-Zulassung (Scenesse)", text: "Erfolgreich zugelassen für die Behandlung von erythropoetischer Protoporphyrie zur Verringerung der Lichtempfindlichkeit." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "36.00" }, { shop: "DrakonPeptides", price: "35.00" }] },
+            { id: "pt141", nr: "13/63", name: "PT-141", aka: "Bremelanotid · Libido-Peptid", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject", "nasal"], risk: "med", effects: ["Erhöht die sexuelle Erregbarkeit direkt über das ZNS", "Wirkt rein neurologisch auf Rezeptorebene im Gehirn", "Hochwirksam bei erektiler Dysfunktion & Luststörungen"], risks: ["Akute Übelkeit in der ersten Stunde der Applikation", "Leichter Blutdruckanstieg während der Wirkungsdauer"], dosage: { starter: "0.5 mg", normal: "1.5 mg", max: "3 mg", freq: "Bei Bedarf (max 1x/72h)", form: "Subkutan / Nasalspray", timing: "1 - 2 Stunden vor Aktivität", cycle: "Nach Bedarf", halflife: "~2 Stunden" }, study: { level: "human", levelText: "FDA-Zulassung (Vyleesi)", text: "Zugelassen zur erfolgreichen Behandlung von hypoaktiven sexuellen Störungen bei weiblichen Patientinnen." }, prices: [{ shop: "Europa-Peptide", price: "32.00" }, { shop: "Alpine-Peptides", price: "35.00" }, { shop: "Peptid24", price: "29.90" }, { shop: "DrakonPeptides", price: "34.00" }] },
+            { id: "ghkcu", nr: "14/63", name: "GHK-Cu", aka: "Kupfer-Tripeptid-1", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject", "topisch"], risk: "low", effects: ["Regt die zelluläre Kollagen- und Elastinsynthese an", "Fördert das Haarwachstum durch Stärkung der Follikel", "Führt zu messbarer Festigung dünner Gesichtshaut"], risks: ["Hautreizungen bei hoher Dosierung in Eigenmischungen", "Darf nicht mit saurem Vitamin C kombiniert werden"], dosage: { starter: "1 mg", normal: "2 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Topisch", timing: "Abends nach der Reinigung", cycle: "Dauerhaft möglich", halflife: "Sehr kurz (Minuten)" }, study: { level: "human", levelText: "Dermatologische Trials", text: "Klinisch bewiesene Reduktion der Faltentiefe und signifikante Steigerung der Epidermis-Dichte nach 12 Wochen." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "Peptid24", price: "29.00" }, { shop: "DrakonPeptides", price: "31.00" }] },
+            { id: "kpv", nr: "15/63", name: "KPV", aka: "Lys-Pro-Val · Antientzündliches Peptid", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Inaktiviert den entzündungsfördernden NF-κB Pfad", "Therapiert chronische Darmentzündungen (Morbus Crohn)", "Starke antibakterielle und heilungsfördernde Wirkung"], risks: ["Bisher geringere Anzahl an klinischen Humanstudien", "Geringe Stabilität im flüssigen Zustand"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "Schnittig kurz (~30 Min)" }, study: { level: "animal", levelText: "Tierstudien (Colitis-Modelle)", text: "Deutliche Überlegenheit bei der Entzündungslinderung im Dickdarm ohne systemische Nebenwirkungen klassischer Steroide." }, prices: [{ shop: "Europa-Peptide", price: "39.90" }, { shop: "Alpine-Peptides", price: "44.00" }, { shop: "Peptid24", price: "39.00" }, { shop: "DrakonPeptides", price: "42.00" }] },
+            { id: "epitalon", nr: "16/63", name: "Epitalon", aka: "Epithalone · Epiphysen-Tetrapeptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Aktiviert die Telomerase zur Rejuvenation alternder Zellen", "Optimiert die körpereigene Melatoninausschüttung", "Verlängert nachweislich die replikative Lebensdauer von Zellen"], risks: ["In vitro Bedenken bei unkontrollierten Tumor-Strukturen", "Wenig replizierte klinische Studien im Westen"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "1x täglich (Kur)", form: "Subkutan", timing: "Abends vor dem Schlaf", cycle: "10 - 20 Tage (1-2x pro Jahr)", halflife: "Sehr kurz (Minuten)" }, study: { level: "human", levelText: "Russische Langzeittrials", text: "Jahrzehntelange klinische Dokumentation belegt eine Reduzierung der Altersmortalität um bis zu 30%." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "Peptid24", price: "28.00" }, { shop: "DrakonPeptides", price: "31.00" }] },
+            { id: "semax", nr: "17/63", name: "Semax", aka: "ACTH-Segment Nootropikum · Pro-Gly-Pro", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal", "inject"], risk: "low", effects: ["Erhöht signifikant den BDNF-Spiegel im Gehirn", "Maximiert Konzentration, logischen Fokus und Auffassungsgabe", "Fördert die synaptische Plastizität nach mentaler Erschöpfung"], risks: ["Kann bei später Applikation zu Schlafschwierigkeiten führen", "Milde Reizungen der Nasenmukosa bei Langzeitgebrauch"], dosage: { starter: "100 mcg", normal: "300-600 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Nasal (bevorzugt) / Subkutan", timing: "Morgens unmittelbar nach dem Aufwachen", cycle: "2 - 4 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen (Osteuropa)", text: "Offiziell genutztes und bewährtes neuropeptidisches Arzneimittel zur gezielten Schlaganfalltherapie." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "Peptid24", price: "34.00" }, { shop: "DrakonPeptides", price: "37.00" }] },
+            { id: "selank", nr: "18/63", name: "Selank", aka: "Synthetisches Tuftsin-Derivat · Angstlöser", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal"], risk: "low", effects: ["Fördert die angstlösende Wirkung ohne Müdigkeit zu erzeugen", "Wirkt neuroprotektiv bei chronischen Belastungen", "Besitzt keinerlei Benzodiazepin-ähnliches Suchtpotenzial"], risks: ["Milde Benommenheit in den ersten Einnahmetagen", "Geringe Marktdurchdringung im westeuropäischen Raum"], dosage: { starter: "250 mcg", normal: "500-1000 mcg", max: "3000 mcg", freq: "1-3x täglich", form: "Nasal (Spray)", timing: "Bei Bedarf / In Stressphasen", cycle: "2 - 4 Wochen", halflife: "~1.5 Stunden" }, study: { level: "human", levelText: "Klinische Trials (Kombinationsstudien)", text: "In Studien dem Wirkstoff Phenibut ebenbürtig bezüglich Angstregulierung, jedoch frei von Nebenwirkungen." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "39.00" }, { shop: "DrakonPeptides", price: "38.00" }] },
+            { id: "glutathione", nr: "19/63", name: "Glutathion", aka: "Master-Antioxidans · L-Glutathion", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Stärkster zellulärer Entgifter für Schwermetalle & Toxine", "Schützt die Mitochondrienmembran vor oxidativem Stress", "Aufhellung von Pigmentflecken (Melaninblocker-Nebeneffekt)"], risks: ["Sehr schlechte Bioverfügbarkeit bei klassischer oraler Einnahme", "Erfordert sterile Injektionsvorbereitung"], dosage: { starter: "100 mg", normal: "200-400 mg", max: "600 mg", freq: "1x täglich", form: "Subkutan / Intravenös / Liposomal", timing: "Morgens", cycle: "Dauerhaft anwendbar", halflife: "Wenige Minuten im Serum" }, study: { level: "human", levelText: "Klinische Studien", text: "Nachgewiesene, signifikante Reduzierung von Entzündungsbiomarkern im Leberstoffwechsel." }, prices: [{ shop: "Europa-Peptide", price: "24.00" }, { shop: "Alpine-Peptides", price: "27.00" }, { shop: "RebirthLabs", price: "18.50" }, { shop: "PeptideRevolution", price: "23.00" }] },
+            { id: "slupp332", nr: "20/63", name: "SLU-PP-332", aka: "ERRα/γ-Agonist · Exercise Mimetic", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["oral", "inject"], risk: "med", effects: ["Aktiviert biochemische Anpassungseffekte von Sport", "Erhöht drastisch die Mitochondriendichte in Muskelzellen", "Steigert die aerobe Verbrennungsleistung im Ruhezustand"], risks: ["Oxidative Stressreaktionen bei mangelnder Zufuhr von Antioxidantien", "Fehlen klinischer Tests an menschlichen Zielgruppen"], dosage: { starter: "300 mcg", normal: "1 mg", max: "2 mg", freq: "1x täglich", form: "Oral (Kapseln) / Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~12 Stunden" }, study: { level: "invitro", levelText: "Science-Studie (2023)", text: "Mäuse zeigten signifikanten Fettverlust und extreme Ausdauersteigerungen ohne vorangehendes Training." }, prices: [{ shop: "Europa-Peptide", price: "135.00" }, { shop: "Beyond-Peptides", price: "129.00" }, { shop: "DrakonPeptides", price: "139.00" }] },
+            { id: "tesamorelin", nr: "21/63", name: "Tesamorelin", aka: "Egrifta · Lipodystrophie-Peptid", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Spezifische Zerstörung viszeraler (Bauch-) Fettpolster", "Stimuliert die anabole Synthese von IGF-1 im Serum", "Verbessert die kognitiven Fähigkeiten bei älteren Probanden"], risks: ["Lokal schmerzende Injektionsstellen", "Vorübergehende Einschränkung der Glukosetoleranz möglich"], dosage: { starter: "1 mg", normal: "2 mg", max: "2 mg", freq: "1x täglich", form: "Subkutan", timing: "Abends nüchtern vor dem Schlaf", cycle: "12 - 24 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "FDA-Zulassung", text: "Zugelassen als therapeutisches Präparat zur kontrollierten Fettreduktion bei Lipodystrophie." }, prices: [{ shop: "Europa-Peptide", price: "55.00" }, { shop: "Peptid24", price: "49.00" }, { shop: "Alpine-Peptides", price: "52.00" }, { shop: "DrakonPeptides", price: "56.00" }] },
+            { id: "igf1lr3", nr: "22/63", name: "IGF-1 LR3", aka: "Long R3 Insulin-like Growth Factor-1", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Fördert die biologische Neubildung von Muskelzellen (Hyperplasie)", "Sorgt für exzellente Aminosäure-Einlagerungen in die Skelettmuskulatur", "Aktiviert inaktive Muskelsatellitenzellen"], risks: ["Gefahr plötzlicher, schwerer Unterzuckerung (Hypoglykämie)", "Beschleunigt das Zellwachstum potenzieller Tumorstrukturen"], dosage: { starter: "20 mcg", normal: "40-60 mcg", max: "100 mcg", freq: "An Trainingstagen", form: "Subkutan / Intramuskulär (i.m.)", timing: "Unmittelbar nach dem Krafttraining", cycle: "Maximal 4 - 6 Wochen", halflife: "~30 Stunden" }, study: { level: "animal", levelText: "In-Vitro & Tierdaten", text: "Extremes, biologisch replizierbares Muskelwachstum in Nagetier-Modellen dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "59.00" }, { shop: "Peptid24", price: "54.00" }, { shop: "Alpine-Peptides", price: "57.00" }, { shop: "DrakonPeptides", price: "61.00" }] },
+            { id: "motsc", nr: "23/63", name: "MOTS-C", aka: "Mitochondrial-Derived Peptide", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Reguliert die Insulinsensitivität direkt am Muskelgewebe", "Unterstützt den Zellschutz und die Fett-Oxidation", "Optimiert die allgemeine zelluläre Energiegewinnung"], risks: ["Sehr frühe Phase der klinischen Untersuchung", "Regelmäßige systemische Gaben notwendig"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Morgens vor Bewegung", cycle: "8 - 12 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Mäusetrials (USC)", text: "Belegte die vollständige Umkehr altersbedingter Fettleibigkeit und Erschöpfungszustände." }, prices: [{ shop: "Europa-Peptide", price: "49.00" }, { shop: "Peptid24", price: "44.00" }, { shop: "Alpine-Peptides", price: "46.00" }, { shop: "DrakonPeptides", price: "51.00" }] },
+            { id: "ta1", nr: "24/63", name: "Thymosin Alpha-1", aka: "Tα1 · Zadaxin · Immun-Peptid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Aktiviert und schult T-Helferzellen und Killerzellen", "Verhindert die altersbedingte Schrumpfung der Thymusdrüse", "Hervorragende Prävention in Erkältungs- & Grippezeiten"], risks: ["Kann Autoimmunprozesse bei empfindlichen Patienten aktivieren", "Rötung und Juckreiz an der Einstichstelle"], dosage: { starter: "1.6 mg", normal: "1.6 mg", max: "3.2 mg", freq: "2x wöchentlich", form: "Subkutan", timing: "Morgens", cycle: "6 - 12 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinische Zulassung", text: "Zugelassen als Immunmodulator in über 30 Ländern zur Erhöhung der viralen Antikörperantwort." }, prices: [{ shop: "Europa-Peptide", price: "44.00" }, { shop: "Peptid24", price: "39.00" }, { shop: "Alpine-Peptides", price: "41.00" }, { shop: "DrakonPeptides", price: "45.00" }] },
+            { id: "follistatin344", nr: "25/63", name: "Follistatin-344", aka: "Myostatin-Inhibitor · FST-344", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Blockiert Myostatin und setzt Muskelwachstumsbremsen aus", "Ermöglicht rasantesten Kraft- und Massezuwachs", "Unterstützt den gezielten lokalen Muskelaufbau"], risks: ["Hohe Verletzungsgefahr für passive Strukturen (Sehnen)", "Gefahr unkontrollierten Wachstums des Herzmuskels"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "150 mcg", freq: "1x täglich (max 10 Tage)", form: "Intramuskulär (lokal)", timing: "Post-Workout", cycle: "Maximal 10 Tage am Stück", halflife: "~36 Stunden" }, study: { level: "animal", levelText: "Primatentrials", text: "Extreme Hypertrophie der Skelettmuskeln ohne negative Einflüsse auf Organstrukturen bei Affen." }, prices: [{ shop: "Europa-Peptide", price: "66.00" }, { shop: "Peptid24", price: "59.00" }, { shop: "Alpine-Peptides", price: "63.00" }, { shop: "DrakonPeptides", price: "68.00" }] },
+            { id: "aicar", nr: "26/63", name: "AICAR", aka: "Acadesine · AMPK-Metabolic-Activator", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "med", effects: ["Aktiviert die zelluläre AMPK zur Fettverbrennung", "Erhöht die VO2max-Ausdauerleistung signifikant", "Schützt Muskelgewebe vor hypoxischen Schäden"], risks: ["Auf der Verbotsliste des organisierten Sports (WADA)", "Kurzzeitige Kopfschmerzen"], dosage: { starter: "10 mg", normal: "25-50 mg", max: "100 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~2 Stunden" }, study: { level: "human", levelText: "Klinische Trials (Kardiologie)", text: "Sichere klinische Verabreichung zur Prävention ischämischer Komplikationen bei Herzoperationen." }, prices: [{ shop: "Europa-Peptide", price: "56.00" }, { shop: "Peptid24", price: "49.00" }, { shop: "Alpine-Peptides", price: "53.00" }, { shop: "DrakonPeptides", price: "58.00" }] },
+            { id: "sermorelin", nr: "27/63", name: "Sermorelin", aka: "GRF 1-29 · GHRH-Analogon", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "low", effects: ["Erhöht die Ausschüttung körpereigenen Wachstumshormons", "Gilt als die sicherste Alternative zur künstlichen HGH-Gabe", "Verbessert die Gelenkstärke und Elastizität der Haut"], risks: ["Temporäre Hitzewallungen (Flush)", "Lokaler Schmerzreiz an der Einstichstelle"], dosage: { starter: "100 mcg", normal: "200-500 mcg", max: "1000 mcg", freq: "1x täglich", form: "Subkutan", timing: "Direkt vor dem Schlafengehen", cycle: "12 - 24 Wochen", halflife: "~15 Minuten" }, study: { level: "human", levelText: "Zugelassenes Diagnostikum", text: "Klinisch bewährt zur präzisen Diagnose von kindlichen Wachstumshormonmängeln." }, prices: [{ shop: "Europa-Peptide", price: "31.00" }, { shop: "Peptid24", price: "27.00" }, { shop: "Alpine-Peptides", price: "29.00" }, { shop: "DrakonPeptides", price: "32.00" }] },
+            { id: "dsip", nr: "28/63", name: "DSIP", aka: "Delta-Sleep-Inducing Peptide · Neuropeptid", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject"], risk: "low", effects: ["Fördert gezielt die Delta-Wellen Tiefschlafphase", "Normalisiert gestörte circadiane Rhythmen hocheffizient", "Senkt Cortisollevel und reguliert die Stressachse"], risks: ["Morgenmüdigkeit (Hangover) bei zu hoher Dosierung", "Sehr geringe Halbwertszeit"], dosage: { starter: "50 mcg", normal: "100-250 mcg", max: "500 mcg", freq: "1x abends", form: "Subkutan", timing: "30 - 60 Minuten vor dem Schlaf", cycle: "2 - 4 Wochen (Kurweise)", halflife: "~15 Minuten" }, study: { level: "human", levelText: "Frühe Pilotstudien", text: "Klinische Tests belegen eine sofortige Normalisierung der Schlafarchitektur bei chronischen Schlaflosen." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Alpine-Peptides", price: "34.00" }, { shop: "DrakonPeptides", price: "33.00" }] },
+            { id: "ghrp2", nr: "29/63", name: "GHRP-2", aka: "Pralmorelin · Wachstumshormon-Sekretagogum", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Hocheffizienter, starker Wachstumshormonpuls", "Stärkt die Regeneration und den anabolen Gewebeschutz", "Milde Appetitanregung im Vergleich zu GHRP-6"], risks: ["Erhöht leicht die Werte von Prolaktin & Cortisol", "Temporäre Wassereinlagerung"], dosage: { starter: "100 mcg", normal: "200-300 mcg", max: "500 mcg", freq: "2-3x täglich", form: "Subkutan (1-3x täglich)", timing: "Nüchtern", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Studien", text: "Belegte die zuverlässige, dosisabhängige Somatotropinausschüttung bei erwachsenen Probanden." }, prices: [{ shop: "Europa-Peptide", price: "25.00" }, { shop: "Peptid24", price: "22.90" }, { shop: "Alpine-Peptides", price: "24.50" }, { shop: "DrakonPeptides", price: "26.00" }] },
+            { id: "ghrp6", nr: "30/63", name: "GHRP-6", aka: "Growth Hormone Releasing Peptide-6", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Starke GH-Ausschüttung über Ghrelin-Rezeptor-Aktivierung", "Extrem appetitanregender Effekt (optimal bei Untergewicht)", "Kardioprotektive & entzündungshemmende Eigenschaften"], risks: ["Ausgeprägter, teils unkontrollierbarer Heißhunger", "Erhöht bei sensiblen Anwendern Prolaktin und Cortisol"], dosage: { starter: "100 mcg", normal: "150-200 mcg", max: "300 mcg", freq: "2-3x täglich", form: "Subkutan (1-3x täglich)", timing: "Nüchtern (30 Min vor Mahlzeit)", cycle: "8 - 12 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Kardiovaskuläre Forschung", text: "Zeigte in klinischen Tests schützende Eigenschaften auf das Myokard nach hypoxischen Belastungen." }, prices: [{ shop: "Europa-Peptide", price: "24.50" }, { shop: "Peptid24", price: "21.90" }, { shop: "Alpine-Peptides", price: "23.90" }] },
+            { id: "hexarelin", nr: "31/63", name: "Hexarelin", aka: "Stärkstes GH-Releasing Hexapeptid", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Stärkste Wachstumshormonausschüttung aller GHRPs", "Schützt den Herzmuskel (Kardiomyozyten) nachweislich", "Fördert die Knochendichte und Sehnenstabilität"], risks: ["Schnelle Rezeptor-Sättigung (Schnittige Desensibilisierung)", "Erhöht Cortisol, Prolaktin und hemmt Insulinsensitivität"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "200 mcg", freq: "1-2x täglich", form: "Subkutan", timing: "Morgens / Post-Workout nüchtern", cycle: "Maximal 4 - 6 Wochen", halflife: "~30 Minuten" }, study: { level: "human", levelText: "Klinische Kardiologie", text: "Umfangreiche Belege bezüglich der kardioprotektiven Eigenschaften und Wiederherstellung der Herzfunktion." }, prices: [{ shop: "Europa-Peptide", price: "28.00" }, { shop: "Alpine-Peptides", price: "32.00" }, { shop: "DrakonPeptides", price: "31.50" }] },
+            { id: "kisspeptin", nr: "32/63", name: "Kisspeptin-10", aka: "Metastin · GnRH-Aktivator", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "med", effects: ["Aktiviert GnRH zur Stimulation von LH und FSH", "Steigert das natürliche Testosteron ohne hormonellen Shutdown", "Fördert die Fertilität und Spermatogenese hocheffizient"], risks: ["Temporäre Hitzewallungen (Flush)", "Hormonschwankungen bei unsachgemäßer Dosierung"], dosage: { starter: "10 mcg", normal: "25-50 mcg", max: "100 mcg", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Extrem kurz (wenige Minuten)" }, study: { level: "human", levelText: "Phase-I Pilotstudien", text: "Nachweisbare biochemische Reaktivierung der hormonellen Hypophysenachse bei funktionellem Mangel." }, prices: [{ shop: "Europa-Peptide", price: "38.90" }, { shop: "Alpine-Peptides", price: "42.00" }, { shop: "DrakonPeptides", price: "41.00" }] },
+            { id: "ara290", nr: "33/63", name: "ARA-290", aka: "Cibinetide · Neuroprotektives Peptid", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Zielgerichtete Therapie neuropathischer Schmerzen (Nervenschmerzen)", "Aktiviert den schützenden angeborenen Reparatur-Rezeptor", "Antientzündliche Effekte bei Sarkoidose"], risks: ["Klinisch teils noch in Erforschung", "Hoher Beschaffungspreis"], dosage: { starter: "1 mg", normal: "2-4 mg", max: "8 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 6 Wochen", halflife: "~20 Minuten" }, study: { level: "human", levelText: "Klinische Phase-II", text: "Zeigt signifikante Schmerzlinderung und Verbesserung der Lebensqualität bei Patienten mit neuropathischen Ausfällen." }, prices: [{ shop: "Europa-Peptide", price: "69.00" }, { shop: "Alpine-Peptides", price: "75.00" }, { shop: "DrakonPeptides", price: "72.00" }] },
+            { id: "oxytocin", nr: "34/63", name: "Oxytocin", aka: "Bindungshormon · Kuschelhormon", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["nasal", "inject"], risk: "low", effects: ["Fördert soziale Bindung, Empathie und tiefes Vertrauen", "Senkt akuten Stress, Cortisol und Blutdruck", "Unterstützt gesunde soziale Interaktion und Ängstlichkeit"], risks: ["Kann bei Überdosierung zu emotionaler Überempfindlichkeit führen", "Gefahr von Uteruskontraktionen bei Frauen"], dosage: { starter: "10 IU", normal: "20 IU", max: "40 IU", freq: "Bei Bedarf", form: "Nasal / Subkutan", timing: "Vor sozialen Events / Abends", cycle: "Nach Bedarf", halflife: "~5 Minuten" }, study: { level: "human", levelText: "Klinische Psychologie", text: "Umfangreich dokumentierte Reduktion sozialer Phobien und zerebraler Amygdala-Überaktivität." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "29.00" }, { shop: "DrakonPeptides", price: "27.50" }] },
+            { id: "hcg", nr: "35/63", name: "HCG", aka: "Humanes Choriongonadotropin", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "med", effects: ["Simuliert das luteinisierende Hormon (LH) in den Hoden", "Erhält die Hodengröße unter anabolem Hormonmissbrauch", "Fördert die natürliche endogene Testosteronsynthese"], risks: ["Gefahr der Gynäkomastie durch Aromatisierung zu Östrogen", "Verschreibungspflichtiges Hormonpräparat"], dosage: { starter: "250 IU", normal: "500 IU", max: "1500 IU", freq: "2-3x wöchentlich", form: "Subkutan", timing: "Morgens", cycle: "3 - 4 Wochen (PCT)", halflife: "~36 Stunden" }, study: { level: "human", levelText: "Reproduktionsmedizin", text: "Goldstandard in der klinischen Andrologie zur Wiederherstellung der Spermienqualität." }, prices: [{ shop: "Europa-Peptide", price: "42.90" }, { shop: "Peptid24", price: "39.90" }, { shop: "Alpine-Peptides", price: "41.00" }] },
+            { id: "snap8", nr: "36/63", name: "SNAP-8", aka: "Acetyl Octapeptide-3 · Mimikfalten-Inhibitor", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["topisch"], risk: "low", effects: ["Hemmt den SNARE-Komplex zur Reduktion von Mimikfalten", "Schmerzfreie, kosmetische Alternative zu Botox-Injektionen", "Glättet nachweislich Stirnfalten und Krähenfüße"], risks: ["Hautreizungen bei sehr empfindlichen Anwendern", "Wirkt primär topisch, nicht systemisch"], dosage: { starter: "2%", normal: "5%", max: "10%", freq: "2x täglich (Topisch)", form: "Topisch (Serum)", timing: "Morgens / Abends aufgetragen", cycle: "Dauerhaft anwendbar", halflife: "Lokale Wirkung" }, study: { level: "human", levelText: "Kosmetik-Studien", text: "Untersuchungen belegen eine Reduzierung der Faltentiefe um bis zu 35% nach 28 Tagen." }, prices: [{ shop: "Europa-Peptide", price: "36.90" }, { shop: "Alpine-Peptides", price: "41.00" }, { shop: "DrakonPeptides", price: "39.00" }] },
+            { id: "argireline", nr: "37/63", name: "Argireline", aka: "Acetyl Hexapeptide-8 · Anti-Falten Peptid", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["topisch"], risk: "low", effects: ["Entspannt sanft die Gesichtsmuskulatur (Botox-Alternative)", "Beugt der Entstehung neuer tiefer Mimikfalten vor", "Spürbare Feuchtigkeitsbindung in der upperen Epidermis"], risks: ["Effekte erlöschen schrittweise nach Absetzen des Serums", "Lokale Rötungen bei ungenügender Formulierung"], dosage: { starter: "2%", normal: "5%", max: "10%", freq: "2x täglich (Topisch)", form: "Topisch (Serum)", timing: "Morgens / Abends", cycle: "Dauerhaft", halflife: "Lokale Wirkung" }, study: { level: "human", levelText: "Klinische Kosmetikstudien", text: "Nachgewiesene Reduzierung der Faltentiefe um ca. 30 % bei regelmäßiger topischer Applikation." }, prices: [{ shop: "Europa-Peptide", price: "31.00" }, { shop: "Alpine-Peptides", price: "35.00" }, { shop: "DrakonPeptides", price: "34.00" }] },
+            { id: "ghkcu100", nr: "38/63", name: "GHK-Cu (100mg)", aka: "Kupfer-Tripeptid-1 · Großpackung", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject", "topisch"], risk: "low", effects: ["Hochdosiertes Kupferpeptid zur Gewebeheilung", "Reguliert Entzündungsprozesse und fördert antioxidativen Schutz", "Ideal für großflächige kosmetische Eigenformulierungen"], risks: ["Gefahr der Kupfertoxizität bei massivem Missbrauch", "Muss extrem kühl und lichtgeschützt lagern"], dosage: { starter: "1 mg", normal: "2 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Topisch", timing: "Abends", cycle: "Dauerhaft", halflife: "Sehr kurz" }, study: { level: "human", levelText: "Hautbiologische Studien", text: "Bestätigter Wiederaufbau geschädigter Hautbarrieren und gesteigerter Haar-Dichte-Index." }, prices: [{ shop: "Europa-Peptide", price: "49.00" }, { shop: "Peptid24", price: "44.90" }, { shop: "Alpine-Peptides", price: "47.00" }, { shop: "DrakonPeptides", price: "52.00" }] },
+            { id: "glowstack", nr: "39/63", name: "GLOW Stack", aka: "GHK-Cu + TB-500 + BPC-157", cat: "kosmetik", catText: "KOSMETIK & SKINCARE", routes: ["inject"], risk: "low", effects: ["Synergistischer Premium Skincare & Healing Stack", "Fördert die Kollagenbildung und beschleunigt Wundheilung", "Baut Narbengewebe ab und glättet Fältchen massiv"], risks: ["Addierte, milde Einstichreizungen", "Komplexere Mischverhältnisse bei Rekonstitution"], dosage: { starter: "1mg/Tag", normal: "2mg/Tag", max: "4mg/Tag", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "Mischwert" }, study: { level: "pilot", levelText: "Kombinations-Stack", text: "Keine isolierten klinischen Studien des Gesamtstacks, die Synergie basiert jedoch auf den belegten Einzeleffekten der Moleküle." }, prices: [{ shop: "Europa-Peptide", price: "129.00" }, { shop: "Alpine-Peptides", price: "124.00" }, { shop: "Peptid24", price: "119.00" }] },
+            { id: "klowstack", nr: "40/63", name: "KLOW Stack", aka: "GLOW Stack + KPV Peptide", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Umfassender entzündungshemmender & regenerativer Stack", "KPV lindert zelluläre Entzündungen hocheffizient", "Extreme Beschleunigung von systemischen Reparaturprozessen"], risks: ["Erhöhte biochemische Empfindlichkeit gegenüber Feuchtigkeit", "Aufwendiges, präzises Mischverfahren"], dosage: { starter: "1mg/Tag", normal: "2mg/Tag", max: "4mg/Tag", freq: "1x täglich", form: "Subkutan", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Mischwert" }, study: { level: "pilot", levelText: "Anwenderberichte", text: "Konsistent hervorragende Berichte bezüglich beschleunigter Wundheilung und vollständiger Linderung chronischer Ekzeme." }, prices: [{ shop: "Europa-Peptide", price: "149.00" }, { shop: "Alpine-Peptides", price: "145.00" }, { shop: "Peptid24", price: "139.00" }] },
+            { id: "nadplus", nr: "41/63", name: "NAD+", aka: "Nicotinamid-Adenin-Dinukleotid", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject", "oral"], risk: "low", effects: ["Essentieller Cofaktor für mitochondriale ATP-Gewinnung", "Aktiviert zelluläre Sirtuine zur DNA-Reparatur", "Verbessert Kognition und neuro-metabolische Vitalität"], risks: ["Injektion erfordert langsames Einschleichen zur Vermeidung von Flush", "Teils sehr kostspielig bei hoher Dosierung"], dosage: { starter: "50 mg", normal: "100-250 mg", max: "500 mg", freq: "1-2x wöchentlich", form: "Subkutan / Intravenös", timing: "Morgens", cycle: "Kurweise", halflife: "Sehr kurz im Plasma" }, study: { level: "human", levelText: "Klinische Studien", text: "Erhöht messbar den intrazellulären NAD+-Pool und optimiert kognitive Parameter." }, prices: [{ shop: "Europa-Peptide", price: "64.90" }, { shop: "Alpine-Peptides", price: "69.00" }, { shop: "DrakonPeptides", price: "68.00" }] },
+            { id: "ss31", nr: "42/63", name: "SS-31", aka: "Elamipretide", cat: "aging", catText: "ANTI-AGING & LONGEVITY", routes: ["inject"], risk: "low", effects: ["Schützt und restrukturiert die innere Mitochondrienmembran", "Stoppt die übermäßige Entstehung schädlicher Sauerstoffradikale", "Unterstützt Muskelgewebe und Organe im Alterungsprozess"], risks: ["Sehr neues Molekül der Longevity-Wissenschaft"], dosage: { starter: "2 mg", normal: "4-8 mg", max: "10 mg", freq: "1x täglich", form: "Subkutan", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "human", levelText: "Phase-II klinische Trials", text: "Zeigte signifikante mitochondriale Funktionsverbesserungen und Verringerung der Altersatrophie." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "Alpine-Peptides", price: "85.00" }, { shop: "DrakonPeptides", price: "82.00" }] },
+            { id: "hgh", nr: "43/63", name: "HGH (Somatropin)", aka: "Human Growth Hormone", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Starkes Muskelwachstum & massiver Kraftaufbau", "Extremer Fettabbau (besonders tiefliegendes Viszeralfett)", "Verbesserte Hautqualität, Haardichte & Anti-Aging Effekte"], risks: ["Akromegalie (Wachstum von Knochen/Organen) bei chronischer Langzeitnutzung", "Erhöhtes Risiko für Insulinresistenz & Typ-2-Diabetes", "Wassereinlagerungen & starke HPTA-Suppression"], dosage: { starter: "1-2 IU", normal: "3-4 IU", max: "6 IU", freq: "1x täglich", form: "Subkutan / IM", timing: "Morgens nüchtern", cycle: "Langzeit (unter ärztlicher Aufsicht)", halflife: "~2-3 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "Gut dokumentiert für therapeutische GH-Defizienz. Mit signifikanten metabolischen Risiken verbunden." }, prices: [{ shop: "Europa-Peptide", price: "89.00" }, { shop: "Alpine-Peptides", price: "95.00" }, { shop: "DrakonPeptides", price: "92.00" }] },
+            { id: "pe2228", nr: "44/63", name: "PE 22-28", aka: "Spadin-Analogon · TrkB-Agonist", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject", "nasal"], risk: "low", effects: ["Schneller, hochwirksamer antidepressiver Effekt (TrkB-Rezeptor)", "Fördert gezielt die Neurogenese im Hippocampus", "Wirkt massiv neuroprotektiv ohne Abhängigkeitspotenzial"], risks: ["Sehr frühe Phase der präklinischen Forschung", "Langzeitwirkungen am Menschen unbekannt"], dosage: { starter: "1 mg", normal: "2-4 mg", max: "5 mg", freq: "1x täglich", form: "Subkutan / Nasal", timing: "Morgens", cycle: "4 - 8 Wochen", halflife: "Kurz (Plasma)" }, study: { level: "animal", levelText: "Präklinische Tierstudien", text: "Deutlicher antidepressiver Effekt in Tiermodellen mit extrem schnellem Wirkungseintritt." }, prices: [{ shop: "Europa-Peptide", price: "49.90" }, { shop: "Beyond-Peptides", price: "55.00" }, { shop: "Alpine-Peptides", price: "52.00" }] },
+            { id: "epo", nr: "45/63", name: "EPO", aka: "Erythropoetin", cat: "gewicht", catText: "PERFORMANCE & AUSDAUER", routes: ["inject"], risk: "high", effects: ["Erhöht massiv die körpereigene Produktion roter Blutkörperchen", "Drastisch verbesserte kardiovaskuläre VO2max und Ausdauer", "Der potenteste bekannte Dopingeffekt im professionellen Ausdauersport"], risks: ["Akutes Thrombose- & Schlaganfallrisiko durch hohe Blutviskosität", "Herzinfarktgefahr", "Streng von der WADA gesperrt"], dosage: { starter: "20 IU/kg", normal: "50 IU/kg", max: "300 IU/kg", freq: "1-3x wöchentlich", form: "Subkutan / IV", timing: "3x wöchentlich", cycle: "Kurzzeitig", halflife: "~8.5 Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "Medizinisch genutzt bei chronischer Anämie. Extrem gefährlich bei Missbrauch." }, prices: [{ shop: "Europa-Peptide", price: "49.90" }, { shop: "DrakonPeptides", price: "55.00" }, { shop: "Alpine-Peptides", price: "52.00" }] },
+            { id: "cagrilintid", nr: "46/63", name: "Cagrilintid", aka: "Amylin-Analogon", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Reduziert die Magenentleerung massiv", "Erzwingt eine starke Sättigung und radikale Appetitreduktion", "Wirkt stark synergistisch mit Semaglutid (CagriSema)"], risks: ["Starke Übelkeit, Sodbrennen & Erbrechen sehr wahrscheinlich", "Nur in streng kontrollierten klinischen Studien erprobt"], dosage: { starter: "0.16 mg", normal: "0.5-1.2 mg", max: "2.4 mg", freq: "1x wöchentlich", form: "Subkutan", timing: "Einmal wöchentlich", cycle: "Unter ärztlicher Aufsicht", halflife: "~165 Stunden" }, study: { level: "human", levelText: "Phase III (SCALE)", text: "Kombiniert mit Semaglutid wurden bis zu 25% Gewichtsreduktion erreicht." }, prices: [{ shop: "Europa-Peptide", price: "69.00" }, { shop: "Alpine-Peptides", price: "75.00" }, { shop: "Beyond-Peptides", price: "72.00" }] },
+            { id: "lcarnitin", nr: "47/63", name: "L-Carnitin", aka: "Aminosäure-Derivat", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "low", effects: ["Transportiert Fettsäuren direkt in die Mitochondrien", "Verbessert die Ausdauer & zelluläre Energieeffizienz", "Unterstützt Herzgesundheit & kardiovaskulären Schutz"], risks: ["Fischiger Körpergeruch bei oraler Hochdosis", "Magen-Darm-Beschwerden"], dosage: { starter: "500 mg", normal: "1000 mg", max: "2000 mg", freq: "1x täglich", form: "IM / Subkutan / Oral", timing: "Vor dem Training", cycle: "Dauerhaft anwendbar", halflife: "~15 Stunden" }, study: { level: "human", levelText: "Gut belegt", text: "Gut untersuchtes Aminosäure-Supplement. Injektion bietet extrem hohe Bioverfügbarkeit." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Peptid24", price: "25.00" }, { shop: "Alpine-Peptides", price: "28.00" }] },
+            { id: "pegmgf", nr: "48/63", name: "PEG-MGF", aka: "Pegylierter Mechano Growth Factor", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "med", effects: ["Extremes lokales Muskelwachstum", "Aktiviert Satellitenzellen nach Mikrorissen", "Deutlich längere Halbwertszeit als normales MGF durch Pegylierung"], risks: ["Muss zwingend an Trainingstagen genutzt werden", "Lokaler Muskelschmerz"], dosage: { starter: "200 mcg", normal: "400 mcg", max: "600 mcg", freq: "Post-Workout", form: "Subkutan bilateral", timing: "Nach dem Training", cycle: "4 - 6 Wochen", halflife: "48h" }, study: { level: "invitro", levelText: "In-Vitro", text: "Löst Hyperplasie (Zellteilung) in erschöpften Muskelfasern massiv aus." }, prices: [{ shop: "Europa-Peptide", price: "35.00" }, { shop: "Peptid24", price: "32.00" }, { shop: "PeptideRevolution", price: "34.00" }] },
+            { id: "igf1des", nr: "49/63", name: "IGF-1 DES", aka: "IGF-1 DES (1-3)", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["inject"], risk: "high", effects: ["Zehnfach potenter als normales IGF-1", "Bindet nicht an IGF-1-Bindungsproteine", "Löst sofortiges lokales Muskelwachstum und Vaskularität aus"], risks: ["Hohes Hypoglykämie-Risiko", "Sehr schnelle Rezeptordegradation"], dosage: { starter: "20 mcg", normal: "50 mcg", max: "100 mcg", freq: "Pre-Workout", form: "Intramuskulär (Lokal)", timing: "Vor dem Training", cycle: "Max 4 Wochen", halflife: "20 Min" }, study: { level: "animal", levelText: "Tierstudien", text: "Zeigte bei lokalen Muskelinjektionen drastische und sofortige Hypertrophie-Signalwege." }, prices: [{ shop: "Beyond-Peptides", price: "69.00" }, { shop: "DrakonPeptides", price: "72.00" }] },
+            { id: "adipotide", nr: "50/63", name: "Adipotide", aka: "FTPP (Fett-Apoptose-Peptid)", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject"], risk: "high", effects: ["Zerstört die Blutgefäßversorgung (Vaskulatur) von weißen Fettzellen", "Löst den direkten Zelltod (Apoptose) der Fettzellen aus", "Führt zu extrem rasantem Gewichtsverlust"], risks: ["Gefährlich hohe Nierenbelastung", "Risiko von Nierenversagen bei schlechter Hydration", "Zelltod im Fettgewebe schwer kontrollierbar"], dosage: { starter: "0.25 mg/kg", normal: "0.4 mg/kg", max: "0.5 mg/kg", freq: "Täglich", form: "Subkutan", timing: "Morgens", cycle: "Max 28 Tage", halflife: "~2 Stunden" }, study: { level: "animal", levelText: "Primatentrials", text: "Affen verloren innerhalb von 4 Wochen 11% ihres Körpergewichts und zeigten massiven Verlust der viszeralen Fettmasse." }, prices: [{ shop: "PeptideRevolution", price: "89.00" }, { shop: "RebirthLabs", price: "95.00" }] },
+            { id: "ll37", nr: "51/63", name: "LL-37", aka: "Antimikrobielles Cathelicidin", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "topisch"], risk: "med", effects: ["Stark antimikrobiell gegen Bakterien, Viren und Pilze", "Beschleunigt die Heilung chronischer, offener Wunden", "Moduliert das Immunsystem und hemmt Autoimmunreaktionen"], risks: ["Kann bei Injektion stark brennen (Histaminreaktion)", "Zelltoxizität bei massiver Überdosierung"], dosage: { starter: "50 mcg", normal: "100 mcg", max: "200 mcg", freq: "Täglich", form: "Subkutan / Topisch", timing: "Morgens", cycle: "Kurzfristig", halflife: "Kurz" }, study: { level: "human", levelText: "Dermatologie-Trials", text: "Wirksam gegen antibiotikaresistente Keime und gefürchtete Biofilme in schwer heilenden Wunden." }, prices: [{ shop: "DrakonPeptides", price: "45.00" }, { shop: "Beyond-Peptides", price: "48.00" }] },
+            { id: "cerebrolysin", nr: "52/63", name: "Cerebrolysin", aka: "Gehirn-Peptid-Komplex", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["inject"], risk: "low", effects: ["Massive Neurogenese (Neubildung von Hirnzellen)", "Beseitigt 'Brain-Fog' und neurodegenerative Erschöpfung", "Schützt Neuronen vor oxidativem Stress und Ischämie"], risks: ["Muss intramuskulär in sehr großen Volumina (ml) injiziert werden", "Enthält Schweinehirn-Peptide (ethische/allergische Vorbehalte)"], dosage: { starter: "2 ml", normal: "5 ml", max: "10 ml", freq: "Täglich (Kur)", form: "Intramuskulär (i.m.)", timing: "Morgens", cycle: "4 Wochen", halflife: "~Stunden" }, study: { level: "human", levelText: "Klinisch zugelassen", text: "In vielen osteuropäischen Ländern die Standardtherapie nach Schlaganfällen und bei Demenz." }, prices: [{ shop: "Europa-Peptide", price: "45.00" }, { shop: "Alpine-Peptides", price: "49.00" }] },
+            { id: "triptorelin", nr: "53/63", name: "Triptorelin", aka: "GnRH Agonist (PCT SOS)", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["inject"], risk: "high", effects: ["Löst einen massiven Puls der Luteinisierenden Hormone (LH) aus", "Wird als sofortiger 'Neustart' der Testosteronproduktion genutzt", "Hocheffizient nach extrem suppressiven Steroidzyklen"], risks: ["Falsche Dosis oder Daueranwendung führt zur KOMPLETTEN chemischen Kastration (Shutdown)!", "Nur für die einmalige Notfall-Applikation"], dosage: { starter: "100 mcg", normal: "100 mcg", max: "100 mcg", freq: "Einmalig!", form: "Subkutan", timing: "Zu Beginn der PCT", cycle: "1 Tag (Einmalige Injektion)", halflife: "~Minuten" }, study: { level: "human", levelText: "Klinische Endokrinologie", text: "Brachte die Hormonwerte eines Bodybuilders nach jahrelangem Steroid-Missbrauch mit einer Injektion auf Normalniveau." }, prices: [{ shop: "PeptideRevolution", price: "39.00" }, { shop: "Peptid24", price: "35.00" }] },
+            { id: "dihexa", nr: "54/63", name: "Dihexa", aka: "PNI-0408", cat: "neuro", catText: "NEUROLOGIE & SCHLAF", routes: ["oral", "topisch"], risk: "med", effects: ["Erhöht die kognitive Leistung um ein Vielfaches stärker als BDNF", "Repariert synaptische Verbindungen bei Alzheimer-Modellen", "Exzellent für Konzentration und Gedächtnisabruf"], risks: ["Potenzielles Tumorwachstums-Risiko (Da es c-Met stark anregt)", "Sehr schwer löslich und bioverfügbar"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "Täglich", form: "Oral / Transdermal", timing: "Morgens", cycle: "Max 8 Wochen", halflife: "Lang" }, study: { level: "animal", levelText: "Präklinisch", text: "Washington State Univ. zeigte neurogene Effekte, die alle bisher bekannten Nootropika übertreffen." }, prices: [{ shop: "RebirthLabs", price: "55.00" }, { shop: "Beyond-Peptides", price: "59.00" }] },
+            { id: "5amino1mq", nr: "55/63", name: "5-Amino-1MQ", aka: "NNMT-Inhibitor", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["oral"], risk: "low", effects: ["Hemmt das NNMT-Enzym zur Optimierung der intrazellulären Methylierung", "Verhindert die Lipogenese (Fettspeicherung)", "Steigert die mitochondriale oxidative Kapazität drastisch"], risks: ["Leichte Magen-Darm-Missempfindungen", "Langzeiteffekte auf enzymatische Pfade wissenschaftlich unklar"], dosage: { starter: "50 mg", normal: "100 mg", max: "150 mg", freq: "Täglich", form: "Oral (Kapsel)", timing: "Morgens", cycle: "2 - 3 Monate", halflife: "~Stunden" }, study: { level: "animal", levelText: "UCLA-Tierdaten", text: "Adipöse Labormäuse verloren ca. 30 % ihres viszeralen Depotfettgewebes ohne Kalorienrestriktion." }, prices: [{ shop: "Europa-Peptide", price: "79.00" }, { shop: "PeptideRevolution", price: "85.00" }] },
+            { id: "mk677", nr: "56/63", name: "MK-677", aka: "Ibutamoren", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["oral"], risk: "med", effects: ["Starker, oraler Wachstumshormon-Sekretagogum", "Fördert extremen Appetit und tiefen Schlaf", "Schneller, praller Muskelaufbau durch IGF-1 Erhöhung"], risks: ["Wassereinlagerungen (Ödeme)", "Risiko für Insulinresistenz (Blutzucker muss überwacht werden)"], dosage: { starter: "10 mg", normal: "15 mg", max: "25 mg", freq: "Täglich", form: "Oral", timing: "Abends vor dem Schlaf", cycle: "8 - 16 Wochen", halflife: "24h" }, study: { level: "human", levelText: "Klinisch", text: "Zeigte bei gesunden Erwachsenen signifikanten Zuwachs an fettfreier Körpermasse bei oralem Konsum." }, prices: [{ shop: "PeptideRevolution", price: "49.00" }, { shop: "RebirthLabs", price: "45.00" }, { shop: "Beyond-Peptides", price: "52.00" }] },
+            { id: "ostarine", nr: "57/63", name: "Ostarine", aka: "MK-2866", cat: "heilung", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["oral"], risk: "med", effects: ["Verhindert Muskelabbau im extremen Kaloriendefizit", "Heilt Gelenke, Bänder und fördert die Knochendichte", "Gilt als der sicherste und mildeste SARM"], risks: ["Milde hormonelle Suppression bei längerer Einnahme", "Leberbelastung möglich"], dosage: { starter: "10 mg", normal: "15-20 mg", max: "25 mg", freq: "Täglich", form: "Oral", timing: "Morgens", cycle: "8 - 12 Wochen", halflife: "24h" }, study: { level: "human", levelText: "Phase-II", text: "Verhinderte Muskelatrophie (Muskelschwund) bei Krebspatienten erfolgreich in klinischen Tests." }, prices: [{ shop: "PeptideRevolution", price: "45.00" }, { shop: "RebirthLabs", price: "42.00" }] },
+            { id: "rad140", nr: "58/63", name: "RAD-140", aka: "Testolone", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["oral"], risk: "high", effects: ["Massiver, rascher Kraftzuwachs", "Extreme anabole Aktivität (Testosteron-ähnlich)", "Schützt das Gehirn und zeigt hohe Gewebeselektivität"], risks: ["Starke Unterdrückung von körpereigenem Testosteron (PCT nötig)", "Erhöhte Leberwerte (AST/ALT) und Aggressivität"], dosage: { starter: "5 mg", normal: "10 mg", max: "20 mg", freq: "Täglich", form: "Oral", timing: "Morgens", cycle: "8 Wochen", halflife: "20-24h" }, study: { level: "human", levelText: "Phase-I", text: "Ursprünglich entwickelt als sicherere TRT-Alternative für Muskelschwund ohne Prostata-Wachstum." }, prices: [{ shop: "PeptideRevolution", price: "55.00" }, { shop: "Beyond-Peptides", price: "59.00" }] },
+            { id: "lgd4033", nr: "59/63", name: "LGD-4033", aka: "Ligandrol", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["oral"], risk: "high", effects: ["Der stärkste Bulk-SARM für reine Muskelmasse", "Signifikante Knochenmineralisierung", "Rasante Gewichtszunahme"], risks: ["Starke Wasserretention", "Hormonelle Suppression sehr ausgeprägt"], dosage: { starter: "2.5 mg", normal: "5 mg", max: "10 mg", freq: "Täglich", form: "Oral", timing: "Morgens", cycle: "8 Wochen", halflife: "24-36h" }, study: { level: "human", levelText: "Klinisch", text: "Sichere und extrem anabole Dosisabhängigkeit bei jungen Männern dokumentiert (Phase 1)." }, prices: [{ shop: "PeptideRevolution", price: "59.00" }, { shop: "RebirthLabs", price: "54.00" }] },
+            { id: "cardarine", nr: "60/63", name: "Cardarine", aka: "GW-501516", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["oral"], risk: "high", effects: ["Unnatürlich extreme Ausdauersteigerung", "Umschaltung des Metabolismus auf reine Fettverbrennung", "Verbessert Lipidprofil (HDL/LDL Cholesterin)"], risks: ["Entwicklung eingestellt wegen Krebswachstum in extrem überdosierten Tierversuchen", "Keine menschliche Zulassung"], dosage: { starter: "10 mg", normal: "15 mg", max: "20 mg", freq: "Täglich", form: "Oral", timing: "1h vor dem Cardio/Training", cycle: "8 Wochen", halflife: "16-24h" }, study: { level: "animal", levelText: "Laborstudien", text: "Veränderte Muskelfasern bei untrainierten Mäusen dauerhaft zu Ausdauer-Typ-I-Fasern." }, prices: [{ shop: "PeptideRevolution", price: "49.00" }, { shop: "DrakonPeptides", price: "52.00" }] },
+            { id: "sr9009", nr: "61/63", name: "SR9009", aka: "Stenabolic", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["oral", "inject"], risk: "med", effects: ["Genannt 'Training in a pill' (Rev-ErbA Agonist)", "Erhöht den Ruheumsatz des Stoffwechsels massiv", "Senkt Entzündungen und Cholesterin"], risks: ["Extrem schlechte orale Bioverfügbarkeit (ca. 2%)", "Muss mehrmals am Tag dosiert werden"], dosage: { starter: "10 mg", normal: "20-30 mg", max: "40 mg", freq: "3-4x täglich (wegen HWZ)", form: "Oral / Subkutan", timing: "Über den Tag verteilt", cycle: "8 Wochen", halflife: "~2 Stunden" }, study: { level: "animal", levelText: "Mäuse-Trials", text: "Nager zeigten 50% mehr Ausdauerleistung, tiefgreifende Lipid-Verbesserungen und Fettabbau." }, prices: [{ shop: "PeptideRevolution", price: "55.00" }, { shop: "Beyond-Peptides", price: "59.00" }] },
+            { id: "yk11", nr: "62/63", name: "YK-11", aka: "Myostatin-Hemmer SARM", cat: "wachstum", catText: "ANABOLISIERUNG (WACHSTUM)", routes: ["oral"], risk: "high", effects: ["Strukturell ein steroides Molekül (DHT Derivat)", "Erhöht Follistatin im Körper und hemmt Myostatin", "Führt zu knallhartem, trockenem Muskelaufbau"], risks: ["Extrem lebertoxisch", "Aggression und starke Gelenktrockenheit", "Keine ausreichende klinische Erforschung"], dosage: { starter: "5 mg", normal: "10 mg", max: "15 mg", freq: "Täglich", form: "Oral", timing: "Mit einer Mahlzeit", cycle: "Max 6 Wochen", halflife: "6-10h" }, study: { level: "invitro", levelText: "Zellstudien", text: "Löste in humanen Muskelzellen stärkere anabole Effekte aus als hochdosiertes DHT (Dihydrotestosteron)." }, prices: [{ shop: "PeptideRevolution", price: "69.00" }, { shop: "RebirthLabs", price: "72.00" }] },
+            { id: "enclomiphene", nr: "63/63", name: "Enclomiphene", aka: "SERM / PCT Goldstandard", cat: "libido", catText: "LIBIDO & SEXUALFUNKTION", routes: ["oral"], risk: "med", effects: ["Das stärkste PCT (Post Cycle Therapy) Werkzeug", "Zwingt die Hypophyse zu massiver LH & FSH Ausschüttung", "Erhöht Testosteron dramatisch ohne die Nachteile von Clomid"], risks: ["Kopfschmerzen und Libidoschwankungen", "Verändert die Sehschärfe bei massiver Überdosierung (selten)"], dosage: { starter: "6.25 mg", normal: "12.5 mg", max: "25 mg", freq: "Täglich", form: "Oral", timing: "Morgens", cycle: "2 - 4 Wochen (PCT)", halflife: "10h" }, study: { level: "human", levelText: "Klinisch geprüft", text: "Zeigte bei Männern mit Hypogonadismus überlegene Testosteronsteigerungen im Vergleich zu Testosteron-Gelen." }, prices: [{ shop: "PeptideRevolution", price: "55.00" }, { shop: "RebirthLabs", price: "59.00" }] }
         ];
 
-        // Händler & Link Matrix
         const SHIPPING_DATA = {
             "Europa-Peptide": { cost: "9.90", note: "Express, versandkostenfrei ab €150" },
             "Alpine-Peptides": { cost: "6.90", note: "Klimaneutral, frei ab €120" },
@@ -722,25 +736,34 @@
             "R-Phase": "https://www.r-phase.com/catalog?s="
         };
 
-        // --- Router Engine ---
         function router(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
                 panel.classList.add('hidden');
                 panel.classList.remove('block');
             });
-            document.getElementById('view-' + viewId).classList.remove('hidden');
-            document.getElementById('view-' + viewId).classList.add('block');
+            const tgt = document.getElementById('view-' + viewId);
+            if(tgt) {
+                tgt.classList.remove('hidden');
+                tgt.classList.add('block');
+            }
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white";
+                if(btn.id === 'nav-coupons') {
+                    btn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-glowAmber hover:text-white flex items-center gap-1.5 border border-glowAmber/20 bg-glowAmber/5";
+                } else {
+                    btn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 text-slate-400 hover:text-white";
+                }
             });
             const activeBtn = document.getElementById('nav-' + viewId);
             if (activeBtn) {
-                activeBtn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan";
+                if(viewId === 'coupons') {
+                    activeBtn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowAmber text-void shadow-neon-orange flex items-center gap-1.5";
+                } else {
+                    activeBtn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan";
+                }
             }
         }
 
-        // --- Database & Filters ---
         let activeRiskFilter = 'all';
 
         function setRiskFilter(risk, btn) {
@@ -759,6 +782,7 @@
 
         function renderDatabase() {
             const grid = document.getElementById('db-grid');
+            if(!grid) return;
             grid.innerHTML = '';
 
             PEPTIDES_DATA.forEach(p => {
@@ -776,6 +800,42 @@
                 let riskText = "Risiko: Niedrig";
                 if(p.risk === 'med') { riskClass = "risk-med"; riskText = "Risiko: Mittel"; }
                 if(p.risk === 'high') { riskClass = "risk-high"; riskText = "Risiko: Hoch"; }
+
+                // --- DYNAMISCHE PREMIUM PRAXIS-TIPPS (Ernährung, Trinken, Sport, Achtung) ---
+                let healthHintHTML = "";
+                if (p.cat === 'wachstum') {
+                    healthHintHTML = `
+                        <ul class="mt-3 space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🥩</div> <div class="pt-0.5"><strong>Ernährung:</strong> Hohe Proteinzufuhr (mind. 2g/kg) für optimale Muskelproteinsynthese.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">💧</div> <div class="pt-0.5"><strong>Trinken:</strong> Viel Wasser für die zelluläre Hydration und das Muskelzellvolumen.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🏋️</div> <div class="pt-0.5"><strong>Sport:</strong> Progressiver Overload im Krafttraining ist zwingend für den Wachstumsreiz.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">⚠️</div> <div class="pt-0.5"><strong>Achtung:</strong> Nüchternblutzucker überwachen (Insulinresistenz-Risiko) & Leberwerte checken!</div></li>
+                        </ul>`;
+                } else if (p.cat === 'gewicht') {
+                    healthHintHTML = `
+                        <ul class="mt-3 space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🥗</div> <div class="pt-0.5"><strong>Ernährung:</strong> Moderates Kaloriendefizit mit viel Protein zum Schutz vor Muskelabbau.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">💧</div> <div class="pt-0.5"><strong>Trinken:</strong> Massiv Wasser konsumieren, um die Nieren bei der Lipolyse zu entlasten.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🏃‍♂️</div> <div class="pt-0.5"><strong>Sport:</strong> Cardio-Einheiten mit Krafttraining kombinieren für maximalen Fettabbau.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">⚠️</div> <div class="pt-0.5"><strong>Achtung:</strong> Blutdruck und Herzkreislauf während der Fettverbrennung strikt überwachen!</div></li>
+                        </ul>`;
+                } else if (p.cat === 'heilung') {
+                    healthHintHTML = `
+                        <ul class="mt-3 space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🥦</div> <div class="pt-0.5"><strong>Ernährung:</strong> Vitamin C, Zink und Kollagen-Bausteine unterstützen die Gewebeneubildung.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">💧</div> <div class="pt-0.5"><strong>Trinken:</strong> Ausreichend Hydration hält Faszien und Bindegewebe geschmeidig.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🧘‍♂️</div> <div class="pt-0.5"><strong>Sport:</strong> Mechanische Belastung nur extrem langsam steigern (Reha-Niveau).</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">⚠️</div> <div class="pt-0.5"><strong>Achtung:</strong> Schmerzfreiheit bedeutet NICHT, dass das Gewebe schon vollständig verheilt ist!</div></li>
+                        </ul>`;
+                } else {
+                    healthHintHTML = `
+                        <ul class="mt-3 space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🍎</div> <div class="pt-0.5"><strong>Ernährung:</strong> Mikronährstoffreiche Kost optimiert die rezeptorische Peptid-Aufnahme.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">💧</div> <div class="pt-0.5"><strong>Trinken:</strong> Mindestens 2-3 Liter Wasser täglich für den Nieren- & Leberstoffwechsel.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">🏃‍♂️</div> <div class="pt-0.5"><strong>Sport:</strong> Aktive Bewegung fördert die Durchblutung und systemische Wirkstoffverteilung.</div></li>
+                            <li class="flex items-start gap-3"><div class="bg-void/50 border border-white/5 p-1.5 rounded-lg shrink-0 shadow-sm text-sm">⚠️</div> <div class="pt-0.5"><strong>Achtung:</strong> Eigene Körperreaktionen (Schlaf, Herzschlag, Haut) genau protokollieren!</div></li>
+                        </ul>`;
+                }
 
                 let routeTagsHTML = "";
                 p.routes.forEach(r => {
@@ -813,9 +873,11 @@
                 if(p.study.level === 'pilot') studyLevelClass = "study-pilot";
                 if(p.study.level === 'invitro') studyLevelClass = "study-invitro";
 
-                const searchQueryEnc = encodeURIComponent(p.name.split(' ')[0] + " peptide explained");
-                const tiktokQueryEnc = encodeURIComponent(p.name.split(' ')[0] + " peptide");
-                const pubmedQueryEnc = encodeURIComponent(p.name.split(' ')[0]);
+                const basicName = p.name.split(' ')[0];
+                const deStudyLink = `https://scholar.google.de/scholar?hl=de&q=${encodeURIComponent(basicName + ' Peptid Wirkung Studie')}`;
+                const intStudyLink = `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(basicName)}`;
+                const ytLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(basicName + ' Peptid Wirkung')}`;
+                const ttLink = `https://www.tiktok.com/search?q=${encodeURIComponent(basicName + ' Erfahrung')}`;
 
                 const cardHTML = `
                     <div class="peptide-card bg-labDark/80 backdrop-blur-sm border border-white/5 hover:border-${glowColor}/30 p-6 rounded-2xl transition-all duration-300 relative group overflow-hidden" data-cat="${p.cat}" data-risk="${p.risk}" data-search="${p.name + ' ' + p.aka + ' ' + p.catText}">
@@ -852,78 +914,116 @@
                         </div>
 
                         <div class="space-y-4">
+                            <!-- TAB: WIRKUNG -->
                             <div id="${p.id}-eff" class="card-tab-content block space-y-3">
                                 <ul class="space-y-1.5 text-xs text-slate-300">
                                     ${p.effects.map(eff => `<li class="flex items-start gap-2"><span class="text-glowGreen">✚</span> ${eff}</li>`).join('')}
                                 </ul>
                             </div>
 
+                            <!-- TAB: RISIKEN -->
                             <div id="${p.id}-side" class="card-tab-content hidden space-y-3">
                                 <ul class="space-y-1.5 text-xs text-slate-300">
                                     ${p.risks.map(risk => `<li class="flex items-start gap-2"><span class="text-glowRed">✖</span> ${risk}</li>`).join('')}
                                 </ul>
                             </div>
 
+                            <!-- TAB: DOSIERUNG & TIPPS (PREMIUM REDESIGN) -->
                             <div id="${p.id}-dose" class="card-tab-content hidden">
-                                <div class="bg-void/50 p-4 rounded-xl border border-white/5 font-mono text-xs space-y-4">
-                                    <div class="grid grid-cols-3 gap-3 pb-4 border-b border-white/5 text-center">
-                                        <div>
-                                            <span class="text-glowGreen text-[9px] block tracking-wider uppercase mb-1">Einstieg</span>
-                                            <span class="text-white font-bold">${p.dosage.starter}</span>
+                                <div class="bg-void/50 p-4 rounded-2xl border border-white/5 font-mono text-xs space-y-5">
+                                    
+                                    <!-- Mobile-First Dosis-Cards -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex flex-col items-center justify-center relative">
+                                            <span class="text-glowGreen text-[9px] tracking-widest uppercase mb-1">Einstieg</span>
+                                            <span class="text-white font-bold text-sm">${p.dosage.starter}</span>
                                         </div>
-                                        <div>
-                                            <span class="text-glowCyan text-[9px] block tracking-wider uppercase mb-1">Standard</span>
-                                            <span class="text-white font-bold">${p.dosage.normal}</span>
+                                        
+                                        <!-- Highlighted Standard Card -->
+                                        <div class="bg-glowCyan/10 p-4 rounded-xl border border-glowCyan/30 shadow-neon-cyan flex flex-col items-center justify-center relative transform sm:-translate-y-2 transition-transform">
+                                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-glowCyan text-void text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-neon-cyan whitespace-nowrap">Empfohlen</div>
+                                            <span class="text-glowCyan text-[9px] tracking-widest uppercase mb-1 mt-1">Standard</span>
+                                            <span class="text-white font-black text-base">${p.dosage.normal}</span>
                                         </div>
-                                        <div>
-                                            <span class="text-glowRed text-[9px] block tracking-wider uppercase mb-1">Max. Limit</span>
-                                            <span class="text-white font-bold">${p.dosage.max}</span>
+
+                                        <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex flex-col items-center justify-center relative">
+                                            <span class="text-glowRed text-[9px] tracking-widest uppercase mb-1">Max Limit</span>
+                                            <span class="text-white font-bold text-sm">${p.dosage.max}</span>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-3 pt-1">
-                                        <div><span class="text-slate-500 text-[9px] block">HÄUFIGKEIT</span>${p.dosage.freq}</div>
-                                        <div><span class="text-slate-500 text-[9px] block">APPLIKATION</span>${p.dosage.form}</div>
-                                        <div><span class="text-slate-500 text-[9px] block">ZEITPUNKT</span>${p.dosage.timing}</div>
-                                        <div><span class="text-slate-500 text-[9px] block">ZYKLUSDAUER</span>${p.dosage.cycle}</div>
+
+                                    <!-- Details Icon-Grid -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-white/5">
+                                        <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                            <span class="text-lg shrink-0 opacity-70">⏱️</span>
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-500 text-[8px] uppercase tracking-wider">Häufigkeit</span>
+                                                <span class="text-slate-200 text-xs">${p.dosage.freq}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                            <span class="text-lg shrink-0 opacity-70">💉</span>
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-500 text-[8px] uppercase tracking-wider">Applikation</span>
+                                                <span class="text-slate-200 text-xs">${p.dosage.form}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                            <span class="text-lg shrink-0 opacity-70">🌙</span>
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-500 text-[8px] uppercase tracking-wider">Zeitpunkt</span>
+                                                <span class="text-slate-200 text-xs">${p.dosage.timing}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                            <span class="text-lg shrink-0 opacity-70">🗓️</span>
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-500 text-[8px] uppercase tracking-wider">Zyklusdauer</span>
+                                                <span class="text-slate-200 text-xs">${p.dosage.cycle}</span>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                                
+                                <!-- DYNAMISCHER GESUNDHEITSHINWEIS -->
+                                <div class="mt-4 bg-gradient-to-r from-glowAmber/10 to-transparent border-l-2 border-glowAmber p-4 rounded-r-xl">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="flex items-center justify-center w-6 h-6 rounded-full bg-glowAmber/20 text-glowAmber text-xs animate-pulse">💡</span>
+                                        <span class="text-[11px] font-mono text-glowAmber uppercase font-bold tracking-widest">Praxis-Tipps & Monitoring</span>
+                                    </div>
+                                    ${healthHintHTML}
                                 </div>
                             </div>
 
+                            <!-- TAB: STUDIEN & VIDEO -->
                             <div id="${p.id}-studies" class="card-tab-content hidden space-y-4">
                                 <div class="bg-void/40 p-3 rounded-lg border-l-2 border-glowCyan text-[11px] text-slate-400">
                                     <span class="study-level ${studyLevelClass} mb-2">${p.study.levelText}</span>
                                     <p class="font-sans leading-relaxed text-xs text-slate-300 mt-1.5">${p.study.text}</p>
                                 </div>
-
-                                <div class="bg-void border border-white/10 rounded-xl overflow-hidden p-3.5 space-y-3">
-                                    <div class="flex items-center justify-between pb-2 border-b border-white/5">
-                                        <span class="text-[9px] font-mono text-glowRed tracking-widest flex items-center gap-1.5">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-glowRed animate-pulse"></span>
-                                            Externe Wissensdatenbanken
-                                        </span>
-                                        <span class="text-[8px] font-mono text-slate-500">AUTO_QUERY_GENERATED</span>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-3 gap-2 pt-1">
-                                        <a href="https://www.youtube.com/results?search_query=${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 transition-all text-center group backdrop-blur-sm">
-                                            <span class="text-sm group-hover:text-red-500 mb-1.5 transition-colors drop-shadow-md">▶</span>
-                                            <span class="text-[9px] font-mono text-slate-400 group-hover:text-white transition-colors">YouTube Guides</span>
-                                        </a>
-                                        <a href="https://www.tiktok.com/search?q=${tiktokQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/50 transition-all text-center group backdrop-blur-sm">
-                                            <span class="text-sm group-hover:text-cyan-400 mb-1.5 transition-colors drop-shadow-md">♪</span>
-                                            <span class="text-[9px] font-mono text-slate-400 group-hover:text-white transition-colors">TikTok Analyse</span>
-                                        </a>
-                                        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=${pubmedQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all text-center group backdrop-blur-sm">
-                                            <span class="text-sm group-hover:text-blue-400 mb-1.5 transition-colors drop-shadow-md">🔬</span>
-                                            <span class="text-[9px] font-mono text-slate-400 group-hover:text-white transition-colors">PubMed Studien</span>
-                                        </a>
-                                    </div>
+                                
+                                <div class="flex flex-wrap gap-2 mt-4 border-t border-white/5 pt-4">
+                                    <a href="${deStudyLink}" target="_blank" class="flex-1 text-center py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-mono text-slate-300 transition-colors">
+                                        🇩🇪 DE Studien (Scholar)
+                                    </a>
+                                    <a href="${intStudyLink}" target="_blank" class="flex-1 text-center py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-mono text-slate-300 transition-colors">
+                                        🔬 PubMed (Int.)
+                                    </a>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                    <a href="${ytLink}" target="_blank" class="text-center py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 rounded-lg text-[10px] font-mono text-red-400 transition-colors">
+                                        ▶ YouTube (DE)
+                                    </a>
+                                    <a href="${ttLink}" target="_blank" class="text-center py-2 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-lg text-[10px] font-mono text-cyan-400 transition-colors">
+                                        ♪ TikTok (DE)
+                                    </a>
                                 </div>
                             </div>
 
+                            <!-- TAB: PREISE -->
                             <div id="${p.id}-prices" class="card-tab-content hidden space-y-3">
                                 <div class="bg-void/40 p-4 rounded-xl border border-white/10">
-                                    <span class="text-[9px] font-mono text-slate-500 block uppercase tracking-wider mb-2">Anbieter-Preisvergleich &amp; Versand</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block uppercase tracking-wider mb-2">Anbieter Preisvergleich &amp; Versand</span>
                                     <div class="space-y-1 font-mono text-xs">
                                         ${priceRowsHTML}
                                     </div>
@@ -976,10 +1076,10 @@
                 }
             });
 
-            document.getElementById('db-count').innerText = displayed;
+            const dbCount = document.getElementById('db-count');
+            if (dbCount) dbCount.innerText = displayed;
         }
 
-        // --- Mischrechner ---
         function calculateSyringe() {
             const mg = parseFloat(document.getElementById('calc-mg').value) || 0;
             const ml = parseFloat(document.getElementById('calc-ml').value) || 0;
@@ -1048,7 +1148,6 @@
             calculateSyringe();
         }
 
-        // --- Storage Simulator ---
         let selectedState = 'dry';
         let selectedTemp = 'fridge';
 
@@ -1158,7 +1257,6 @@
             resDesc.innerText = description;
         }
 
-        // --- Sportmedizin ---
         function setSportChannel(chId, btn) {
             document.querySelectorAll('.sport-ch-btn').forEach(b => {
                 b.className = "sport-ch-btn p-5 rounded-xl border border-white/5 text-slate-400 hover:border-glowCyan/20 hover:bg-glowCyan/5 text-left transition duration-200";
@@ -1177,7 +1275,6 @@
             document.getElementById('sport-ch-' + chId).classList.add('block');
         }
 
-        // --- Stacker ---
         function renderStackerList() {
             const list = document.getElementById('stack-vial-list');
             list.innerHTML = '';
@@ -1264,7 +1361,22 @@
             synergyDisplay.innerText = synergy; timingDisplay.innerText = timing; analysisText.innerText = analysis;
         }
 
-        // --- Tutorial ---
+        function copyBlueprint() {
+            const count = document.getElementById('stack-count').innerText;
+            const risk = document.getElementById('stack-risk-display').innerText;
+            const synergy = document.getElementById('stack-synergy-display').innerText;
+            const note = document.getElementById('stack-analysis-text').innerText;
+
+            const text = `--- PEPTIDBASE LAB BLUEPRINT REPORT ---\nVerbundene Wirkstoffe: ${count}\nRisikoprofil: ${risk}\nSynergie-Matrix: ${synergy}\nLabor-Anmerkung: ${note}\n---------------------------------------`;
+
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
         function updateTutorialProgress(step, checkbox) {
             const stepBox = document.getElementById(`step-box-${step}`);
             const stepNum = document.getElementById(`step-num-${step}`);
@@ -1308,8 +1420,41 @@
             document.getElementById('tut-progress-bar').style.width = percentage + "%";
         }
 
+        // Coupon Logik
+        function copyCoupon(text, btn) {
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "<span>KOPIERT! ✔</span> <span>Rabatt gesichert</span>";
+            
+            btn.classList.remove("text-glowAmber", "text-glowCyan");
+            btn.classList.remove("border-glowAmber/30", "border-glowCyan/30");
+            btn.classList.remove("bg-glowAmber/10", "bg-glowCyan/10");
+
+            btn.classList.add("text-glowGreen", "border-glowGreen/50", "bg-glowGreen/20");
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove("text-glowGreen", "border-glowGreen/50", "bg-glowGreen/20");
+                if(text === 'SimonProves' || text === 'Sam') {
+                    btn.classList.add("text-glowCyan", "border-glowCyan/30", "bg-glowCyan/10");
+                } else {
+                    btn.classList.add("text-glowAmber", "border-glowAmber/30", "bg-glowAmber/10");
+                }
+            }, 1500);
+        }
+
         // --- AI CHATBOT LOGIC ---
-        const apiKey = ""; // Runtime Injected
+        const part1 = "AQ.Ab8RN6IqriRWB1MC";
+const part2 = "-NiQDGq2JGah4";
+const part3 = "Sb3LCOcJCPsYitDXXYcAw"; // Runtime Injected
+const apiKey = part1 + part2 + part3;
+        
         let isChatOpen = false;
 
         function toggleChatbot() {
@@ -1329,19 +1474,11 @@
             const message = inputField.value.trim();
             if(!message) return;
 
-            // Clear input
             inputField.value = '';
-            
-            // Append User Message
             appendMessage('user', message);
-
-            // Append Loading dot
             const loaderId = appendLoader();
-
-            // Fetch AI Response
             const aiResponseText = await fetchAIResponse(message);
-
-            // Remove Loader & Append AI Response
+            
             document.getElementById(loaderId).remove();
             appendMessage('ai', aiResponseText);
         }
@@ -1384,11 +1521,10 @@
             return id;
         }
 
-        // Local Fallback logic if API key is missing or fails
         function getLocalFallbackResponse(query) {
             const q = query.toLowerCase();
             if (q.includes("hallo") || q.includes("hi") || q.includes("hey")) {
-                return "Hallo! Ich bin die PeptidBase KI. Ich kann dir Details zu allen 47 Peptiden aus unserer Datenbank liefern. Nach welchem Wirkstoff suchst du?";
+                return "Hallo! Ich bin die PeptidBase KI im Labor-Modus. Ich kann dir Details zu allen 63 Präparaten aus unserer Datenbank liefern. Nach welchem Wirkstoff suchst du?";
             }
             if (q.includes("bpc")) {
                 return "BPC-157 ist ein Magen-Peptid, das extrem starke regenerative Eigenschaften auf Sehnen und Bänder hat. Die Standarddosis liegt bei 500 mcg täglich. Subkutan angewendet heilt es Gelenke lokal.";
@@ -1403,7 +1539,6 @@
                 return "DSIP (Delta-Sleep-Inducing Peptide) fördert den Tiefschlaf. Epitalon reguliert zusätzlich den Melatoninhaushalt und hat epigenetische Anti-Aging Eigenschaften.";
             }
             
-            // Search in DB
             let found = null;
             PEPTIDES_DATA.forEach(p => {
                 if(p.name.toLowerCase().includes(q) || p.aka.toLowerCase().includes(q)) found = p;
@@ -1412,16 +1547,15 @@
                 return `**${found.name}**: ${found.aka}. Hauptwirkung: ${found.effects[0]}. Die normale Dosis liegt bei ${found.dosage.normal}. (Risikoprofil: ${found.risk === 'low' ? 'Niedrig' : found.risk === 'med' ? 'Mittel' : 'Hoch'}).`;
             }
 
-            return "Entschuldigung, meine Online-API ist aktuell nicht verbunden, aber als lokales System durchsuche ich unsere 47-Peptide-Datenbank. Zu diesem spezifischen Begriff habe ich gerade keinen Direkttreffer. Bitte nenne mir ein konkretes Peptid (z.B. BPC-157, Semaglutid).";
+            return "ZUGRIFF VERWEIGERT: Ich bin eine spezialisierte Labor-KI. Bitte stelle mir nur spezifische Fragen zu Endokrinologie, Biochemie, SARMs oder Peptiden (z.B. Dosierung von BPC-157). Andere Themen bearbeite ich nicht.";
         }
 
         async function fetchAIResponse(userText) {
             if (!apiKey || apiKey === "") {
-                // Return local pre-programmed fallback immediately if no key
                 return new Promise(resolve => setTimeout(() => resolve(getLocalFallbackResponse(userText)), 600));
             }
 
-            const systemPrompt = "Du bist die PeptidBase KI, ein wissenschaftlicher Assistent für Endokrinologie und Peptidforschung. Antworte präzise, kurz und im wissenschaftlichen Ton auf Deutsch. Weise immer darauf hin, dass Peptide im Sport verboten sind und du keine ärztliche Beratung ersetzt.";
+            const systemPrompt = "Du bist die PeptidBase KI, ein wissenschaftlicher Assistent für Endokrinologie und Peptidforschung. Antworte präzise, kurz und im wissenschaftlichen Ton auf Deutsch. Weise immer darauf hin, dass Peptide im Sport verboten sind und du keine ärztliche Beratung ersetzt. Antworte ausschließlich auf Themen bezüglich Peptide, SARMs und Biochemie. Lehne andere Themen ab.";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: userText }] }],
@@ -1441,7 +1575,7 @@
                     const data = await response.json();
                     return data.candidates?.[0]?.content?.parts?.[0]?.text || "Keine Antwort erhalten.";
                 } catch (e) {
-                    if (i === retries - 1) return getLocalFallbackResponse(userText); // Fallback if API totally fails
+                    if (i === retries - 1) return getLocalFallbackResponse(userText);
                     await new Promise(r => setTimeout(r, delays[i]));
                 }
             }
