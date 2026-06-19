@@ -1523,31 +1523,36 @@ const apiKey = part1 + part2 + part3;
 
         function getLocalFallbackResponse(query) {
             const q = query.toLowerCase();
+            
             if (q.includes("hallo") || q.includes("hi") || q.includes("hey")) {
-                return "Hallo! Ich bin die PeptidBase KI im Labor-Modus. Ich kann dir Details zu allen 63 Präparaten aus unserer Datenbank liefern. Nach welchem Wirkstoff suchst du?";
-            }
-            if (q.includes("bpc")) {
-                return "BPC-157 ist ein Magen-Peptid, das extrem starke regenerative Eigenschaften auf Sehnen und Bänder hat. Die Standarddosis liegt bei 500 mcg täglich. Subkutan angewendet heilt es Gelenke lokal.";
-            }
-            if (q.includes("semaglutid") || q.includes("abnehmen") || q.includes("fett")) {
-                return "Für Fettabbau ist Semaglutid (GLP-1) der Goldstandard. Es verlangsamt die Magenentleerung und drosselt den Appetit massiv. Alternativen sind Tirzepatid, HGH-Frag 176-191 oder AOD-9604.";
-            }
-            if (q.includes("wachstum") || q.includes("muskeln") || q.includes("ipamorelin") || q.includes("cjc")) {
-                return "Der stärkste und sicherste Stack für die Wachstumshormonausschüttung (Muskelaufbau) ist CJC-1295 kombiniert mit Ipamorelin. Ipamorelin triggert den Puls, CJC erhöht die Stärke des Pulses.";
-            }
-            if (q.includes("schlaf") || q.includes("dsip") || q.includes("epitalon")) {
-                return "DSIP (Delta-Sleep-Inducing Peptide) fördert den Tiefschlaf. Epitalon reguliert zusätzlich den Melatoninhaushalt und hat epigenetische Anti-Aging Eigenschaften.";
+                return "Hallo! Ich bin die PeptidBase KI im Offline-Modus. Welches Peptid interessiert dich?";
             }
             
             let found = null;
             PEPTIDES_DATA.forEach(p => {
-                if(p.name.toLowerCase().includes(q) || p.aka.toLowerCase().includes(q)) found = p;
+                // Holt sich nur das erste Wort (macht aus "Retatrutid (10mg)" -> "retatrutid")
+                const shortName = p.name.split(' ')[0].toLowerCase(); 
+                const searchId = p.id.toLowerCase();
+                
+                // Schlaue Suche: Erkennt den Namen oder Abkürzungen auch innerhalb eines ganzen Satzes!
+                if(q.includes(shortName) || q.includes(searchId) || 
+                  (q.includes("reta") && searchId.includes("reta")) || 
+                  (q.includes("sema") && searchId.includes("sema")) || 
+                  (q.includes("tirz") && searchId.includes("tirz")) ||
+                  (q.includes("bpc") && searchId.includes("bpc"))) {
+                    found = p;
+                }
             });
+
             if (found) {
-                return `**${found.name}**: ${found.aka}. Hauptwirkung: ${found.effects[0]}. Die normale Dosis liegt bei ${found.dosage.normal}. (Risikoprofil: ${found.risk === 'low' ? 'Niedrig' : found.risk === 'med' ? 'Mittel' : 'Hoch'}).`;
+                return `**Lokale Kurzinfo zu ${found.name}:**<br><br>
+**Wirkung:** ${found.effects[0]}<br>
+**Dosierung:** ${found.dosage.normal} (${found.dosage.timing})<br>
+**Zu beachten:** ${found.risks[0]}<br><br>
+*(Hinweis: Für komplexere Antworten trage bitte einen gültigen API-Schlüssel ein).*`;
             }
 
-            return "ZUGRIFF VERWEIGERT: Ich bin eine spezialisierte Labor-KI. Bitte stelle mir nur spezifische Fragen zu Endokrinologie, Biochemie, SARMs oder Peptiden (z.B. Dosierung von BPC-157). Andere Themen bearbeite ich nicht.";
+            return "Ich konnte dieses Peptid im Offline-Modus nicht zuordnen. Bitte schreibe den Namen etwas genauer aus (z.B. 'Retatrutid' statt 'reta').";
         }
 
         async function fetchAIResponse(userText) {
