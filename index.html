@@ -47,31 +47,39 @@
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
             pointer-events: none;
-            z-index: 9999;
+            z-index: 10;
         }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        
+        .chat-bubble { animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Typing dot animation */
+        .dot-flashing {
+            position: relative; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite linear alternate; animation-delay: .5s;
         }
-        ::-webkit-scrollbar-track {
-            background: #030712;
+        .dot-flashing::before, .dot-flashing::after {
+            content: ''; display: inline-block; position: absolute; top: 0;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #1f2937;
-            border-radius: 3px;
+        .dot-flashing::before {
+            left: -10px; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite alternate; animation-delay: 0s;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #374151;
+        .dot-flashing::after {
+            left: 10px; width: 6px; height: 6px; border-radius: 3px; background-color: #00f2fe; color: #00f2fe; animation: dot-flashing 1s infinite alternate; animation-delay: 1s;
         }
+        @keyframes dot-flashing { 0% { background-color: #00f2fe; } 50%, 100% { background-color: rgba(0, 242, 254, 0.2); } }
     </style>
 </head>
-<body class="bg-void text-slate-100 font-sans min-h-screen flex flex-col grain-bg overflow-x-hidden">
+<body class="bg-void text-slate-100 font-sans min-h-screen flex flex-col grain-bg overflow-x-hidden relative">
 
     <!-- Glowing Top Line -->
-    <div class="h-[2px] w-full bg-gradient-to-r from-glowCyan via-glowPurple to-glowGreen"></div>
+    <div class="h-[2px] w-full z-20 relative bg-gradient-to-r from-glowCyan via-glowPurple to-glowGreen"></div>
 
     <!-- Main Navigation Header -->
-    <header class="sticky top-0 z-50 bg-void/90 backdrop-blur-md border-b border-white/5 py-4 px-4 sm:px-8">
+    <header class="sticky top-0 z-40 bg-void/90 backdrop-blur-md border-b border-white/5 py-4 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <!-- Brand Logo -->
             <div class="flex items-center gap-3 cursor-pointer group" onclick="router('db')">
@@ -85,7 +93,7 @@
             </div>
 
             <!-- Viewport Router Links -->
-            <nav class="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-labDark/80 rounded-xl border border-white/5">
+            <nav class="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-labDark/80 rounded-xl border border-white/5 relative z-20">
                 <button onclick="router('db')" id="nav-db" class="nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan">
                     Datenbank
                 </button>
@@ -109,28 +117,26 @@
     </header>
 
     <!-- Floating Diagnostic Warning Header -->
-    <div class="bg-glowAmber/5 border-b border-glowAmber/20 py-2.5 px-4 text-center">
+    <div class="bg-glowAmber/5 border-b border-glowAmber/20 py-2.5 px-4 text-center relative z-20">
         <p class="text-[11px] font-mono text-glowAmber tracking-wide flex items-center justify-center gap-2">
             <span class="animate-pulse">●</span> INTELLECTUAL PROPERTY: Diese Schnittstelle dient rein didaktischen Laboranalysen & wissenschaftlichen Modellberechnungen.
         </p>
     </div>
 
     <!-- Main Viewports Container -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-8 py-8">
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 relative z-20">
 
         <!-- ==================== VIEW 1: DATENBANK ==================== -->
         <div id="view-db" class="view-panel block space-y-8 animate-fadeIn">
             <!-- Search & Advanced Filter Board -->
-            <div class="bg-labDark border border-white/5 rounded-2xl p-6 space-y-6">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 space-y-6 shadow-xl">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <!-- Search Input -->
                     <div class="relative lg:col-span-2">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm">SEARCH_QUERY_</span>
-                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Peptid-Name, Indikation, Biomarker oder Code eingeben..." class="w-full bg-void border border-white/10 rounded-xl py-3.5 pl-36 pr-4 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
+                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Peptid-Name, Indikation, Biomarker oder Code eingeben..." class="w-full bg-void/50 border border-white/10 rounded-xl py-3.5 pl-36 pr-4 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
                     </div>
-                    <!-- Direct Category Select -->
                     <div>
-                        <select id="catSelect" onchange="applyFilters()" class="w-full bg-void border border-white/10 rounded-xl py-3.5 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
+                        <select id="catSelect" onchange="applyFilters()" class="w-full bg-void/50 border border-white/10 rounded-xl py-3.5 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
                             <option value="all">KAT_SELEKTOR: ALLE ANZEIGEN</option>
                             <option value="heilung">REGENERATION (HEILUNG)</option>
                             <option value="wachstum">ANABOLISMUS (WACHSTUM)</option>
@@ -165,9 +171,8 @@
 
         <!-- ==================== VIEW 2: MISCHRECHNER ==================== -->
         <div id="view-calc" class="view-panel hidden space-y-8 animate-fadeIn">
-            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 shadow-xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
                     <!-- Form Controls -->
                     <div class="lg:col-span-5 space-y-6">
                         <div>
@@ -179,7 +184,7 @@
                         <!-- Dropdown Preset Selector -->
                         <div class="space-y-1">
                             <label class="text-[10px] font-mono text-glowCyan uppercase tracking-widest block font-bold">Schnellauswahl (Preset)</label>
-                            <select id="calcPreset" onchange="loadPresetToCalc()" class="w-full bg-void border border-white/10 rounded-xl py-3 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
+                            <select id="calcPreset" onchange="loadPresetToCalc()" class="w-full bg-void/80 border border-white/10 rounded-xl py-3 px-4 font-mono text-xs text-white outline-none focus:border-glowCyan transition-all duration-200">
                                 <option value="">-- Eigenes Peptid / Custom Wert --</option>
                             </select>
                         </div>
@@ -193,7 +198,6 @@
                                     <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">mg</span>
                                 </div>
                             </div>
-
                             <!-- BAC Water Input -->
                             <div class="space-y-1">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Lösungsmittelmenge (BAC-Wasser in ml)</label>
@@ -202,7 +206,6 @@
                                     <span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500">ml</span>
                                 </div>
                             </div>
-
                             <!-- Desired Dose Input -->
                             <div class="space-y-1">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Gewünschte Einzeldosis (mcg)</label>
@@ -240,15 +243,15 @@
 
                         <!-- Metrics Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/5 font-mono text-xs text-center">
-                            <div class="bg-labDark p-3 rounded-xl border border-white/5">
+                            <div class="bg-labDark/80 p-3 rounded-xl border border-white/5">
                                 <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Konzentration</span>
                                 <span class="text-white font-bold" id="res-conc">2.50 mg/ml</span>
                             </div>
-                            <div class="bg-labDark p-3 rounded-xl border border-white/5">
+                            <div class="bg-labDark/80 p-3 rounded-xl border border-white/5">
                                 <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Aufzuziehen</span>
                                 <span class="text-glowCyan font-black" id="res-units">10.0 IE</span>
                             </div>
-                            <div class="bg-labDark p-3 rounded-xl border border-white/5">
+                            <div class="bg-labDark/80 p-3 rounded-xl border border-white/5">
                                 <span class="text-slate-500 text-[9px] block uppercase tracking-wider mb-1">Dosen / Vial</span>
                                 <span class="text-white font-bold" id="res-doses">20 Dosen</span>
                             </div>
@@ -261,9 +264,8 @@
 
         <!-- ==================== VIEW 3: HALTBARKEIT ==================== -->
         <div id="view-storage" class="view-panel hidden space-y-8 animate-fadeIn">
-            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 shadow-xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    
                     <!-- Controls -->
                     <div class="lg:col-span-5 space-y-6">
                         <div>
@@ -271,29 +273,23 @@
                             <h2 class="text-3xl font-black text-white">Stabilitäts-Simulator</h2>
                             <p class="text-slate-400 text-xs mt-2 leading-relaxed">Simuliert den temperaturbedingten Molekularzerfall und die thermische Integrität empfindlicher Peptid-Strukturen.</p>
                         </div>
-
                         <div class="space-y-4">
-                            <!-- State Toggle -->
                             <div class="space-y-2">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Aggregatzustand</label>
-                                <div class="grid grid-cols-2 gap-2 bg-void p-1 rounded-xl border border-white/5">
+                                <div class="grid grid-cols-2 gap-2 bg-void/80 p-1 rounded-xl border border-white/5">
                                     <button onclick="setStorageState('dry', this)" class="storage-state-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200">Pulver (Dry)</button>
                                     <button onclick="setStorageState('liquid', this)" class="storage-state-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200">Flüssig (BAC)</button>
                                 </div>
                             </div>
-
-                            <!-- Temp Selection -->
                             <div class="space-y-2">
                                 <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Lagerort / Temperatur</label>
-                                <div class="grid grid-cols-3 gap-2 bg-void p-1 rounded-xl border border-white/5">
+                                <div class="grid grid-cols-3 gap-2 bg-void/80 p-1 rounded-xl border border-white/5">
                                     <button onclick="setStorageTemp('room', this)" class="storage-temp-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200">Zimmer (~21°C)</button>
                                     <button onclick="setStorageTemp('fridge', this)" class="storage-temp-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200">Kühler (2-8°C)</button>
                                     <button onclick="setStorageTemp('freezer', this)" class="storage-temp-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200">Frost (-20°C)</button>
                                 </div>
                             </div>
-
-                            <!-- Light Toggle -->
-                            <div class="flex items-center justify-between p-3.5 bg-void rounded-xl border border-white/5">
+                            <div class="flex items-center justify-between p-3.5 bg-void/80 rounded-xl border border-white/5">
                                 <div>
                                     <span class="text-xs font-mono text-white block">UV- & Lichteinfluss</span>
                                     <span class="text-[9px] text-slate-500">Fotochemische Bindungsdegradation</span>
@@ -305,14 +301,10 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Vial Graphic & Stability Indicator -->
                     <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 sm:p-10 flex flex-col items-center justify-center space-y-6 min-h-[380px] relative overflow-hidden">
-                        
-                        <!-- Visual representation of Vial -->
                         <div class="relative w-28 h-48 border-2 border-slate-500 rounded-3xl flex flex-col justify-between items-center py-2 px-1 bg-gradient-to-b from-slate-800/10 to-slate-900/40">
                             <div class="absolute -top-3 w-16 h-4 bg-glowCyan border-2 border-slate-500 rounded shadow-neon-cyan" id="vial-cap"></div>
-                            
                             <div class="w-full h-full flex items-end justify-center relative overflow-hidden rounded-2xl">
                                 <div id="vial-liquid" class="w-full h-[40%] bg-gradient-to-t from-glowCyan/30 to-glowCyan/10 border-t border-glowCyan/60 transition-all duration-500 relative" style="display: none;">
                                     <div class="absolute inset-0 flex items-center justify-center" id="vial-cracks" style="display: none;">
@@ -326,37 +318,29 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Shelf-life and Progress bar -->
                         <div class="w-full space-y-3 font-mono text-center">
                             <span class="text-xs text-slate-500 uppercase tracking-widest block">Berechneter Erwartungswert</span>
                             <div class="text-3xl font-black text-glowGreen tracking-tight" id="sim-result-life">12 - 18 Monate</div>
-                            
                             <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
                                 <div id="sim-result-bar" class="bg-glowGreen h-full w-[80%] transition-all duration-500"></div>
                             </div>
-
                             <p class="text-xs text-slate-400 max-w-md mx-auto pt-2 leading-relaxed" id="sim-result-desc">
                                 Das lyophiliserte Pulver im gekühlten Bereich verfügt über eine solide Haltbarkeit.
                             </p>
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
 
         <!-- ==================== VIEW 4: SPORTMEDIZIN ==================== -->
         <div id="view-sport" class="view-panel hidden space-y-8 animate-fadeIn">
-            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8 shadow-xl">
                 <div>
                     <span class="text-[10px] font-mono text-glowCyan tracking-widest uppercase block mb-1">PHYSIOLOGICAL_MATRIX</span>
                     <h2 class="text-3xl font-black text-white">Leistung &amp; Rehabilitation</h2>
                     <p class="text-slate-400 text-xs mt-2 leading-relaxed">Wähle deinen primären sportbiologischen Schwerpunkt aus, um das optimale molekulare Signal-Profil aufzurufen.</p>
                 </div>
-
-                <!-- Matrix Selection Buttons -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <button onclick="setSportChannel('heal', this)" class="sport-ch-btn p-5 rounded-xl border border-glowGreen/20 bg-glowGreen/5 text-glowGreen text-left transition duration-200">
                         <span class="text-2xl block mb-2">🩹</span>
@@ -379,8 +363,6 @@
                         <p class="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-wider">Mitochondrien &amp; Ausdauer</p>
                     </button>
                 </div>
-
-                <!-- Matrix Output Area -->
                 <div class="bg-void/50 border border-white/10 rounded-2xl p-6 sm:p-8">
                     <!-- HEALING -->
                     <div id="sport-ch-heal" class="sport-ch-content block space-y-4">
@@ -401,7 +383,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- MUSCLE -->
                     <div id="sport-ch-muscle" class="sport-ch-content hidden space-y-4">
                         <h3 class="text-xl font-bold text-glowCyan">ANABOLIC_GROWTH_ Muskuläre Proteinsynthese</h3>
@@ -421,7 +402,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- LIPOLYSIS -->
                     <div id="sport-ch-lip" class="sport-ch-content hidden space-y-4">
                         <h3 class="text-xl font-bold text-glowOrange">LIPOLYTIC_COMPENSATION_ Gewichts- &amp; Fettstoffwechsel</h3>
@@ -441,7 +421,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- CELLULAR -->
                     <div id="sport-ch-cell" class="sport-ch-content hidden space-y-4">
                         <h3 class="text-xl font-bold text-glowPurple">MITOCHONDRIAL_REORGANIZATION_ Ausdauer &amp; Zellverjüngung</h3>
@@ -462,35 +441,23 @@
 
         <!-- ==================== VIEW 5: STACK GENERATOR ==================== -->
         <div id="view-stack" class="view-panel hidden space-y-8 animate-fadeIn">
-            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8 shadow-xl">
                 <div>
                     <span class="text-[10px] font-mono text-glowCyan tracking-widest uppercase block mb-1">STACK_SYNTHESIZER</span>
                     <h2 class="text-3xl font-black text-white">Synergie- &amp; Stack-Prüfer</h2>
                     <p class="text-slate-400 text-xs mt-2 leading-relaxed">Selektiere beliebige Forschungspräparate, um deren Kompatibilität, biologische Überlagerungen und Einnahmezeitfenster in Echtzeit zu ermitteln.</p>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
-                    <!-- Selection -->
                     <div class="lg:col-span-5 space-y-4">
                         <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Peptide kombinieren</span>
-                        
-                        <!-- Internal Live Search for Stacker -->
-                        <input type="text" id="stackerSearch" oninput="filterStackerList()" placeholder="Peptid-Wirkstoff filtern..." class="w-full bg-void border border-white/10 rounded-xl py-2 px-3 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
-                        
-                        <div class="space-y-2.5 max-h-[400px] overflow-y-auto pr-2" id="stack-vial-list">
-                            <!-- JS will inject the checklist options here -->
-                        </div>
+                        <input type="text" id="stackerSearch" oninput="filterStackerList()" placeholder="Peptid-Wirkstoff filtern..." class="w-full bg-void/80 border border-white/10 rounded-xl py-2 px-3 font-mono text-xs text-white placeholder-slate-600 outline-none focus:border-glowCyan transition-all duration-200">
+                        <div class="space-y-2.5 max-h-[400px] overflow-y-auto pr-2" id="stack-vial-list"></div>
                     </div>
-
-                    <!-- Blueprint Output Report -->
                     <div class="lg:col-span-7 bg-void/50 border border-white/10 rounded-2xl p-6 flex flex-col space-y-6">
                         <div class="flex items-center justify-between pb-4 border-b border-white/5">
                             <span class="text-xs font-mono text-slate-400">LAB_BLUEPRINT_REPORT</span>
                             <span class="text-xs font-mono text-glowCyan animate-pulse">SYSTEM_ACTIVE</span>
                         </div>
-
-                        <!-- Analysis Panel -->
                         <div class="space-y-4 font-mono text-xs">
                             <div class="flex justify-between border-b border-white/5 pb-2">
                                 <span class="text-slate-500">Ausgewählte Moleküle:</span>
@@ -509,27 +476,21 @@
                                 <span class="text-white font-bold" id="stack-timing-display">-</span>
                             </div>
                         </div>
-
-                        <!-- Realtime custom recommendations block -->
                         <div class="p-4 bg-labDark rounded-xl border border-white/5">
                             <span class="text-[9px] font-mono text-slate-500 block uppercase tracking-wider mb-2">Diagnostische Fachnote</span>
-                            <p class="text-xs text-slate-400 leading-relaxed font-mono" id="stack-analysis-text">
-                                Bitte wähle Wirkstoffe aus der linken Auswahlliste aus, um die biochemische Stack-Analyse zu starten.
-                            </p>
+                            <p class="text-xs text-slate-400 leading-relaxed font-mono" id="stack-analysis-text">Bitte wähle Wirkstoffe aus der linken Auswahlliste aus, um die biochemische Stack-Analyse zu starten.</p>
                         </div>
-
                         <div class="flex justify-end pt-4 border-t border-white/5">
                             <button onclick="copyBlueprint()" class="px-5 py-2.5 bg-glowCyan hover:bg-cyan-400 text-void font-bold text-xs uppercase tracking-wider rounded-lg shadow-neon-cyan transition-all duration-200">Blueprint kopieren</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
         <!-- ==================== VIEW 6: MISCH-TUTORIAL ==================== -->
         <div id="view-tutorial" class="view-panel hidden space-y-8 animate-fadeIn">
-            <div class="bg-labDark border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8">
+            <div class="bg-labDark/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-10 space-y-8 shadow-xl">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/5">
                     <div>
                         <span class="text-[10px] font-mono text-glowGreen tracking-widest uppercase block mb-1">RECONSTITUTION_GUIDE</span>
@@ -544,97 +505,72 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
-                    <!-- Steps Checklist -->
                     <div class="lg:col-span-7 space-y-4">
-                        <!-- Step 1 -->
                         <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl transition-all duration-200" id="step-box-1">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-start gap-3">
                                     <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-1">1</span>
                                     <div>
                                         <h4 class="text-sm font-bold text-white uppercase tracking-wide">Desinfektion &amp; Arbeitsplatz</h4>
-                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
-                                            Sorgfältige Handhygiene und Desinfektion. Reinige die Gummiverschlüsse des Peptid-Vials und des BAC-Wasser-Fläschchens gründlich mit einem Isopropyl-Alkoholtupfer.
-                                        </p>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">Sorgfältige Handhygiene und Desinfektion. Reinige die Gummiverschlüsse des Peptid-Vials und des BAC-Wasser-Fläschchens gründlich mit einem Isopropyl-Alkoholtupfer.</p>
                                     </div>
                                 </div>
                                 <input type="checkbox" onchange="updateTutorialProgress(1, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer">
                             </div>
                         </div>
-
-                        <!-- Step 2 -->
                         <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-2">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-start gap-3">
                                     <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-2">2</span>
                                     <div>
                                         <h4 class="text-sm font-bold text-white uppercase tracking-wide">Luftdruckausgleich</h4>
-                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
-                                            Ziehe mit der Rekonstitutionsspritze exakt so viel Luft auf, wie du später an BAC-Wasser entnehmen möchtest (z.B. 2ml). Drücke diese Luft in die BAC-Wasser-Flasche, um ein Vakuum bei der Entnahme zu verhindern.
-                                        </p>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">Ziehe mit der Rekonstitutionsspritze exakt so viel Luft auf, wie du später an BAC-Wasser entnehmen möchtest (z.B. 2ml). Drücke diese Luft in die BAC-Wasser-Flasche, um ein Vakuum bei der Entnahme zu verhindern.</p>
                                     </div>
                                 </div>
                                 <input type="checkbox" onchange="updateTutorialProgress(2, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
                             </div>
                         </div>
-
-                        <!-- Step 3 -->
                         <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-3">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-start gap-3">
                                     <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-3">3</span>
                                     <div>
                                         <h4 class="text-sm font-bold text-white uppercase tracking-wide">Wasserentnahme (BAC)</h4>
-                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
-                                            Drehe die BAC-Flasche auf den Kopf und ziehe das sterile, bakteriostatische Wasser präzise auf die gewünschte ml-Marke auf (üblicherweise 2ml oder 3ml). Entnehme die Nadel langsam.
-                                        </p>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">Drehe die BAC-Flasche auf den Kopf und ziehe das sterile, bakteriostatische Wasser präzise auf die gewünschte ml-Marke auf. Entnehme die Nadel langsam.</p>
                                     </div>
                                 </div>
                                 <input type="checkbox" onchange="updateTutorialProgress(3, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
                             </div>
                         </div>
-
-                        <!-- Step 4 -->
                         <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-4">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-start gap-3">
                                     <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-4">4</span>
                                     <div>
                                         <h4 class="text-sm font-bold text-white uppercase tracking-wide">Sachte Rekonstitution</h4>
-                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
-                                            Führe die Nadel schräg in das Peptid-Vial ein. Spritze das BAC-Wasser <strong class="text-glowAmber">äußerst langsam an die innere Glaswand</strong> des Vials. Der Wasserstrahl darf NIEMALS direkt auf das empfindliche Pulver treffen!
-                                        </p>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">Führe die Nadel schräg in das Peptid-Vial ein. Spritze das BAC-Wasser <strong class="text-glowAmber">äußerst langsam an die innere Glaswand</strong> des Vials. Der Wasserstrahl darf NIEMALS direkt auf das empfindliche Pulver treffen!</p>
                                     </div>
                                 </div>
                                 <input type="checkbox" onchange="updateTutorialProgress(4, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
                             </div>
                         </div>
-
-                        <!-- Step 5 -->
                         <div class="tut-step-box p-5 bg-void/50 border border-white/10 rounded-2xl opacity-60 transition-all duration-200" id="step-box-5">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-start gap-3">
                                     <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 font-mono text-xs flex items-center justify-center shrink-0" id="step-num-5">5</span>
                                     <div>
                                         <h4 class="text-sm font-bold text-white uppercase tracking-wide">Auflösen &amp; Lagern</h4>
-                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">
-                                            Spritze nach dem Entleeren noch die restliche Luft aus der Spritze, um den Überdruck im Fläschchen zu entlasten. Rolle das Vial sachte zwischen den Handflächen. <strong class="text-glowRed">Niemals schütteln!</strong> Lagere es sofort im Kühlschrank.
-                                        </p>
+                                        <p class="text-slate-400 text-xs mt-1 leading-relaxed">Spritze nach dem Entleeren noch die restliche Luft aus der Spritze, um den Überdruck im Fläschchen zu entlasten. Rolle das Vial sachte zwischen den Handflächen. <strong class="text-glowRed">Niemals schütteln!</strong> Lagere es sofort im Kühlschrank.</p>
                                     </div>
                                 </div>
                                 <input type="checkbox" onchange="updateTutorialProgress(5, this)" class="tut-chk w-5 h-5 rounded border-white/10 text-glowGreen focus:ring-glowGreen bg-void cursor-pointer" disabled>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Safety Warnings & Guidelines -->
                     <div class="lg:col-span-5 space-y-6">
                         <div class="bg-void/40 p-6 rounded-2xl border border-white/10 space-y-4">
                             <span class="text-[9px] font-mono text-glowRed tracking-widest uppercase block">Kritische Sicherheits-Parameter</span>
-                            
                             <div class="space-y-3 font-mono text-xs">
                                 <div class="p-3 bg-glowRed/5 rounded-xl border border-glowRed/15 text-slate-300">
                                     <strong class="text-glowRed block mb-1">Keine Erschütterung</strong>
@@ -651,15 +587,53 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
     </main>
 
+    <!-- FLOATING AI BOT BUTTON -->
+    <button onclick="toggleChatbot()" class="fixed bottom-6 right-6 w-14 h-14 bg-glowCyan text-void rounded-full flex items-center justify-center shadow-neon-cyan hover:scale-110 transition-transform duration-300 z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+    </button>
+
+    <!-- AI CHAT WINDOW -->
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[350px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[70vh] bg-labDark/95 backdrop-blur-xl border border-glowCyan/50 rounded-2xl shadow-neon-cyan z-50 flex flex-col hidden transform origin-bottom-right transition-all duration-300">
+        <!-- Chat Header -->
+        <div class="flex items-center justify-between p-4 border-b border-white/10 bg-void/50 rounded-t-2xl">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-glowCyan animate-pulse"></div>
+                <span class="font-mono text-xs font-bold text-glowCyan">PEPTID_OS AI Assistant</span>
+            </div>
+            <button onclick="toggleChatbot()" class="text-slate-400 hover:text-white">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 font-mono text-xs">
+            <div class="chat-bubble flex gap-2">
+                <div class="w-6 h-6 rounded-full bg-glowCyan/20 flex items-center justify-center shrink-0"><span class="text-[10px] text-glowCyan">AI</span></div>
+                <div class="bg-void border border-white/10 p-3 rounded-xl rounded-tl-none text-slate-300">
+                    System online. Ich habe Zugriff auf alle 47 Peptide der Datenbank. Frag mich nach Dosierungen, Kombinationen oder Wirkungen.
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="p-3 border-t border-white/10 bg-void/50 rounded-b-2xl">
+            <form id="chat-form" class="flex items-center gap-2" onsubmit="handleChatSubmit(event)">
+                <input type="text" id="chat-input" placeholder="Frage die KI..." class="flex-1 bg-labDark border border-white/10 rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-glowCyan">
+                <button type="submit" class="bg-glowCyan text-void p-2 rounded-lg hover:bg-cyan-400 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Main Footer -->
-    <footer class="bg-labDark border-t border-white/5 py-8 px-4 sm:px-8 text-xs text-slate-500 font-mono">
+    <footer class="bg-labDark border-t border-white/5 py-8 px-4 sm:px-8 text-xs text-slate-500 font-mono relative z-20">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <span class="text-white font-bold tracking-widest block">PEPTIDBASE // ANALYTICS 2026</span>
@@ -674,7 +648,7 @@
 
     <!-- INTERACTIVE ENGINE & SCRIPTS -->
     <script>
-        // MASTER DATABASE: All 47 Peptides structured
+        // MASTER DATABASE: All 47 Peptides
         const PEPTIDES_DATA = [
             { id: "bpc157", nr: "01/47", name: "BPC-157", aka: "Body Protection Compound-157", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject", "oral"], risk: "low", effects: ["Beschleunigt Sehnen-, Gelenk- & Muskelregeneration", "Schützt die Magenschleimhaut (Leaky Gut, Reflux, Ulzera)", "Starke entzündungshemmende Wirkung ohne Immunsuppression"], risks: ["Schwindel bei zu schneller Gabe möglich", "Langzeiteffekte am Menschen nur bedingt erprobt"], dosage: { starter: "250 mcg", normal: "500 mcg", max: "1000 mcg", freq: "1-2x täglich", form: "Subkutan (lokal) / Oral", timing: "Morgens nüchtern", cycle: "4 - 8 Wochen", halflife: "~4 Stunden" }, study: { level: "animal", levelText: "Tierstudien", text: "Umfangreiche Rattenmodelle belegen die vollständige biologische Reparatur chronischer Achillessehnenrupturen." }, prices: [{ shop: "Europa-Peptide", price: "24.90" }, { shop: "Alpine-Peptides", price: "28.50" }, { shop: "Peptid24", price: "23.90" }, { shop: "DrakonPeptides", price: "26.00" }] },
             { id: "tb500", nr: "02/47", name: "TB-500", aka: "Thymosin Beta-4 Analogon", cat: "heilung", catText: "REGENERATION (HEILUNG)", routes: ["inject"], risk: "low", effects: ["Induziert zelluläre Migration via Actin-Synthese", "Erhöht Elastizität & Flexibilität von Narbengewebe", "Synergistischer Heilungsfaktor gestapelt mit BPC-157"], risks: ["Milde Abgeschlagenheit unmittelbar nach Gabe", "Hohe Preisschwankungen am freien Markt"], dosage: { starter: "2 mg/Woche", normal: "5 mg/Woche", max: "10 mg/Woche", freq: "1-2x wöchentlich", form: "Subkutan", timing: "Abends / Post-Workout", cycle: "6 - 8 Wochen", halflife: "~30 Stunden" }, study: { level: "pilot", levelText: "Veterinärstudien", text: "Exzellente Erfolgsraten bei Sehnen- und Hufschäden von Galopppferden dokumentiert." }, prices: [{ shop: "Europa-Peptide", price: "34.90" }, { shop: "Alpine-Peptides", price: "38.00" }, { shop: "Peptid24", price: "32.00" }, { shop: "DrakonPeptides", price: "36.00" }] },
@@ -725,7 +699,7 @@
             { id: "lcarnitin", nr: "47/47", name: "L-Carnitin", aka: "Aminosäure-Derivat · Fetttransporter", cat: "gewicht", catText: "METABOLISMUS (GEWICHT)", routes: ["inject", "oral"], risk: "low", effects: ["Transportiert langkettige Fettsäuren direkt in die Kraftwerke der Zellen (Mitochondrien)", "Verbessert die Ausdauer & zelluläre Energieeffizienz", "Unterstützt Herzgesundheit, Spermienqualität & kardiovaskulären Schutz"], risks: ["Fischiger Körpergeruch bei oraler Hochdosis über längeren Zeitraum möglich", "Magen-Darm-Beschwerden (insb. bei oraler Überdosierung)"], dosage: { starter: "500 mg", normal: "1000 mg", max: "2000 mg", freq: "1x täglich (Pre-Workout)", form: "IM / Subkutan / Oral", timing: "Vor dem Kraft- oder Cardiotraining", cycle: "Dauerhaft anwendbar", halflife: "~15 Stunden" }, study: { level: "human", levelText: "Gut belegt", text: "Eines der am besten untersuchten Aminosäure-Supplements weltweit. Als Injektion extrem hohe Bioverfügbarkeit im Vergleich zur oralen Gabe (nur ca. 15%)." }, prices: [{ shop: "Europa-Peptide", price: "29.90" }, { shop: "Peptid24", price: "25.00" }, { shop: "Alpine-Peptides", price: "28.00" }] }
         ];
 
-        // Structured Händler & Versand Matrix matching industry benchmarks
+        // Händler & Link Matrix
         const SHIPPING_DATA = {
             "Europa-Peptide": { cost: "9.90", note: "Express, versandkostenfrei ab €150" },
             "Alpine-Peptides": { cost: "6.90", note: "Klimaneutral, frei ab €120" },
@@ -733,10 +707,22 @@
             "DrakonPeptides": { cost: "7.50", note: "Diskreter Versand, frei ab €130" },
             "Beyond-Peptides": { cost: "5.90", note: "Mitteleuropäisches Tracking" },
             "RebirthLabs": { cost: "6.50", note: "Direkter Labor-Kurier" },
-            "PeptideRevolution": { cost: "8.90", note: "EU-Einschreiben" }
+            "PeptideRevolution": { cost: "8.90", note: "EU-Einschreiben" },
+            "R-Phase": { cost: "12.00", note: "Premium Kühlversand, frei ab €200" }
         };
 
-        // DOM Views Router Engine
+        const SHOP_LINKS = {
+            "Europa-Peptide": "https://europa-peptide.de/?s=",
+            "Alpine-Peptides": "https://alpine-peptides.com/de/katalog?s=",
+            "Peptid24": "https://peptid24.de/shop/?s=",
+            "DrakonPeptides": "https://drakonpeptides.com/shop-2/?s=",
+            "Beyond-Peptides": "https://beyond-peptides.com/?s=",
+            "RebirthLabs": "https://rebirthlabs.org/?s=",
+            "PeptideRevolution": "https://www.peptiderevolution.eu/?s=",
+            "R-Phase": "https://www.r-phase.com/catalog?s="
+        };
+
+        // --- Router Engine ---
         function router(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
                 panel.classList.add('hidden');
@@ -752,35 +738,9 @@
             if (activeBtn) {
                 activeBtn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-glowCyan text-void shadow-neon-cyan";
             }
-
-            // Custom Dynamic Header Typography
-            const heroTitle = document.getElementById('hero-title');
-            const heroDesc = document.getElementById('hero-desc');
-            
-            if (heroTitle && heroDesc) {
-                if(viewId === 'db') {
-                    heroTitle.innerHTML = "PEPTID<br><span class=\"accent\">REFERENZ</span>";
-                    heroDesc.innerText = "Umfassende biochemische Dokumentation, interaktives Stabilitätsmonitoring und physiologische Mischkalkulationen für Sport & Labor.";
-                } else if(viewId === 'calc') {
-                    heroTitle.innerHTML = "PRÄZISIONS<br><span class=\"accent\">RECHNER</span>";
-                    heroDesc.innerText = "Kalkuliere das Rekonstitutionsverhältnis deines Peptids mathematisch exakt auf der Spritzenskala.";
-                } else if(viewId === 'storage') {
-                    heroTitle.innerHTML = "STABILITÄTS<br><span class=\"accent\">MONITOR</span>";
-                    heroDesc.innerText = "Interaktive Simulation zum temperatur- und aggregatabhängigen Molekularzerfall empfindlicher Proteinsequenzen.";
-                } else if(viewId === 'sport') {
-                    heroTitle.innerHTML = "SPORT<br><span class=\"accent\">PHYSIOLOGIE</span>";
-                    heroDesc.innerText = "Analyse der gezielten Peptidwirkungen auf Hypertrophie, Sehnenregeneration und aerobe Mitochondrienkapazität.";
-                } else if(viewId === 'stack') {
-                    heroTitle.innerHTML = "STACK<br><span class=\"accent\">SYNTHESIZER</span>";
-                    heroDesc.innerText = "Kombiniere Peptide im virtuellen Labor-Kombinator und kalkuliere das biologische Risikoprofil.";
-                } else if(viewId === 'tutorial') {
-                    heroTitle.innerHTML = "MISCH<br><span class=\"accent\">ANLEITUNG</span>";
-                    heroDesc.innerText = "Schritt-für-Schritt Rekonstitutions-Protokoll zur fehlerfreien und sterilen Peptidpräparation.";
-                }
-            }
         }
 
-        // Active database and filters state
+        // --- Database & Filters ---
         let activeRiskFilter = 'all';
 
         function setRiskFilter(risk, btn) {
@@ -797,7 +757,6 @@
             applyFilters();
         }
 
-        // DOM-Injektor for Peptide Cards
         function renderDatabase() {
             const grid = document.getElementById('db-grid');
             grid.innerHTML = '';
@@ -830,11 +789,17 @@
                 p.prices.forEach(pr => {
                     const cleanShopName = pr.shop.split(" ")[0].replace(/[^a-zA-Z0-9-]/g, ""); 
                     const shippingObj = SHIPPING_DATA[pr.shop] || SHIPPING_DATA[cleanShopName] || { cost: "5.00", note: "Standard" };
+                    
+                    const baseLink = SHOP_LINKS[cleanShopName] || ("https://google.com/search?q=" + cleanShopName + "+");
+                    const searchSuffix = encodeURIComponent(p.name.split(" ")[0]);
+                    let finalUrl = baseLink + searchSuffix;
+                    if(baseLink.includes("?s=")) { finalUrl += "&post_type=product"; }
+
                     priceRowsHTML += `
                         <div class="price-row py-2 border-b border-white/5 last:border-0 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                            <span class="price-shop font-bold text-slate-300 flex items-center gap-1.5 text-[11px]">
-                                🏪 ${pr.shop}
-                            </span>
+                            <a href="${finalUrl}" target="_blank" class="price-shop font-bold text-slate-300 hover:text-glowCyan transition-colors flex items-center gap-1.5 text-[11px] group cursor-pointer">
+                                🏪 ${pr.shop} <span class="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+                            </a>
                             <div class="flex flex-col items-end">
                                 <span class="price-amount text-glowCyan font-black text-sm">€${pr.price}</span>
                                 <span class="text-[9px] text-slate-500 font-mono">Porto: €${shippingObj.cost} (${shippingObj.note})</span>
@@ -848,10 +813,12 @@
                 if(p.study.level === 'pilot') studyLevelClass = "study-pilot";
                 if(p.study.level === 'invitro') studyLevelClass = "study-invitro";
 
-                const searchQueryEnc = encodeURIComponent(p.name.split(' ')[0]);
+                const searchQueryEnc = encodeURIComponent(p.name.split(' ')[0] + " peptide explained");
+                const tiktokQueryEnc = encodeURIComponent(p.name.split(' ')[0] + " peptide");
+                const pubmedQueryEnc = encodeURIComponent(p.name.split(' ')[0]);
 
                 const cardHTML = `
-                    <div class="peptide-card bg-labDark/80 backdrop-blur-sm border border-white/5 hover:border-${glowColor}/30 p-6 rounded-2xl transition-all duration-300 relative group overflow-hidden" data-cat="${p.cat}" data-risk="${p.risk}" data-search="${p.searchTags || p.name + ' ' + p.aka + ' ' + p.catText}">
+                    <div class="peptide-card bg-labDark/80 backdrop-blur-sm border border-white/5 hover:border-${glowColor}/30 p-6 rounded-2xl transition-all duration-300 relative group overflow-hidden" data-cat="${p.cat}" data-risk="${p.risk}" data-search="${p.name + ' ' + p.aka + ' ' + p.catText}">
                         <div class="absolute top-0 right-0 w-24 h-24 bg-${glowColor}/5 rounded-full blur-2xl group-hover:bg-${glowColor}/10 transition-all duration-300"></div>
                         
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-white/5">
@@ -867,7 +834,6 @@
                             </div>
                         </div>
 
-                        <!-- Utility Action Buttons -->
                         <div class="flex gap-2 mt-4 mb-2">
                             <button onclick="router('calc'); setTimeout(() => { document.getElementById('calcPreset').value = '${p.id}'; loadPresetToCalc(); }, 100);" class="flex-1 py-1.5 bg-white/5 hover:bg-${glowColor}/10 border border-white/10 hover:border-${glowColor}/30 rounded-lg text-[9px] font-mono text-slate-300 hover:text-${glowColor} transition-colors flex items-center justify-center gap-1.5">
                                 🧪 In den Rechner laden
@@ -933,47 +899,23 @@
                                     <div class="flex items-center justify-between pb-2 border-b border-white/5">
                                         <span class="text-[9px] font-mono text-glowRed tracking-widest flex items-center gap-1.5">
                                             <span class="w-1.5 h-1.5 rounded-full bg-glowRed animate-pulse"></span>
-                                            YOUTUBE_RECON_VIDEO_GUIDE
+                                            Externe Wissensdatenbanken
                                         </span>
-                                        <span class="text-[8px] font-mono text-slate-500">FORMAT: MP4_H264</span>
-                                    </div>
-                                    
-                                    <div class="relative w-full aspect-video bg-labDark/80 rounded-lg overflow-hidden flex flex-col justify-between p-3 border border-white/5 group-hover:border-glowCyan/10 transition-all duration-300">
-                                        <div class="absolute inset-0 flex items-center justify-center bg-void/60 hover:bg-void/40 transition-colors duration-200 cursor-pointer">
-                                            <div class="w-12 h-12 rounded-full bg-glowRed flex items-center justify-center text-void shadow-lg shadow-glowRed/20 hover:scale-105 transition-transform duration-200">
-                                                <svg class="w-5 h-5 fill-current ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
-                                            </div>
-                                        </div>
-                                        <div class="z-10 flex justify-between items-center text-[9px] font-mono bg-void/80 px-2 py-1 rounded backdrop-blur-sm">
-                                            <span class="text-white font-bold truncate">Biochemische Analyse: ${p.name}</span>
-                                            <span class="text-glowCyan">HD_1080P</span>
-                                        </div>
-                                        <div class="z-10 bg-void/80 p-2 rounded space-y-1.5 font-mono text-[8px] text-slate-400 backdrop-blur-sm">
-                                            <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
-                                                <div class="bg-glowRed h-full w-[45%]"></div>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <div class="flex gap-2.5">
-                                                    <span>PAUSE</span>
-                                                    <span>VOL_80%</span>
-                                                </div>
-                                                <span>04:12 / 12:45</span>
-                                            </div>
-                                        </div>
+                                        <span class="text-[8px] font-mono text-slate-500">AUTO_QUERY_GENERATED</span>
                                     </div>
                                     
                                     <div class="grid grid-cols-3 gap-2 pt-1">
-                                        <a href="https://www.youtube.com/results?search_query=IronMike+${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 transition-all text-center group backdrop-blur-sm">
-                                            <span class="text-xs group-hover:text-red-500 mb-1 transition-colors drop-shadow-md">▶</span>
-                                            <span class="text-[8px] font-mono text-slate-400 group-hover:text-white transition-colors">IronMike</span>
+                                        <a href="https://www.youtube.com/results?search_query=${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 transition-all text-center group backdrop-blur-sm">
+                                            <span class="text-sm group-hover:text-red-500 mb-1.5 transition-colors drop-shadow-md">▶</span>
+                                            <span class="text-[9px] font-mono text-slate-400 group-hover:text-white transition-colors">YouTube Guides</span>
                                         </a>
-                                        <a href="https://www.tiktok.com/search?q=samexplainspeps+${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/50 transition-all text-center group backdrop-blur-sm">
-                                            <span class="text-xs group-hover:text-cyan-400 mb-1 transition-colors drop-shadow-md">♪</span>
-                                            <span class="text-[8px] font-mono text-slate-400 group-hover:text-white transition-colors">samexplains</span>
+                                        <a href="https://www.tiktok.com/search?q=${tiktokQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/50 transition-all text-center group backdrop-blur-sm">
+                                            <span class="text-sm group-hover:text-cyan-400 mb-1.5 transition-colors drop-shadow-md">♪</span>
+                                            <span class="text-[9px] font-mono text-slate-400 group-hover:text-white transition-colors">TikTok Analyse</span>
                                         </a>
-                                        <a href="https://www.tiktok.com/search?q=landotalkspeps+${searchQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all text-center group backdrop-blur-sm">
-                                            <span class="text-xs group-hover:text-purple-400 mb-1 transition-colors drop-shadow-md">♪</span>
-                                            <span class="text-[8px] font-mono text-slate-400 group-hover:text-white transition-colors">landotalks</span>
+                                        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=${pubmedQueryEnc}" target="_blank" class="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all text-center group backdrop-blur-sm">
+                                            <span class="text-sm group-hover:text-blue-400 mb-1.5 transition-colors drop-shadow-md">🔬</span>
+                                            <span class="text-[9px] font-mono text-slate-400 group-hover:text-white transition-colors">PubMed Studien</span>
                                         </a>
                                     </div>
                                 </div>
@@ -1037,7 +979,7 @@
             document.getElementById('db-count').innerText = displayed;
         }
 
-        // Syringe Mischrechner Math
+        // --- Mischrechner ---
         function calculateSyringe() {
             const mg = parseFloat(document.getElementById('calc-mg').value) || 0;
             const ml = parseFloat(document.getElementById('calc-ml').value) || 0;
@@ -1072,20 +1014,15 @@
             syringeLabel.innerText = roundedUnits.toFixed(1) + " IE";
         }
 
-        // Load Preset into Mischrechner Dropdown
         function initCalcPresets() {
             const select = document.getElementById('calcPreset');
             select.innerHTML = '<option value="">-- Eigenes Peptid / Custom Wert --</option>';
-            
-            PEPTIDES_DATA.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
-            });
+            PEPTIDES_DATA.forEach(p => { select.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
         }
 
         function loadPresetToCalc() {
             const selectedId = document.getElementById('calcPreset').value;
             if(!selectedId) return;
-
             const peptide = PEPTIDES_DATA.find(p => p.id === selectedId);
             if(!peptide) return;
 
@@ -1105,13 +1042,13 @@
             if(peptide.id === 'nadplus') typicalDose = 100000;
 
             document.getElementById('calc-mg').value = typicalMg;
-            document.getElementById('calc-ml').value = 2; // Default BAC ml
+            document.getElementById('calc-ml').value = 2;
             document.getElementById('calc-mcg').value = typicalDose;
 
             calculateSyringe();
         }
 
-        // Storage Simulator Logik
+        // --- Storage Simulator ---
         let selectedState = 'dry';
         let selectedTemp = 'fridge';
 
@@ -1132,7 +1069,6 @@
                 vialPowder.style.display = 'none';
                 vialLiquid.style.display = 'block';
             }
-
             updateStorageSimulation();
         }
 
@@ -1142,7 +1078,6 @@
                 b.className = "storage-temp-btn py-2 rounded-lg text-xs font-mono text-slate-400 transition-all duration-200";
             });
             btn.className = "storage-temp-btn py-2 rounded-lg text-xs font-mono font-bold bg-glowCyan text-void transition-all duration-200";
-
             updateStorageSimulation();
         }
 
@@ -1223,17 +1158,15 @@
             resDesc.innerText = description;
         }
 
-        // Sportmedizin Matrix Selector
+        // --- Sportmedizin ---
         function setSportChannel(chId, btn) {
             document.querySelectorAll('.sport-ch-btn').forEach(b => {
                 b.className = "sport-ch-btn p-5 rounded-xl border border-white/5 text-slate-400 hover:border-glowCyan/20 hover:bg-glowCyan/5 text-left transition duration-200";
             });
-
             let borderStyle = "border-glowCyan bg-glowCyan/5 text-glowCyan";
             if (chId === 'heal') borderStyle = "border-glowGreen bg-glowGreen/5 text-glowGreen";
             if (chId === 'lip') borderStyle = "border-glowOrange bg-glowOrange/5 text-glowOrange";
             if (chId === 'cell') borderStyle = "border-glowPurple bg-glowPurple/5 text-glowPurple";
-
             btn.className = "sport-ch-btn p-5 rounded-xl border-2 text-left transition duration-200 " + borderStyle;
 
             document.querySelectorAll('.sport-ch-content').forEach(c => {
@@ -1244,14 +1177,12 @@
             document.getElementById('sport-ch-' + chId).classList.add('block');
         }
 
-        // Initialize Checkbox Stacker Selector
+        // --- Stacker ---
         function renderStackerList() {
             const list = document.getElementById('stack-vial-list');
             list.innerHTML = '';
-
             PEPTIDES_DATA.forEach(p => {
-                let riskText = "Niedrig";
-                let val = 1;
+                let riskText = "Niedrig"; let val = 1;
                 if(p.risk === 'med') { riskText = "Mittel"; val = 2; }
                 if(p.risk === 'high') { riskText = "Hoch"; val = 3; }
 
@@ -1272,18 +1203,12 @@
         function filterStackerList() {
             const q = document.getElementById('stackerSearch').value.toLowerCase();
             const items = document.querySelectorAll('.stack-selector-item');
-            
             items.forEach(item => {
-                const name = item.dataset.name;
-                if (name.includes(q)) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
+                if (item.dataset.name.includes(q)) item.classList.remove('hidden');
+                else item.classList.add('hidden');
             });
         }
 
-        // Dynamic Stack Generator Engine
         function generateStackReport() {
             const checkedBoxes = document.querySelectorAll('.stack-checkbox:checked');
             const countDisplay = document.getElementById('stack-count');
@@ -1295,76 +1220,51 @@
             countDisplay.innerText = checkedBoxes.length + " Peptid(e)";
 
             if (checkedBoxes.length === 0) {
-                riskDisplay.innerText = "-";
-                riskDisplay.style.color = 'var(--text)';
-                synergyDisplay.innerText = "-";
-                timingDisplay.innerText = "-";
+                riskDisplay.innerText = "-"; riskDisplay.style.color = 'var(--text)';
+                synergyDisplay.innerText = "-"; timingDisplay.innerText = "-";
                 analysisText.innerText = "Bitte wähle Wirkstoffe aus der Liste aus, um die biochemische Stack-Analyse zu starten.";
                 return;
             }
 
-            let maxRisk = 1;
-            let selectedVials = [];
-
+            let maxRisk = 1; let selectedVials = [];
             checkedBoxes.forEach(box => {
                 const riskVal = parseInt(box.dataset.risk);
                 if (riskVal > maxRisk) maxRisk = riskVal;
                 selectedVials.push(box.value);
             });
 
-            if (maxRisk === 1) {
-                riskDisplay.innerText = "LOW_RISK_PROFILE";
-                riskDisplay.style.color = "var(--glowGreen)";
-            } else if (maxRisk === 2) {
-                riskDisplay.innerText = "MODERATE_RISK_AXIS";
-                riskDisplay.style.color = "var(--glowAmber)";
-            } else {
-                riskDisplay.innerText = "CRITICAL_RISK_WARNING";
-                riskDisplay.style.color = "var(--glowRed)";
-            }
+            if (maxRisk === 1) { riskDisplay.innerText = "LOW_RISK_PROFILE"; riskDisplay.style.color = "var(--glowGreen)"; }
+            else if (maxRisk === 2) { riskDisplay.innerText = "MODERATE_RISK_AXIS"; riskDisplay.style.color = "var(--glowAmber)"; }
+            else { riskDisplay.innerText = "CRITICAL_RISK_WARNING"; riskDisplay.style.color = "var(--glowRed)"; }
 
-            let synergy = "Individuelle Wirkung";
-            let analysis = "";
-            let timing = "Morgens";
-
+            let synergy = "Individuelle Wirkung"; let analysis = ""; let timing = "Morgens";
             const namesString = selectedVials.join(" ");
 
             if (namesString.includes("BPC-157") && namesString.includes("TB-500")) {
-                synergy = "SYNERGY_HIGH [Rehabilitativ]";
-                timing = "Morgens & Abends";
-                analysis += "Herausragende synergistische Gewebe- und Sehnenregeneration. Die Kombination aus Angiogenese (BPC) und Actin-Zellwanderung (TB) beschleunigt den Heilungsprozess optimal. Diese Peptide können ideal im selben Zyklus angewendet werden. ";
+                synergy = "SYNERGY_HIGH [Rehabilitativ]"; timing = "Morgens & Abends";
+                analysis += "Herausragende synergistische Gewebe- und Sehnenregeneration. Die Kombination aus Angiogenese (BPC) und Actin-Zellwanderung (TB) beschleunigt den Heilungsprozess optimal. ";
             }
             if (namesString.includes("Ipamorelin") && namesString.includes("CJC-1295")) {
-                synergy = "SYNERGY_MAX [Wachstumsimpuls]";
-                timing = "Abends (vor Schlaf, nüchtern)";
-                analysis += "Die klassische 'Wachstumshormon-Verstärkerschleife'. CJC erhöht die Amplitude der somatotropen Signale, während Ipamorelin den selektiven Puls triggert. Maximale Proteinsynthese. Können im selben Zeitraum appliziert werden. ";
+                synergy = "SYNERGY_MAX [Wachstumsimpuls]"; timing = "Abends (vor Schlaf, nüchtern)";
+                analysis += "Die klassische 'Wachstumshormon-Verstärkerschleife'. CJC erhöht die Amplitude der somatotropen Signale, während Ipamorelin den selektiven Puls triggert. Maximale Proteinsynthese. ";
             }
             if (namesString.includes("Semaglutid") && namesString.includes("5-Amino-1MQ")) {
-                synergy = "METABOLIC_ACCELERATOR [Fettreduktion]";
-                timing = "Sema: Wöchentlich / 5-Amino: Täglich";
-                analysis += "Optimaler metabolischer Fettabbau-Stack. Semaglutid dämpft den Appetit, während 5-Amino-1MQ die Fetteinspeicherung blockiert und die Muskelmitochondrien antreibt. Sehr gute funktionelle Ergänzung. ";
-            }
-            if (namesString.includes("Follistatin-344") && namesString.includes("IGF-1 LR3")) {
-                synergy = "CRITICAL_MASS_UP [Extremer Muskelaufbau]";
-                timing = "Post-Workout";
-                analysis += "VORSICHT: Dieser anabole Stack birgt ein hohes Risiko für übermäßigen Stress auf passive Strukturen wie Sehnen und Gelenkbänder, da das Muskelwachstum die Sehnenstrukturen mechanisch überholt. Nur extrem kurzzeitig erforschen. ";
+                synergy = "METABOLIC_ACCELERATOR [Fettreduktion]"; timing = "Sema: Wöchentlich / 5-Amino: Täglich";
+                analysis += "Optimaler metabolischer Fettabbau-Stack. Semaglutid dämpft den Appetit, während 5-Amino-1MQ die Fetteinspeicherung blockiert und die Muskelmitochondrien antreibt. ";
             }
 
             if (synergy === "Individuelle Wirkung" && checkedBoxes.length > 1) {
-                synergy = "CO-APPLIKATION [Standard]";
-                timing = "Versetzte Einnahmezeiten";
-                analysis = "Mehrere Wirkstoffe sind aktiv. Achte auf zeitliche Abstände bei der Verabreichung, um Interaktionen an den Rezeptorschnittstellen zu minimieren. Grundsätzlich im gleichen Zeitraum einnehmbar.";
+                synergy = "CO-APPLIKATION [Standard]"; timing = "Versetzte Einnahmezeiten";
+                analysis = "Mehrere Wirkstoffe sind aktiv. Achte auf zeitliche Abstände bei der Verabreichung, um Interaktionen an den Rezeptorschnittstellen zu minimieren.";
             } else if (checkedBoxes.length === 1) {
-                synergy = "SINGLE_ELEMENT_MODE";
-                timing = "Peptidspezifisch";
+                synergy = "SINGLE_ELEMENT_MODE"; timing = "Peptidspezifisch";
                 analysis = `Du analysierst das Peptid ${selectedVials[0]}. Perfekt geeignet für den Einstieg zur exakten Bestimmung der Verträglichkeit.`;
             }
 
-            synergyDisplay.innerText = synergy;
-            timingDisplay.innerText = timing;
-            analysisText.innerText = analysis;
+            synergyDisplay.innerText = synergy; timingDisplay.innerText = timing; analysisText.innerText = analysis;
         }
 
+        // --- Tutorial ---
         function updateTutorialProgress(step, checkbox) {
             const stepBox = document.getElementById(`step-box-${step}`);
             const stepNum = document.getElementById(`step-num-${step}`);
@@ -1408,21 +1308,143 @@
             document.getElementById('tut-progress-bar').style.width = percentage + "%";
         }
 
-        function copyBlueprint() {
-            const count = document.getElementById('stack-count').innerText;
-            const risk = document.getElementById('stack-risk-display').innerText;
-            const synergy = document.getElementById('stack-synergy-display').innerText;
-            const timing = document.getElementById('stack-timing-display').innerText;
-            const note = document.getElementById('stack-analysis-text').innerText;
+        // --- AI CHATBOT LOGIC ---
+        const apiKey = ""; // Runtime Injected
+        let isChatOpen = false;
 
-            const text = `--- PEPTIDBASE LAB BLUEPRINT REPORT ---\nVerbundene Wirkstoffe: ${count}\nRisikoprofil: ${risk}\nSynergie-Matrix: ${synergy}\nEinnahme-Zeitraum: ${timing}\nLabor-Anmerkung: ${note}\n---------------------------------------`;
+        function toggleChatbot() {
+            const chatWindow = document.getElementById('ai-chat-window');
+            if(isChatOpen) {
+                chatWindow.classList.add('hidden');
+                isChatOpen = false;
+            } else {
+                chatWindow.classList.remove('hidden');
+                isChatOpen = true;
+            }
+        }
 
-            const tempInput = document.createElement("textarea");
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const inputField = document.getElementById('chat-input');
+            const message = inputField.value.trim();
+            if(!message) return;
+
+            // Clear input
+            inputField.value = '';
+            
+            // Append User Message
+            appendMessage('user', message);
+
+            // Append Loading dot
+            const loaderId = appendLoader();
+
+            // Fetch AI Response
+            const aiResponseText = await fetchAIResponse(message);
+
+            // Remove Loader & Append AI Response
+            document.getElementById(loaderId).remove();
+            appendMessage('ai', aiResponseText);
+        }
+
+        function appendMessage(sender, text) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = "chat-bubble flex gap-2 w-full " + (sender === 'user' ? "flex-row-reverse" : "");
+            
+            let iconHtml = '';
+            let bubbleHtml = '';
+
+            if (sender === 'user') {
+                iconHtml = `<div class="w-6 h-6 rounded-full bg-glowPurple/20 flex items-center justify-center shrink-0"><span class="text-[10px] text-glowPurple">US</span></div>`;
+                bubbleHtml = `<div class="bg-glowPurple/10 border border-glowPurple/30 p-3 rounded-xl rounded-tr-none text-white max-w-[80%]">${text}</div>`;
+            } else {
+                iconHtml = `<div class="w-6 h-6 rounded-full bg-glowCyan/20 flex items-center justify-center shrink-0"><span class="text-[10px] text-glowCyan">AI</span></div>`;
+                bubbleHtml = `<div class="bg-void border border-white/10 p-3 rounded-xl rounded-tl-none text-slate-300 max-w-[85%]">${text}</div>`;
+            }
+
+            div.innerHTML = (sender === 'user' ? bubbleHtml + iconHtml : iconHtml + bubbleHtml);
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function appendLoader() {
+            const id = 'loader-' + Date.now();
+            const messagesContainer = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = "chat-bubble flex gap-2 w-full";
+            div.innerHTML = `
+                <div class="w-6 h-6 rounded-full bg-glowCyan/20 flex items-center justify-center shrink-0"><span class="text-[10px] text-glowCyan">AI</span></div>
+                <div class="bg-void border border-white/10 p-3 rounded-xl rounded-tl-none text-slate-300 w-16 flex items-center justify-center">
+                    <div class="dot-flashing"></div>
+                </div>
+            `;
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return id;
+        }
+
+        // Local Fallback logic if API key is missing or fails
+        function getLocalFallbackResponse(query) {
+            const q = query.toLowerCase();
+            if (q.includes("hallo") || q.includes("hi") || q.includes("hey")) {
+                return "Hallo! Ich bin die PeptidBase KI. Ich kann dir Details zu allen 47 Peptiden aus unserer Datenbank liefern. Nach welchem Wirkstoff suchst du?";
+            }
+            if (q.includes("bpc")) {
+                return "BPC-157 ist ein Magen-Peptid, das extrem starke regenerative Eigenschaften auf Sehnen und Bänder hat. Die Standarddosis liegt bei 500 mcg täglich. Subkutan angewendet heilt es Gelenke lokal.";
+            }
+            if (q.includes("semaglutid") || q.includes("abnehmen") || q.includes("fett")) {
+                return "Für Fettabbau ist Semaglutid (GLP-1) der Goldstandard. Es verlangsamt die Magenentleerung und drosselt den Appetit massiv. Alternativen sind Tirzepatid, HGH-Frag 176-191 oder AOD-9604.";
+            }
+            if (q.includes("wachstum") || q.includes("muskeln") || q.includes("ipamorelin") || q.includes("cjc")) {
+                return "Der stärkste und sicherste Stack für die Wachstumshormonausschüttung (Muskelaufbau) ist CJC-1295 kombiniert mit Ipamorelin. Ipamorelin triggert den Puls, CJC erhöht die Stärke des Pulses.";
+            }
+            if (q.includes("schlaf") || q.includes("dsip") || q.includes("epitalon")) {
+                return "DSIP (Delta-Sleep-Inducing Peptide) fördert den Tiefschlaf. Epitalon reguliert zusätzlich den Melatoninhaushalt und hat epigenetische Anti-Aging Eigenschaften.";
+            }
+            
+            // Search in DB
+            let found = null;
+            PEPTIDES_DATA.forEach(p => {
+                if(p.name.toLowerCase().includes(q) || p.aka.toLowerCase().includes(q)) found = p;
+            });
+            if (found) {
+                return `**${found.name}**: ${found.aka}. Hauptwirkung: ${found.effects[0]}. Die normale Dosis liegt bei ${found.dosage.normal}. (Risikoprofil: ${found.risk === 'low' ? 'Niedrig' : found.risk === 'med' ? 'Mittel' : 'Hoch'}).`;
+            }
+
+            return "Entschuldigung, meine Online-API ist aktuell nicht verbunden, aber als lokales System durchsuche ich unsere 47-Peptide-Datenbank. Zu diesem spezifischen Begriff habe ich gerade keinen Direkttreffer. Bitte nenne mir ein konkretes Peptid (z.B. BPC-157, Semaglutid).";
+        }
+
+        async function fetchAIResponse(userText) {
+            if (!apiKey || apiKey === "") {
+                // Return local pre-programmed fallback immediately if no key
+                return new Promise(resolve => setTimeout(() => resolve(getLocalFallbackResponse(userText)), 600));
+            }
+
+            const systemPrompt = "Du bist die PeptidBase KI, ein wissenschaftlicher Assistent für Endokrinologie und Peptidforschung. Antworte präzise, kurz und im wissenschaftlichen Ton auf Deutsch. Weise immer darauf hin, dass Peptide im Sport verboten sind und du keine ärztliche Beratung ersetzt.";
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userText }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+            
+            let retries = 5;
+            let delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i=0; i<retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Keine Antwort erhalten.";
+                } catch (e) {
+                    if (i === retries - 1) return getLocalFallbackResponse(userText); // Fallback if API totally fails
+                    await new Promise(r => setTimeout(r, delays[i]));
+                }
+            }
         }
 
         window.onload = function() {
