@@ -1484,9 +1484,9 @@
         // --- AI CHATBOT LOGIC ---
         
         // --- HIER DEN SCHLÜSSEL EINTRAGEN ---
-        const part1 = "AQ.Ab8RN6LXOGvc-"; // z.B. "AIzaSy..."
-        const part2 = "sLafc1BQU8t_"; // z.B. "abc..."
-        const part3 = "TWWvbckICsD4XbSbbhaQ29wWg"; // z.B. "...xyz"
+        const part1 = "AQ.Ab8RN6IqriRWB1";
+        const part2 = "MC-NiQDGq2JGah"; 
+        const part3 = "4Sb3LCOcJCPsYitDXXYcAw"; 
         // ------------------------------------
         
         const apiKey = part1 + part2 + part3;
@@ -1592,33 +1592,39 @@
         }
 
         async function fetchAIResponse(userText) {
+            // Die strenge "AIza"-Prüfung wurde KOMPLETT entfernt. Er testet jetzt jeden Key!
             if (!apiKey || apiKey === "") {
+                console.warn("Kein API-Key gefunden. Nutze Offline-Modus.");
                 return new Promise(resolve => setTimeout(() => resolve(getLocalFallbackResponse(userText)), 600));
             }
 
             const systemPrompt = "Du bist die PeptidBase KI, ein wissenschaftlicher Assistent für Endokrinologie und Peptidforschung. Antworte präzise, kurz und im wissenschaftlichen Ton auf Deutsch. Weise immer darauf hin, dass Peptide im Sport verboten sind und du keine ärztliche Beratung ersetzt. Antworte ausschließlich auf Themen bezüglich Peptide, SARMs und Biochemie. Lehne andere Themen ab.";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            
+            // WICHTIG: system_instruction mit Unterstrich!
             const payload = {
                 contents: [{ parts: [{ text: userText }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
+                system_instruction: { parts: [{ text: systemPrompt }] } 
             };
             
-            let retries = 5;
-            let delays = [1000, 2000, 4000, 8000, 16000];
-            for (let i=0; i<retries; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error('API Error');
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Keine Antwort erhalten.";
-                } catch (e) {
-                    if (i === retries - 1) return getLocalFallbackResponse(userText);
-                    await new Promise(r => setTimeout(r, delays[i]));
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    console.error("Google API Fehler:", errData);
+                    throw new Error('API Error: ' + response.status);
                 }
+                
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Keine Antwort erhalten.";
+            } catch (e) {
+                console.error("Fehler beim Abrufen der KI:", e);
+                return getLocalFallbackResponse(userText);
             }
         }
 
